@@ -27,6 +27,6 @@ public class BallControlScript : MonoBehaviour {
 	void OnGUI()
 	{
 		GUI.Label (new Rect (0, 0, 100, 100), rigidbody.velocity.x.ToString());
-		GUI.Label (new Rect (0, 20, 100, 100), "Fan va jag e störig");
+		GUI.Label (new Rect (0, 20, 100, 100), "Fan fdsafesfesig");
 	}
 }
