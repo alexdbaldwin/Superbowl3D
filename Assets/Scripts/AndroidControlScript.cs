@@ -5,11 +5,10 @@ public class AndroidControlScript : MonoBehaviour {
 
 	// Use this for initialization
 	Vector2 fingerPosition = Vector2.zero;
-	float speed = 3.0f;
 	public GameObject gameCamera;
 	public float turnSpeed = 20f;
-	float trust = 30.0f;
-	public float tiltThreshold = 1.1f;
+	public float tiltThreshold = 0.5f;
+	public float tiltThresholdMax = 0.5f;
 	public float maxTurnSpeed = 25f; 
 	public float velX = 0.0f;
 	public Vector3 currentCollisionNormal;
@@ -17,8 +16,13 @@ public class AndroidControlScript : MonoBehaviour {
 	public bool jump, isOnSurface = false;
 	private float horizontalMovement;
 
-	void Start () {
+	private float counter = 0.0f;
+	private bool isTouched = false;
+	private Vector2 touchStartPosition;
 
+	void Start () {
+	
+	
 
 	}
 	
@@ -51,6 +55,11 @@ public class AndroidControlScript : MonoBehaviour {
 
 		Rect jumpButton = new Rect (Screen.width - width, 0, width, width);
 
+		TouchStick ();
+
+
+
+
 		if (jump 
 		    || (Input.GetMouseButtonUp (0) && jumpButton.Contains (Input.mousePosition)) 
 		    || Input.touchCount > 0 && jumpButton.Contains(Input.GetTouch(0).position)) {
@@ -62,10 +71,7 @@ public class AndroidControlScript : MonoBehaviour {
 			jump = false;		
 		}
 
-		if (Input.acceleration.magnitude > tiltThreshold) {
-			float accAmount = Input.acceleration.y - tiltThreshold;
-			horizontalMovement = Input.acceleration.y;
-				}
+		AccelerometerControls ();
 
 	}
 	
@@ -83,7 +89,11 @@ public class AndroidControlScript : MonoBehaviour {
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
 
-		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+		float maxVelocity = Mathf.Abs (rigidbody.velocity.x);
+		if (maxVelocity < 10.0f) {
+			rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+				}
+
 
 		if (jump) {
 			rigidbody.AddForce(new Vector3(0,50,0));
@@ -95,8 +105,7 @@ public class AndroidControlScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 0, 100, 100), rigidbody.velocity.x.ToString());
-		GUI.Label (new Rect (0, 20, 100, 100), "" + Input.acceleration.magnitude.ToString() + " " + rigidbody.velocity.ToString());
+		GUI.Label (new Rect (0, 20, 100, 100), "y:" + Input.acceleration.y.ToString() + " :" + Screen.width.ToString());
 
 //		}
 	}
@@ -109,6 +118,45 @@ public class AndroidControlScript : MonoBehaviour {
 			isOnSurface = true;
 		}
 		currentCollisionNormal.Normalize ();
+	}
+
+	void AccelerometerControls()
+	{
+		float accAmountY = Mathf.Abs(Input.acceleration.y);
+
+		if (accAmountY > tiltThreshold) {
+			if (accAmountY > tiltThresholdMax) {
+				if (Input.acceleration.y < 0) {
+					horizontalMovement = -tiltThresholdMax;
+				}
+				else {
+					horizontalMovement = tiltThresholdMax;
+				}
+
+				return;
+			}
+			horizontalMovement = Input.acceleration.y;
+
+		}
+	}
+
+	void TouchStick ()
+	{
+		if (Input.touchCount > 0) {
+			if (Input.GetTouch (0).phase == TouchPhase.Began) {
+				touchStartPosition = Input.GetTouch (0).position;
+				isTouched = true;
+			}
+			if (Input.GetTouch (0).phase == TouchPhase.Ended) {
+				isTouched = false;
+			}
+			if (isTouched) {
+				float posX = Input.GetTouch (0).position.x;
+				if (posX != touchStartPosition.x) {
+					horizontalMovement = (posX - touchStartPosition.x) / 100;
+				}
+			}
+		}
 	}
 
 	void OnCollisionExit(Collision collisionInfo)
