@@ -9,17 +9,17 @@ public class AndroidControlScript : MonoBehaviour {
 	public GameObject gameCamera;
 	public float turnSpeed = 20f;
 	float trust = 30.0f;
+	public float tiltThreshold = 1.1f;
 	public float maxTurnSpeed = 25f; 
 	public float velX = 0.0f;
 	public Vector3 currentCollisionNormal;
 
-	public bool jump;
+	public bool jump, isOnSurface = false;
 	private float horizontalMovement;
 
 	void Start () {
-		Screen.autorotateToPortrait = false;
-		Screen.autorotateToPortraitUpsideDown = false;
-		Screen.orientation = ScreenOrientation.AutoRotation;
+
+
 	}
 	
 	// Update is called once per frame
@@ -42,38 +42,31 @@ public class AndroidControlScript : MonoBehaviour {
 		}
 	}*/
 	//Tilt controlls
-/*
-	void Update () {
-		Vector3 direction = Vector3.zero;
-
-		direction.x = -Input.acceleration.y;
-		direction.z = Input.acceleration.x;
-
-		if (direction.sqrMagnitude > 1) {
-			direction.Normalize();
-				}
-		direction *= Time.deltaTime;
-
-		transform.Translate(direction * speed);
-
-	}*/
 
 	void Update(){
 
-		float width = Screen.width / 10.0f;
+		float width = Screen.width / 7.0f;
+
+
 
 		Rect jumpButton = new Rect (Screen.width - width, 0, width, width);
 
 		if (jump 
 		    || (Input.GetMouseButtonUp (0) && jumpButton.Contains (Input.mousePosition)) 
 		    || Input.touchCount > 0 && jumpButton.Contains(Input.GetTouch(0).position)) {
-			jump = true;
+			if (isOnSurface) {
+				jump = true;
+			}
+
 		} else {
 			jump = false;		
 		}
 
-		//horizontalMovement = Input.acceleration.x;
-		horizontalMovement = Input.GetAxis ("Horizontal");
+		if (Input.acceleration.magnitude > tiltThreshold) {
+			float accAmount = Input.acceleration.y - tiltThreshold;
+			horizontalMovement = Input.acceleration.y;
+				}
+
 	}
 	
 
@@ -89,45 +82,38 @@ public class AndroidControlScript : MonoBehaviour {
 		
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
-		
+
 		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+
 		if (jump) {
-			rigidbody.AddForce(new Vector3(0,150,0));
+			rigidbody.AddForce(new Vector3(0,50,0));
 			jump = false;
 		}
-		//rigidbody.AddForce (-currentCollisionNormal * 5f);
-		//		rigidbody.AddForce (gameCamera.transform.forward * 5);
-		
-		
-		
-		//		if (rigidbody.velocity.x < maxTurnSpeed && rigidbody.velocity.x > -maxTurnSpeed) {
-		//				rigidbody.AddForce (new Vector3 (horizontal * turnSpeed, 0, -vertical * trust));
-		//		}
-		//			Test
-		
-		
+
 		
 	}
 
 	void OnGUI()
 	{
 		GUI.Label (new Rect (0, 0, 100, 100), rigidbody.velocity.x.ToString());
-		GUI.Label (new Rect (0, 20, 100, 100), "Hello");
-		//GUI.Label (new Rect (0, 40, 100, 100), "mouse pos: " + Input.mousePosition.ToString ());
-//		float width = Screen.width / 10.0f;
-//		if (jump || GUI.Button (new Rect (Screen.width - width, Screen.height - width, width, width), "jump")) {
-//						jump = true;		
-//				} else {
-//			jump  = false;		
+		GUI.Label (new Rect (0, 20, 100, 100), "" + Input.acceleration.magnitude.ToString() + " " + rigidbody.velocity.ToString());
+
 //		}
 	}
 
 	void OnCollisionStay(Collision collisionInfo) {
-		
+
+
 		foreach (ContactPoint contact in collisionInfo.contacts) {
 			currentCollisionNormal = contact.normal;
+			isOnSurface = true;
 		}
 		currentCollisionNormal.Normalize ();
 	}
+
+	void OnCollisionExit(Collision collisionInfo)
+	{
+		isOnSurface = false;
+		}
 
 }
