@@ -40,7 +40,7 @@ public class BallControlScript : MonoBehaviour {
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
 
-		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+		rigidbody.AddForce (forceDir * horizontal * turnSpeed);
 		//rigidbody.AddForce (-currentCollisionNormal * 5f);
 //		rigidbody.AddForce (gameCamera.transform.forward * 5);
 		
