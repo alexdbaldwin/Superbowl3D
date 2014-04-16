@@ -2,86 +2,55 @@
 using System.Collections;
 
 public class AndroidControlScript : MonoBehaviour {
-
-	// Use this for initialization
-	Vector2 fingerPosition = Vector2.zero;
 	public GameObject gameCamera;
-	public float turnSpeed = 20f;
-	public float tiltThreshold = 0.5f;
-	public float tiltThresholdMax = 0.5f;
-	public float maxTurnSpeed = 25f; 
-	public float velX = 0.0f;
-	public Vector3 currentCollisionNormal;
+	//Debug output
+	public float jumpVelocity = 50;
 
-	public bool jump, isOnSurface = false;
-	private float horizontalMovement;
-
-	private float counter = 0.0f;
-	private bool isTouched = false;
+	private float trust = 30.0f;
+	//Kontrollprylar
+	private float tiltThreshold = 0.1f;
+	private float tiltThresholdMax = 0.6f;
+	private bool jump, isOnSurface = false;
 	private Vector2 touchStartPosition;
 
+	private Vector3 ballStartPos;
+	private Vector3 currentCollisionNormal;
+	private float horizontalMovement;
+	private float turnSpeed = 5.0f;
+	private Rect jumpBtn;
+
+
+
+	// Use this for initialization
 	void Start () {
-	
-	
+		ballStartPos = transform.position;
+		jumpBtn = new Rect (Screen.width - 250, Screen.height - 250, 200, 200);
+
 
 	}
-	
-	// Update is called once per frame
-	/*
-	void Update () {
-		float horizontal = Input.GetAxis ("Horizontal");
 
-		fingerPosition = Input.GetTouch(0).position;
-
-		if (Input.touchCount > 0) {
-			if (fingerPosition.y <= Screen.height/2 ) {
-				//gå åt höger
-				rigidbody.AddForce (new Vector3 (horizontal, 0, 0));
-			}
-			else {
-			//gå åt vänster
-				rigidbody.AddForce (new Vector3 (-horizontal, 0, 0));
-			}
-
+	void Update()
+	{
+		AccelerometerControls();
+		if (Input.GetKey(KeyCode.Escape)) {
+			Application.LoadLevel(Application.loadedLevelName);
 		}
-	}*/
-	//Tilt controlls
 
-	void Update(){
-
-		float width = Screen.width / 7.0f;
-
-
-
-		Rect jumpButton = new Rect (Screen.width - width, 0, width, width);
-
-		TouchStick ();
-
-
-
-
-		if (jump 
-		    || (Input.GetMouseButtonUp (0) && jumpButton.Contains (Input.mousePosition)) 
-		    || Input.touchCount > 0 && jumpButton.Contains(Input.GetTouch(0).position)) {
-			if (isOnSurface) {
+		if (IsTouching()) {
+			if (jumpBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
 				jump = true;
 			}
-
-		} else {
-			jump = false;		
 		}
 
-		AccelerometerControls ();
-
+		//		TouchStick();
 	}
-	
-
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-	
-
-
+		
+		float horizontal = Input.GetAxis ("Horizontal");
+		float vertical = Input.GetAxis ("Vertical");
+		
 		Vector3 right = gameCamera.transform.right;
 		right.y = 0;
 		right.Normalize ();
@@ -89,79 +58,114 @@ public class AndroidControlScript : MonoBehaviour {
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
 
-//		float maxVelocity = Mathf.Abs (rigidbody.velocity.x);
-//		if (maxVelocity < 10.0f) {
-			rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
-//				}
-
-
-		if (jump) {
-			rigidbody.AddForce(new Vector3(0,50,0));
-			jump = false;
-		}
-
+		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+		//rigidbody.AddForce (-currentCollisionNormal * 5f);
+		//		rigidbody.AddForce (gameCamera.transform.forward * 5);
 		
-	}
+		
+		
+		//		if (rigidbody.velocity.x < maxTurnSpeed && rigidbody.velocity.x > -maxTurnSpeed) {
+		//				rigidbody.AddForce (new Vector3 (horizontal * turnSpeed, 0, -vertical * trust));
+		//		}
+		//			Test
 
+
+
+
+		if (jump && isOnSurface) {
+			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0));
+			jump = false;
+				}
+
+	}
+	
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 20, 100, 100), "y:" + Input.acceleration.y.ToString() + " :" + Screen.width.ToString());
+		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + jump.ToString());
+		GUI.Label (new Rect (0, 20, 200, 100), "Fan hej");
+		GUI.Label (new Rect (0, 40, 200, 100), Input.acceleration.y.ToString());
+		if (IsTouching()) {
+			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
+				}
+		if (GUI.Button (jumpBtn, "Jumpuru")) {
+//			jump = true;
+				}
 
-//		}
 	}
-
+	
 	void OnCollisionStay(Collision collisionInfo) {
 
-
-		foreach (ContactPoint contact in collisionInfo.contacts) {
-			currentCollisionNormal = contact.normal;
-			isOnSurface = true;
+		if (collisionInfo.contacts.Length > 0) {
+			foreach (ContactPoint contact in collisionInfo.contacts) {
+				currentCollisionNormal = contact.normal;
+				isOnSurface = true;
+			}
 		}
+
 		currentCollisionNormal.Normalize ();
-	}
-
-	void AccelerometerControls()
-	{
-		float accAmountY = Mathf.Abs(Input.acceleration.y);
-
-		if (accAmountY > tiltThreshold) {
-			if (accAmountY > tiltThresholdMax) {
-				if (Input.acceleration.y < 0) {
-					horizontalMovement = -tiltThresholdMax;
-				}
-				else {
-					horizontalMovement = tiltThresholdMax;
-				}
-
-				return;
-			}
-			horizontalMovement = Input.acceleration.y;
-
-		}
-	}
-
-	void TouchStick ()
-	{
-		if (Input.touchCount > 0) {
-			if (Input.GetTouch (0).phase == TouchPhase.Began) {
-				touchStartPosition = Input.GetTouch (0).position;
-				isTouched = true;
-			}
-			if (Input.GetTouch (0).phase == TouchPhase.Ended) {
-				isTouched = false;
-			}
-			if (isTouched) {
-				float posX = Input.GetTouch (0).position.x;
-				if (posX != touchStartPosition.x) {
-					horizontalMovement = (posX - touchStartPosition.x) / 100;
-				}
-			}
-		}
 	}
 
 	void OnCollisionExit(Collision collisionInfo)
 	{
 		isOnSurface = false;
-		}
+	}
 
+
+	void AccelerometerControls()
+	{
+		float accAmountY = Mathf.Abs(Input.acceleration.x);
+		
+		if (accAmountY > tiltThreshold) {
+
+
+			if (accAmountY > tiltThresholdMax) {
+				if (Input.acceleration.x < 0) {
+					//horizontalMovement = -tiltThresholdMax;
+					horizontalMovement = -1.0f;
+				}
+				else {
+					//horizontalMovement = tiltThresholdMax;
+					horizontalMovement = 1.0f;
+				}
+				
+				return;
+			}
+			horizontalMovement = Input.acceleration.x / tiltThresholdMax;
+			
+		}
+	}
+	
+	void TouchStick ()
+	{	
+
+
+
+//		if (Input.touchCount > 0) {
+//			if (Input.GetTouch (0).phase == TouchPhase.Began) {
+//				touchStartPosition = Input.GetTouch (0).position;
+//				isTouched = true;
+//			}
+//			if (Input.GetTouch (0).phase == TouchPhase.Ended) {
+//				isTouched = false;
+//			}
+//			if (isTouched) {
+//				float posX = Input.GetTouch (0).position.x;
+//				if (posX != touchStartPosition.x) {
+//					horizontalMovement = (posX - touchStartPosition.x) / 100;
+//				}
+//			}
+//		}
+	}
+
+	bool IsTouching()
+	{
+		return Input.touchCount > 0;
+
+	}
+
+	Vector2 ConvertToTopLeftOrigin(Vector2 andPos)
+	{
+		return new Vector2(andPos.x, Screen.height - andPos.y);
+	}
+	
 }
