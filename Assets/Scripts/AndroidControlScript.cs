@@ -4,27 +4,35 @@ using System.Collections;
 public class AndroidControlScript : MonoBehaviour {
 	public GameObject gameCamera;
 	//Debug output
-	public float jumpVelocity = 50;
-
-	private float trust = 30.0f;
 	//Kontrollprylar
 	private float tiltThreshold = 0.1f;
 	private float tiltThresholdMax = 0.6f;
-	private bool jump, isOnSurface = false;
+	private bool isJumping, isBoosting = false, isOnSurface = false;
 	private Vector2 touchStartPosition;
 
 	private Vector3 ballStartPos;
 	private Vector3 currentCollisionNormal;
 	private float horizontalMovement;
 	private float turnSpeed = 5.0f;
+	private float powerGauge = 100f;
+	private int maxPower = 100;
+	private int minPower = 0;
+	
 	private Rect jumpBtn;
+	private Rect boostBtn;
+	
+	private float jumpVelocity = 2.3f;
+	private float boostVelocity = 20;
+
+	private float trust = 30.0f;
 
 
 
 	// Use this for initialization
 	void Start () {
 		ballStartPos = transform.position;
-		jumpBtn = new Rect (Screen.width - 250, Screen.height - 250, 200, 200);
+		jumpBtn = new Rect (Screen.width - 150, Screen.height - 150, 100, 100);
+		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
 
 
 	}
@@ -38,10 +46,12 @@ public class AndroidControlScript : MonoBehaviour {
 
 		if (IsTouching()) {
 			if (jumpBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
-				jump = true;
+				isJumping = true;
+			}
+			if (boostBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
+				isBoosting = true;
 			}
 		}
-
 		//		TouchStick();
 	}
 	// Update is called once per frame
@@ -54,11 +64,24 @@ public class AndroidControlScript : MonoBehaviour {
 		Vector3 right = gameCamera.transform.right;
 		right.y = 0;
 		right.Normalize ();
-		
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
-
 		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+		
+		if(powerGauge < minPower)
+			powerGauge = minPower;
+		else if(powerGauge > maxPower)
+			powerGauge = maxPower;
+		
+		if(isBoosting && powerGauge > minPower){
+			Vector3 boostDir = transform.position - gameCamera.transform.position;
+			boostDir.Normalize();
+			rigidbody.AddForce(boostDir * boostVelocity);
+			powerGauge -= 2f;
+		}
+		else
+			powerGauge += 0.5f;
+		isBoosting = false;
 		//rigidbody.AddForce (-currentCollisionNormal * 5f);
 		//		rigidbody.AddForce (gameCamera.transform.forward * 5);
 		
@@ -72,24 +95,27 @@ public class AndroidControlScript : MonoBehaviour {
 
 
 
-		if (jump && isOnSurface) {
-			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0));
-			jump = false;
+		if (isJumping && isOnSurface) {
+			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0), ForceMode.Impulse);
+			isJumping = false;
 				}
+		
+//		if(!isOnSurface)
+//			rigidbody.AddForce(0, -1, 0);
 
 	}
 	
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + jump.ToString());
-		GUI.Label (new Rect (0, 20, 200, 100), "Fan hej");
+		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
+		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
 		GUI.Label (new Rect (0, 40, 200, 100), Input.acceleration.y.ToString());
+		GUI.Button (jumpBtn, "Jumpuru");
+		GUI.Button (boostBtn, "Boosturu");
 		if (IsTouching()) {
 			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
 				}
-		if (GUI.Button (jumpBtn, "Jumpuru")) {
-//			jump = true;
-				}
+
 
 	}
 	
