@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BallControlScript : MonoBehaviour {
 	public GameObject gameCamera;
-	public float turnSpeed = 20f;
+	public float turnSpeed = 10f;
 	float trust = 30.0f;
 	//Kontrollprylar
     public float tiltThreshold = 0.5f;
