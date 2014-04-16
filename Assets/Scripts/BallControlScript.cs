@@ -13,7 +13,7 @@ public class BallControlScript : MonoBehaviour {
     bool isTouched = false;
 	private Vector2 touchStartPosition;
 	
-	
+	string change = "Jeppe";
 	
 	public float maxTurnSpeed = 25f; 
 	public float velX = 0.0f;
