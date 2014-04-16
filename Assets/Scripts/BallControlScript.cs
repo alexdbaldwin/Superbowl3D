@@ -3,21 +3,19 @@ using System.Collections;
 
 public class BallControlScript : MonoBehaviour {
 	public GameObject gameCamera;
-	public float turnSpeed = 50f;
+	private float turnSpeed = 50f;
 	float trust = 30.0f;
 	//Kontrollprylar
-    public float tiltThreshold = 0.5f;
-	public float tiltThresholdMax = 0.5f;
-	public bool jump, isOnSurface = false;
+	private float tiltThreshold = 0.5f;
+	private float tiltThresholdMax = 0.5f;
+	private bool jump, isOnSurface = false;
 	private float horizontalMovement;
     bool isTouched = false;
 	private Vector2 touchStartPosition;
 	
-	string change = "Jeppe";
-	
-	public float maxTurnSpeed = 25f; 
-	public float velX = 0.0f;
-	public Vector3 currentCollisionNormal;
+	private float maxTurnSpeed = 25f; 
+	private float velX = 0.0f;
+	private Vector3 currentCollisionNormal;
 	// Use this for initialization
 	void Start () {
 	
@@ -59,7 +57,7 @@ public class BallControlScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 0, 100, 100), rigidbody.velocity.x.ToString());
+		GUI.Label (new Rect (0, 0, 100, 100), Input.acceleration.y.ToString());
 		GUI.Label (new Rect (0, 20, 100, 100), "Fan fdsafesfesig");
 	}
 
