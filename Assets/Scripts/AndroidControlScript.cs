@@ -23,6 +23,9 @@ public class AndroidControlScript : MonoBehaviour {
 	
 	private float jumpVelocity = 2.3f;
 	private float boostVelocity = 20;
+	
+	private float boostModifier = 0;
+	private float boostModifierMax = 1f;
 
 	private float trust = 30.0f;
 
@@ -68,19 +71,25 @@ public class AndroidControlScript : MonoBehaviour {
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
 		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
 		
-		if(powerGauge < minPower)
-			powerGauge = minPower;
-		else if(powerGauge > maxPower)
-			powerGauge = maxPower;
+
 		
 		if(isBoosting && powerGauge > minPower){
 			Vector3 boostDir = transform.position - gameCamera.transform.position;
 			boostDir.Normalize();
-			rigidbody.AddForce(boostDir * boostVelocity);
-			powerGauge -= 2f;
+			
+			rigidbody.AddForce(boostDir * (boostVelocity * boostModifier));
+			powerGauge -= 1f;
+			boostModifier = Mathf.Min(boostModifier + 0.02f, boostModifierMax);
+			if(powerGauge < minPower)
+				powerGauge = minPower;
 		}
 		else
+		{
 			powerGauge += 0.5f;
+			boostModifier = 0;
+			if(powerGauge > maxPower)
+				powerGauge = maxPower;
+		}
 		isBoosting = false;
 		//rigidbody.AddForce (-currentCollisionNormal * 5f);
 		//		rigidbody.AddForce (gameCamera.transform.forward * 5);
@@ -109,7 +118,7 @@ public class AndroidControlScript : MonoBehaviour {
 	{
 		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
 		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
-		GUI.Label (new Rect (0, 40, 200, 100), Input.acceleration.y.ToString());
+		GUI.Label (new Rect (0, 40, 200, 100), "Boost modifier : " + boostModifier.ToString());
 		GUI.Button (jumpBtn, "Jumpuru");
 		GUI.Button (boostBtn, "Boosturu");
 		if (IsTouching()) {

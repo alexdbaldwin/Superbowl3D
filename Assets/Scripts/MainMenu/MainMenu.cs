@@ -16,7 +16,6 @@ public class MainMenu : MonoBehaviour {
 		} else if (Input.GetMouseButtonUp (0)) {
 			Click(Input.mousePosition);
 		}
-		PlayerPrefs.
 	}
 
 	void Click(Vector2 position)
@@ -42,6 +41,6 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	void SavePreferences(){
-		PlayerPrefs.SetInt ("Tilt", (int)tilt);
+//		PlayerPrefs.SetInt ("Tilt", (int)tilt);
 	}
 }
