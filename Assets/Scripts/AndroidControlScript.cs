@@ -3,6 +3,7 @@ using System.Collections;
 
 public class AndroidControlScript : MonoBehaviour {
 	public GameObject gameCamera;
+	public GameObject GUIManager;
 	//Debug output
 	//Kontrollprylar
 	private float tiltThreshold = 0.1f;
@@ -29,6 +30,8 @@ public class AndroidControlScript : MonoBehaviour {
 
 	private float trust = 30.0f;
 
+	private bool tiltControls = false;
+
 
 
 	// Use this for initialization
@@ -37,24 +40,30 @@ public class AndroidControlScript : MonoBehaviour {
 		jumpBtn = new Rect (Screen.width - 150, Screen.height - 150, 100, 100);
 		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
 
-
+		tiltControls = PlayerPrefs.GetInt ("Tilt") == 1 ? true : false;
 	}
 
 	void Update()
 	{
-		AccelerometerControls();
+		if (tiltControls) {
+			AccelerometerControls ();
+		} else {
+			TouchControls();	
+		}
 		if (Input.GetKey(KeyCode.Escape)) {
 			Application.LoadLevel(Application.loadedLevelName);
 		}
 
-		if (IsTouching()) {
-			if (jumpBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
-				isJumping = true;
-			}
-			if (boostBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
-				isBoosting = true;
-			}
-		}
+//		if (IsTouching()) {
+////			if (jumpBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
+////				isJumping = true;
+////			}
+////			if (boostBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
+////				isBoosting = true;
+////			}
+//		}
+		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
+		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
 		//		TouchStick();
 	}
 	// Update is called once per frame
@@ -62,7 +71,7 @@ public class AndroidControlScript : MonoBehaviour {
 	{
 		
 		float horizontal = Input.GetAxis ("Horizontal");
-		float vertical = Input.GetAxis ("Vertical");
+
 		
 		Vector3 right = gameCamera.transform.right;
 		right.y = 0;
@@ -91,26 +100,13 @@ public class AndroidControlScript : MonoBehaviour {
 				powerGauge = maxPower;
 		}
 		isBoosting = false;
-		//rigidbody.AddForce (-currentCollisionNormal * 5f);
-		//		rigidbody.AddForce (gameCamera.transform.forward * 5);
-		
-		
-		
-		//		if (rigidbody.velocity.x < maxTurnSpeed && rigidbody.velocity.x > -maxTurnSpeed) {
-		//				rigidbody.AddForce (new Vector3 (horizontal * turnSpeed, 0, -vertical * trust));
-		//		}
-		//			Test
-
-
 
 
 		if (isJumping && isOnSurface) {
 			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0), ForceMode.Impulse);
 			isJumping = false;
-				}
-		
-//		if(!isOnSurface)
-//			rigidbody.AddForce(0, -1, 0);
+		}
+
 
 	}
 	
@@ -119,11 +115,12 @@ public class AndroidControlScript : MonoBehaviour {
 		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
 		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
 		GUI.Label (new Rect (0, 40, 200, 100), "Boost modifier : " + boostModifier.ToString());
-		GUI.Button (jumpBtn, "Jumpuru");
-		GUI.Button (boostBtn, "Boosturu");
-		if (IsTouching()) {
-			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
-				}
+		GUI.Label (new Rect (0, 60, 200, 100), "Touch count : " + Input.touchCount);
+//		GUI.Button (jumpBtn, "Jumpuru");
+//		GUI.Button (boostBtn, "Boosturu");
+//		if (IsTouching()) {
+//			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
+//		}
 
 
 	}
@@ -169,34 +166,19 @@ public class AndroidControlScript : MonoBehaviour {
 			
 		}
 	}
-	
-	void TouchStick ()
-	{	
 
+	void TouchControls(){
 
-
-//		if (Input.touchCount > 0) {
-//			if (Input.GetTouch (0).phase == TouchPhase.Began) {
-//				touchStartPosition = Input.GetTouch (0).position;
-//				isTouched = true;
-//			}
-//			if (Input.GetTouch (0).phase == TouchPhase.Ended) {
-//				isTouched = false;
-//			}
-//			if (isTouched) {
-//				float posX = Input.GetTouch (0).position.x;
-//				if (posX != touchStartPosition.x) {
-//					horizontalMovement = (posX - touchStartPosition.x) / 100;
-//				}
-//			}
-//		}
-	}
-
-	bool IsTouching()
-	{
-		return Input.touchCount > 0;
+		horizontalMovement = GUIManager.GetComponent<GUIScript> ().GetSteering ();
 
 	}
+
+
+//	bool IsTouching()
+//	{
+//		return Input.touchCount > 0;
+//
+//	}
 
 	Vector2 ConvertToTopLeftOrigin(Vector2 andPos)
 	{
