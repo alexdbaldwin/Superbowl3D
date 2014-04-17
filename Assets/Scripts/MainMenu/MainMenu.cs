@@ -6,7 +6,7 @@ public class MainMenu : MonoBehaviour {
 	bool tilt = false;
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour {
 			Click(Input.mousePosition);
 		}
 	}
-
+	
 	void Click(Vector2 position)
 	{
 		Ray ray = Camera.main.ScreenPointToRay (position);
@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit)) {
 			if (hit.collider.gameObject.name == "StartButton") {
 				SavePreferences();
-				Application.LoadLevel ("Test course two");
+				Application.LoadLevel ("TestBana");
 			} else if (hit.collider.gameObject.name == "TiltButton") {
 				if (tilt) {
 					hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = tiltOff;
@@ -39,8 +39,8 @@ public class MainMenu : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	void SavePreferences(){
-//		PlayerPrefs.SetInt ("Tilt", (int)tilt);
+		PlayerPrefs.SetInt ("Tilt", tilt ? 1 : 0);
 	}
 }

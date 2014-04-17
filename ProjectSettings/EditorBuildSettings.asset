@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
   - enabled: 1
     path: Assets/Scenes/Test course two.unity
+  - enabled: 1
+    path: Assets/Scenes/TestBana.unity
