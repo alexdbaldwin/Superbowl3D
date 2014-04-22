@@ -184,5 +184,8 @@ public class AndroidControlScript : MonoBehaviour {
 	{
 		return new Vector2(andPos.x, Screen.height - andPos.y);
 	}
-	
+	public float GetPowerGauge()
+	{
+		return (powerGauge / 100);
+	}
 }
