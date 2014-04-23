@@ -120,7 +120,7 @@ public class CameraPositioningScript : MonoBehaviour {
 		cameraOffset *= 0.75f;
 		cameraOffset.y += cameraHeight;
 
-		transform.position = Vector3.Lerp (transform.position, target.transform.position + cameraOffset, Time.deltaTime);
+		transform.position = Vector3.Lerp (transform.position, target.transform.position + cameraOffset, Time.deltaTime * 2);
 		Quaternion oldRot = transform.rotation;
 		transform.LookAt (transform.position - cameraOffset + new Vector3(0,0.8f,0));
 		Quaternion newRot = transform.rotation;

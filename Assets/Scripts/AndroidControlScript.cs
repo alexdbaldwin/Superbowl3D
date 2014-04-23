@@ -4,6 +4,8 @@ using System.Collections;
 public class AndroidControlScript : MonoBehaviour {
 	public GameObject gameCamera;
 	public GameObject GUIManager;
+	public AudioSource boostEffect;
+
 	//Debug output
 	//Kontrollprylar
 	private float tiltThreshold = 0.1f;
@@ -22,13 +24,15 @@ public class AndroidControlScript : MonoBehaviour {
 	private Rect jumpBtn;
 	private Rect boostBtn;
 	
-	private float jumpVelocity = 2.3f;
+	private float jumpVelocity = 3.8f;
 	private float boostVelocity = 20;
 	
 	private float boostModifier = 0;
 	private float boostModifierMax = 1f;
 
 	private float trust = 30.0f;
+
+	private float boostEffectModifier = 0.05f;
 
 	private bool tiltControls = false;
 
@@ -83,9 +87,13 @@ public class AndroidControlScript : MonoBehaviour {
 
 		
 		if(isBoosting && powerGauge > minPower){
+			if(!audio.isPlaying)
+			{
+				audio.Play();
+			}
 			Vector3 boostDir = transform.position - gameCamera.transform.position;
 			boostDir.Normalize();
-			
+			boostEffect.pitch += boostEffectModifier;
 			rigidbody.AddForce(boostDir * (boostVelocity * boostModifier));
 			powerGauge -= 1f;
 			boostModifier = Mathf.Min(boostModifier + 0.02f, boostModifierMax);
@@ -94,12 +102,14 @@ public class AndroidControlScript : MonoBehaviour {
 		}
 		else
 		{
+			audio.Stop();
+			audio.pitch = 1;
 			powerGauge += 0.5f;
 			boostModifier = 0;
 			if(powerGauge > maxPower)
 				powerGauge = maxPower;
 		}
-		isBoosting = false;
+		//isBoosting = false;
 
 
 		if (isJumping && isOnSurface) {
