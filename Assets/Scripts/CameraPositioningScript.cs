@@ -22,10 +22,10 @@ public class CameraPositioningScript : MonoBehaviour {
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
 		colliders = motherNode.GetComponentsInChildren<CapsuleCollider> ();
-//		foreach (MeshRenderer mr in meshRenderers)
-//		{
-//			mr.enabled = false;
-//		}
+		foreach (MeshRenderer mr in meshRenderers)
+		{
+			mr.enabled = false;
+		}
 		foreach (CapsuleCollider cl in colliders) 
 		{
 			cl.enabled = false;

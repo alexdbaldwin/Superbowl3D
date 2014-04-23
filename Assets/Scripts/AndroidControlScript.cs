@@ -14,7 +14,7 @@ public class AndroidControlScript : MonoBehaviour {
 	private Vector3 ballStartPos;
 	private Vector3 currentCollisionNormal;
 	private float horizontalMovement;
-	private float turnSpeed = 5.0f;
+	private float turnSpeed = 0.25f;
 	private float powerGauge = 100f;
 	private int maxPower = 100;
 	private int minPower = 0;
@@ -69,8 +69,8 @@ public class AndroidControlScript : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		
-		float horizontal = Input.GetAxis ("Horizontal");
+		//comment this out for android
+		float horizontalMovement = Input.GetAxis ("Horizontal");
 
 		
 		Vector3 right = gameCamera.transform.right;
@@ -78,7 +78,7 @@ public class AndroidControlScript : MonoBehaviour {
 		right.Normalize ();
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
-		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed);
+		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed, ForceMode.VelocityChange);
 		
 
 		
