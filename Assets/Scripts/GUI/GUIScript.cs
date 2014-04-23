@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GUIScript : MonoBehaviour {
 	public GameObject GUICamera;
+	public GameObject Ball;
+	public GameObject boostBar = null;
 	public GameObject steeringCircle = null;
 	public GameObject steeringArrows = null;
 	public GameObject jumpArrow = null;
@@ -120,7 +122,10 @@ public class GUIScript : MonoBehaviour {
 				}
 			}
 		}
-
+		//Power Gauge
+		boostBar.transform.localScale.Set(0, 1 * Ball.GetComponent<AndroidControlScript> ().GetPowerGauge (), 0);
+		//ControlScript.GetComponent<AndroidControlScript> ().GetPowerGauge (); 
+		//restet 
 		if (Input.touchCount == 0) {
 			steering = false;
 			jumpDown = false;
