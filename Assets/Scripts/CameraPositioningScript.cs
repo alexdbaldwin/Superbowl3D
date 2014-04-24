@@ -18,18 +18,7 @@ public class CameraPositioningScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		MeshRenderer[] meshRenderers;
-		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
-		CapsuleCollider[] colliders;
-		colliders = motherNode.GetComponentsInChildren<CapsuleCollider> ();
-		foreach (MeshRenderer mr in meshRenderers)
-		{
-			mr.enabled = false;
-		}
-		foreach (CapsuleCollider cl in colliders) 
-		{
-			cl.enabled = false;
-		}
+
 	}
 	
 	// Update is called once per frame

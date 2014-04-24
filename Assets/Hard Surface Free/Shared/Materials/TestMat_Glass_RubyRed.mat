@@ -64,11 +64,11 @@ Material:
       data:
         first:
           name: _FrezPow
-        second: 1
+        second: 0
       data:
         first:
           name: _FrezFalloff
-        second: 1.19402981
+        second: 0
       data:
         first:
           name: _EdgeAlpha
@@ -93,7 +93,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .870588243, g: 0, b: 0, a: .498039216}
+        second: {r: .0300202481, g: .870588243, b: 0, a: .321568638}
       data:
         first:
           name: _SpecColor
