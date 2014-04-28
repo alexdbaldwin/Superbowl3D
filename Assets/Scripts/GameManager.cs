@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour {
 			if (Physics.Raycast(ray, out hit)) {
 				if (hit.collider.gameObject.name == "OverviewArea") {
 					overviewCamera.transform.rotation = Quaternion.LookRotation(-hit.collider.gameObject.transform.up, hit.collider.gameObject.transform.forward);
-					overviewCamera.transform.position = hit.collider.gameObject.transform.position + hit.collider.gameObject.transform.up * 50;
+					overviewCamera.transform.position = hit.collider.gameObject.transform.position + hit.collider.gameObject.transform.up * 30;
 					inPlacementArea = true;
 					
 					
