@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour {
 	private bool inPlacementArea = false;
 	// Use this for initialization
 	void Start () {
-		ballCamera.SetActive (false);
-		overviewCamera.SetActive (true);
+//		ballCamera.SetActive (false);
+//		overviewCamera.SetActive (true);
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 		{
 			cl.enabled = false;
 		}
+
 	}
 	
 	// Update is called once per frame
