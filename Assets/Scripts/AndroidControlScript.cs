@@ -48,10 +48,12 @@ public class AndroidControlScript : MonoBehaviour {
 		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
 		defaultBodyDrag = rigidbody.drag;
 		tiltControls = PlayerPrefs.GetInt ("Tilt") == 1 ? true : false;
+
 	}
 
 	void Update()
 	{
+
 		if (tiltControls) {
 			AccelerometerControls ();
 		} else {
@@ -77,7 +79,10 @@ public class AndroidControlScript : MonoBehaviour {
 	void FixedUpdate () 
 	{
 		//comment this out for android
-		float horizontalMovement = Input.GetAxis ("Horizontal");
+		if (Application.platform == RuntimePlatform.WindowsEditor) {
+			horizontalMovement = Input.GetAxis ("Horizontal");
+				}
+		//float horizontalMovement = Input.GetAxis ("Horizontal");
 
 		
 		Vector3 right = gameCamera.transform.right;
@@ -217,5 +222,11 @@ public class AndroidControlScript : MonoBehaviour {
 	public float GetPowerGauge()
 	{
 		return (powerGauge / 100);
+	}
+
+	public GameObject GetGameCamera()
+	{
+
+		return gameCamera;
 	}
 }

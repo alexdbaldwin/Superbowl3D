@@ -72,7 +72,7 @@ public class ObstacleMenu : MonoBehaviour {
 			float angle = i* Mathf.PI * 2.0f / obstacles.Count;
 			float x = ((offset.x) * Mathf.Cos(angle)) - (( - offset.y) * Mathf.Sin(angle));
 			float y = ((-offset.y) * Mathf.Cos(angle)) - ((offset.x) * Mathf.Sin(angle));
-			Vector3 newOffset = new Vector3(0,x,y);
+			Vector3 newOffset = new Vector3(x,y,0);
 			newOffset = overviewGUICamera.transform.InverseTransformDirection(newOffset);
 
 

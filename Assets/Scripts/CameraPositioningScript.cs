@@ -122,4 +122,10 @@ public class CameraPositioningScript : MonoBehaviour {
 //		transform.position = Vector3.Lerp(transform.position, target.transform.position + targetVelocity + new Vector3(0, cameraHeight, 0), Time.deltaTime * 2.0f);
 //		transform.LookAt (target.transform);
 	}
+
+	void SetTarget(GameObject target)
+	{
+		this.target = target;
+	}
+
 }
