@@ -3,15 +3,27 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+	public GameObject GUICamera;
 	public GameObject ballCamera;
 	public GameObject overviewCamera;
 	public GameObject motherNode;
+	public GameObject overviewGUICamera;
 
+	public bool player2Mode = false;
 	private bool inPlacementArea = false;
+
 	// Use this for initialization
 	void Start () {
-//		ballCamera.SetActive (false);
-//		overviewCamera.SetActive (true);
+		if (player2Mode) {
+			ballCamera.SetActive (false);
+			GUICamera.SetActive (false);
+			overviewCamera.SetActive (true);
+		} else {
+			ballCamera.SetActive (true);
+			GUICamera.SetActive (true);
+			overviewCamera.SetActive (false);		
+		}
+
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
@@ -48,8 +60,8 @@ public class GameManager : MonoBehaviour {
 					overviewCamera.transform.rotation = Quaternion.LookRotation(-hit.collider.gameObject.transform.up, hit.collider.gameObject.transform.forward);
 					overviewCamera.transform.position = hit.collider.gameObject.transform.position + hit.collider.gameObject.transform.up * 30;
 					inPlacementArea = true;
-					
-					
+					//Show back arrow
+					overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = true;
 				}
 			}
 		}
@@ -68,6 +80,18 @@ public class GameManager : MonoBehaviour {
 
 
 				}		
+			} else {
+				Ray rayB = overviewGUICamera.camera.ScreenPointToRay (position);
+				RaycastHit hitB;
+				if (Physics.Raycast(rayB, out hitB, 1000, 1 << 11)) {
+					if (hitB.collider.gameObject.name == "BackArrow") {
+						overviewCamera.GetComponent<OverviewCameraScript>().GoBackToStart();	
+						inPlacementArea = false;
+						//Hide back arrow
+						overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = false;
+					}
+				}
+
 			}
 		}
 
