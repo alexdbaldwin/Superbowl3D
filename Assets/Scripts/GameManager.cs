@@ -6,12 +6,14 @@ public class GameManager : MonoBehaviour {
 	public GameObject ballCamera;
 	public GameObject overviewCamera;
 	public GameObject motherNode;
+	public bool BallCameraActive = false;
 
 	private bool inPlacementArea = false;
 	// Use this for initialization
 	void Start () {
-//		ballCamera.SetActive (false);
-//		overviewCamera.SetActive (true);
+		ballCamera.SetActive (true);
+		overviewCamera.SetActive (!BallCameraActive);
+
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
