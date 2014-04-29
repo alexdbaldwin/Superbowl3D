@@ -12,6 +12,7 @@ public class BallControlScript : MonoBehaviour {
 	private float horizontalMovement;
     bool isTouched = false;
 	private Vector2 touchStartPosition;
+	private bool slowDown;
 	
 	private float maxTurnSpeed = 25f; 
 	private float velX = 0.0f;
@@ -53,6 +54,18 @@ public class BallControlScript : MonoBehaviour {
 
 
 
+	}
+
+	public void SlowDown()
+	{
+		rigidbody.drag = 100;
+		StartCoroutine ("speedUp");
+	}
+
+	IEnumerator speedUp()
+	{
+		yield return new WaitForSeconds (5.0f);
+		rigidbody.drag = 0.5f;
 	}
 
 	void OnGUI()

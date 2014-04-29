@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour {
 	private bool inPlacementArea = false;
 	// Use this for initialization
 	void Start () {
-//		ballCamera.SetActive (false);
-//		overviewCamera.SetActive (true);
+		ballCamera.SetActive (true);
+		overviewCamera.SetActive (false);
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;

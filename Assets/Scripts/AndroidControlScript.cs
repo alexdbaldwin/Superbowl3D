@@ -6,6 +6,9 @@ public class AndroidControlScript : MonoBehaviour {
 	public GameObject GUIManager;
 	public AudioSource boostEffect;
 
+	public float defaultBodyDrag;
+	private float rigidbodyDrag;
+	public bool slowed = false;
 	//Debug output
 	//Kontrollprylar
 	private float tiltThreshold = 0.1f;
@@ -43,7 +46,7 @@ public class AndroidControlScript : MonoBehaviour {
 		ballStartPos = transform.position;
 		jumpBtn = new Rect (Screen.width - 150, Screen.height - 150, 100, 100);
 		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
-
+		defaultBodyDrag = rigidbody.drag;
 		tiltControls = PlayerPrefs.GetInt ("Tilt") == 1 ? true : false;
 	}
 
@@ -119,7 +122,24 @@ public class AndroidControlScript : MonoBehaviour {
 
 
 	}
+
+	public void SlowDown()
+	{
+		if (!slowed) {
+			rigidbodyDrag = rigidbody.drag;
+						rigidbody.drag = 2;
+						StartCoroutine ("speedUp");
+				}
+	}
 	
+	IEnumerator speedUp()
+	{
+		yield return new WaitForSeconds (2.0f);
+		rigidbody.drag = defaultBodyDrag;
+
+		slowed = false;
+	}
+
 	void OnGUI()
 	{
 		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
