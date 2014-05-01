@@ -12,9 +12,13 @@ public class GameManager : MonoBehaviour {
 
 	public bool player2Mode = false;
 	private bool inPlacementArea = false;
+	private bool cancelZoom = false;
+
 
 	// Use this for initialization
 	void Start () {
+
+
 
 
 		if (player2Mode) {
@@ -55,21 +59,27 @@ public class GameManager : MonoBehaviour {
 
 	void Click(Vector2 position)
 	{
-		Ray ray = overviewCamera.camera.ScreenPointToRay (position);
-		RaycastHit hit;
+
 		if (!inPlacementArea) {
-			if (Physics.Raycast(ray, out hit)) {
+			Ray ray = overviewGUICamera.camera.ScreenPointToRay (position);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit, 100, 1 << LayerMask.NameToLayer("OverviewGUIAreas"))) {
 				if (hit.collider.gameObject.name == "OverviewArea") {
-					overviewCamera.transform.rotation = Quaternion.LookRotation(-hit.collider.gameObject.transform.up, hit.collider.gameObject.transform.forward);
-					overviewCamera.transform.position = hit.collider.gameObject.transform.position + hit.collider.gameObject.transform.up * 30;
+					overviewCamera.GetComponent<OverviewCameraScript>().LerpTo(hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.position + hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.up * 30 ,Quaternion.LookRotation(-hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.up, hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.forward), null);
 					inPlacementArea = true;
 					//Show back arrow
 					overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = true;
+					overviewGUICamera.camera.cullingMask = 1 << LayerMask.NameToLayer("OverviewGUI");
 				}
 			}
-		}
-		else {
 
+//			RaycastHit2D hit = Physics2D.Raycast(overviewGUICamera.camera.
+
+		}
+
+		else {
+			Ray ray = overviewCamera.camera.ScreenPointToRay (position);
+			RaycastHit hit;
 			//Only check for collision with layer 10 (placement objects)
 			if (Physics.Raycast(ray, out hit, 1000, 1 << 10)) {
 				if (hit.collider.gameObject.name == "Cylinder") {
@@ -82,16 +92,19 @@ public class GameManager : MonoBehaviour {
 					//Destroy(hit.collider.gameObject);
 
 
+
 				}		
 			} else {
 				Ray rayB = overviewGUICamera.camera.ScreenPointToRay (position);
 				RaycastHit hitB;
 				if (Physics.Raycast(rayB, out hitB, 1000, 1 << 11)) {
 					if (hitB.collider.gameObject.name == "BackArrow") {
-						overviewCamera.GetComponent<OverviewCameraScript>().GoBackToStart();	
+						overviewCamera.GetComponent<OverviewCameraScript>().GoBackToStart(ShowOverviewAreas);	
 						inPlacementArea = false;
 						//Hide back arrow
 						overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = false;
+						//overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
+
 					}
 				}
 
@@ -99,4 +112,12 @@ public class GameManager : MonoBehaviour {
 		}
 
 	}
+
+	void ShowOverviewAreas(){
+		overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
+
+
+	}
+
+
 }

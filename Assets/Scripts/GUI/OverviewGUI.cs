@@ -3,30 +3,29 @@ using System.Collections;
 
 public class OverviewGUI : MonoBehaviour {
 	public GameObject overviewCamera;
+	public GameObject backArrow;
 
-	// Use this for initialization
+	private Rect bounds;
+
 	void Start () {
-	
+		bounds = gameObject.camera.pixelRect;
+
+		RefreshGUILayout ();
+
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
-//		
-//		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Ended) {
-//			Click(Input.GetTouch(0).position);
-//		} else if (Input.GetMouseButtonUp (0)) {
-//			Click(Input.mousePosition);
-//		}	
-//	}
-//	
-//	void Click(Vector2 position)
-//	{
-//		Ray ray = gameObject.camera.ScreenPointToRay (position);
-//		RaycastHit hit;
-//		if (Physics.Raycast(ray, out hit, 1000, 1 << 11)) {
-//			if (hit.collider.gameObject.name == "BackArrow") {
-//				overviewCamera.GetComponent<OverviewCameraScript>().GoBackToStart();	
-//			}
-//		}
+		if (!bounds.Equals (gameObject.camera.pixelRect)) {
+			RefreshGUILayout();
+			bounds = gameObject.camera.pixelRect;
+		}
+	}
+
+	void RefreshGUILayout(){
+
+		backArrow.transform.position = gameObject.camera.ScreenToWorldPoint (new Vector3 (camera.pixelWidth/20.0f, camera.pixelWidth/20.0f, 8.0f))
+			+ new Vector3(backArrow.GetComponent<BoxCollider>().bounds.size.x/2.0f, backArrow.GetComponent<BoxCollider>().bounds.size.y/2.0f, 0.0f);
+
 	}
 }
