@@ -17,6 +17,7 @@ public class AndroidControlScript : MonoBehaviour {
 	private Vector2 touchStartPosition;
 
 	private Vector3 ballStartPos;
+	private Vector3 lastActiveNodePos;
 	private Vector3 currentCollisionNormal;
 	private float horizontalMovement;
 	private float turnSpeed = 0.25f;
@@ -147,10 +148,10 @@ public class AndroidControlScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
-		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
-		GUI.Label (new Rect (0, 40, 200, 100), "Boost modifier : " + boostModifier.ToString());
-		GUI.Label (new Rect (0, 60, 200, 100), "Touch count : " + Input.touchCount);
+//		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
+//		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
+//		GUI.Label (new Rect (0, 40, 200, 100), "Boost modifier : " + boostModifier.ToString());
+//		GUI.Label (new Rect (0, 60, 200, 100), "Touch count : " + Input.touchCount);
 //		GUI.Button (jumpBtn, "Jumpuru");
 //		GUI.Button (boostBtn, "Boosturu");
 //		if (IsTouching()) {
@@ -175,6 +176,13 @@ public class AndroidControlScript : MonoBehaviour {
 	void OnCollisionExit(Collision collisionInfo)
 	{
 		isOnSurface = false;
+		if (collisionInfo.gameObject.tag == "TheLevel")
+						lastActiveNodePos = gameCamera.GetComponent<CameraPositioningScript> ().GetCurrentNodePosition();
+	}
+
+	public Vector3 GetLastActiveNodePos()
+	{
+		return lastActiveNodePos;
 	}
 
 
@@ -226,7 +234,6 @@ public class AndroidControlScript : MonoBehaviour {
 
 	public GameObject GetGameCamera()
 	{
-
 		return gameCamera;
 	}
 }

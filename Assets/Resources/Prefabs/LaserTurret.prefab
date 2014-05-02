@@ -13,6 +13,8 @@ GameObject:
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
   - 135: {fileID: 13500000}
+  - 148: {fileID: 14800000}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: LaserTurret
   m_TagString: Untagged
@@ -84,8 +86,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c4d6e07f695f243b8de16716d42723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 100000, guid: 893b9e9b166cd1a42926916d14ba198b, type: 2}
   oldDirection: {x: 0, y: 0, z: 0}
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4456651fd03ae5a4b88c9cfc9c77a13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: LaserTurret
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -98,6 +112,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.52999997
   m_Center: {x: .00380168296, y: .0950043648, z: .0519313924}
+--- !u!148 &14800000
+NetworkView:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_StateSynchronization: 1
+  m_Observed: {fileID: 400000}
+  m_ViewID:
+    m_ID: 0
+    m_Type: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -5,6 +5,8 @@ public class ObstaclePlacementScript : MonoBehaviour {
 
 	enum InputType {MouseControl, TouchControl}
 
+	public string prefabName = "GeosphereTower";
+
 	bool placementMode = false;
 	bool dragging = false;
 	Vector2 initialScreenPos;
@@ -116,5 +118,25 @@ public class ObstaclePlacementScript : MonoBehaviour {
 	void Place(){
 		dragging = false;
 		placementMode = false;
+
+
+	}
+
+	[RPC]
+	void SendObjectOverNetwork()
+	{
+//		Object parent = UnityEditor.PrefabUtility.GetPrefabParent (this.gameObject);
+//		path = UnityEditor.AssetDatabase.GetAssetPath (parent);
+
+//		GameObject myNewObstace = (GameObject)Network.Instantiate(Resources.Load ("Prefabs/" + this.gameObject.name - "(clone)"), this.gameObject.transform.position, this.gameObject.transform.rotation, 0);
+	}
+
+	public void OnGUI()
+	{
+
+		GUI.Label (new Rect (0, 100, 100, 100), gameObject.name);
+//		GameObject parent = UnityEditor.PrefabUtility.GetPrefabParent (this.gameObject);
+//		UnityEditor.AssetDatabase.
+
 	}
 }

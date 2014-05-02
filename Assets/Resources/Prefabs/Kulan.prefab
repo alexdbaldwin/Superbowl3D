@@ -16,9 +16,10 @@ GameObject:
   - 114: {fileID: 11400000}
   - 82: {fileID: 8200000}
   - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: Kulan
-  m_TagString: Untagged
+  m_TagString: TheBall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163,6 +164,8 @@ MonoBehaviour:
   gameCamera: {fileID: 0}
   GUIManager: {fileID: 0}
   boostEffect: {fileID: 8200000}
+  defaultBodyDrag: 0
+  slowed: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,7 +174,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61c65e3132972c2428e7c75c40d62085, type: 3}
+  m_Script: {fileID: 11500000, guid: 25a19351977a3bd4b9ce5a6da12afc45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 937e88ef80a66aa448d9dff6daef0087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!135 &13500000

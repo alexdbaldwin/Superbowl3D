@@ -167,9 +167,9 @@ public class GUIScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-		GUI.Label (new Rect (0, 80, 200, 100), "Boosting : " + boosting.ToString());
-		GUI.Label (new Rect (0, 100, 200, 100), "Jump Down : " + jumpDown.ToString());
-		GUI.Label (new Rect (0, 120, 200, 100), "Jump touch (FingerId) : " + jumpTouch.ToString());
+//		GUI.Label (new Rect (0, 80, 200, 100), "Boosting : " + boosting.ToString());
+//		GUI.Label (new Rect (0, 100, 200, 100), "Jump Down : " + jumpDown.ToString());
+//		GUI.Label (new Rect (0, 120, 200, 100), "Jump touch (FingerId) : " + jumpTouch.ToString());
 
 		//		GUI.Button (jumpBtn, "Jumpuru");
 		//		GUI.Button (boostBtn, "Boosturu");

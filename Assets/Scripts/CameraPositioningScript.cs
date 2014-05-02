@@ -16,6 +16,11 @@ public class CameraPositioningScript : MonoBehaviour {
 	public float lerpything;
 	public float d;
 
+	public Vector3 GetCurrentNodePosition()
+	{
+		return currentNodePos;
+	}
+
 	// Use this for initialization
 	void Start () {
 

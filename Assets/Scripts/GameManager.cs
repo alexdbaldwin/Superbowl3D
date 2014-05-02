@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 
 
 
+
 		if (player2Mode) {
 			ballCamera.SetActive (false);
 			GUICamera.SetActive (false);
@@ -29,6 +30,12 @@ public class GameManager : MonoBehaviour {
 			ballCamera.SetActive (true);
 			GUICamera.SetActive (true);
 			overviewCamera.SetActive (false);		
+		}
+
+		if (Network.player.ToString() == "1") {
+			ballCamera.SetActive (false);
+			GUICamera.SetActive (false);
+			overviewCamera.SetActive (true);
 		}
 
 		MeshRenderer[] meshRenderers;
@@ -118,6 +125,7 @@ public class GameManager : MonoBehaviour {
 
 
 	}
+
 
 
 }

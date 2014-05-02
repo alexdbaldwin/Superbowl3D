@@ -37,7 +37,7 @@ public class ObstacleMenu : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit, 1000, 1 << 11 /*Layer mask 11*/)) {
 			if (hit.collider.gameObject.tag == "RadialMenuButton") {
 				//Debug.Log (hit.collider.gameObject.ToString());
-				GameObject newObstacle = (GameObject)Instantiate (hit.collider.gameObject);
+				GameObject newObstacle = (GameObject)Network.Instantiate (Resources.Load("Prefabs/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName), transform.position, transform.rotation, 0);
 				newObstacle.transform.position = transform.position;
 				newObstacle.transform.rotation = transform.rotation;
 				newObstacle.transform.localScale = Vector3.one;

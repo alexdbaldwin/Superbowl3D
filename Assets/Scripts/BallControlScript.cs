@@ -68,11 +68,6 @@ public class BallControlScript : MonoBehaviour {
 		rigidbody.drag = 0.5f;
 	}
 
-	void OnGUI()
-	{
-		GUI.Label (new Rect (0, 0, 100, 100), Input.acceleration.y.ToString());
-		GUI.Label (new Rect (0, 20, 100, 100), "Fan fdsafesfesig");
-	}
 
 	void OnCollisionStay(Collision collisionInfo) {
 
