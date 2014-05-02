@@ -18,10 +18,6 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-
-
-
-
 		if (player2Mode) {
 			ballCamera.SetActive (false);
 			GUICamera.SetActive (false);
@@ -56,9 +52,9 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Ended) {
+		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
 			Click(Input.GetTouch(0).position);
-		} else if (Input.GetMouseButtonUp (0)) {
+		} else if (Input.GetMouseButtonDown (0)) {
 			Click(Input.mousePosition);
 		}
 
