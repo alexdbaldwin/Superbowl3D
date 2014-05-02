@@ -5,6 +5,7 @@ public class MenuCamera : MonoBehaviour {
 	Vector3 dir;
 	float maxBounce = 0.2f;
 	Vector3 startPos;
+	Quaternion startQuaternion, goalQuaternion;
 
 	// Use this for initialization
 	void Start () {

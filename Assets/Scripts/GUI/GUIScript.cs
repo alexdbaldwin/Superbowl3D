@@ -118,12 +118,13 @@ public class GUIScript : MonoBehaviour {
 					}
 					if(boosting){
 						jumpArrow.transform.position = jumpArrowStart + jumpArrow.transform.up * boostAmount / boostMax * 2.0f;
+
 					}
 				}
 			}
+
 		}
-		//Power Gauge
-		boostBar.transform.localScale.Set(0, 1 * Ball.GetComponent<AndroidControlScript> ().GetPowerGauge (), 0);
+
 		//ControlScript.GetComponent<AndroidControlScript> ().GetPowerGauge (); 
 		//restet 
 		if (Input.touchCount == 0) {
@@ -137,6 +138,9 @@ public class GUIScript : MonoBehaviour {
 		//		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
 		//			TouchDown(Input.GetTouch(0).position);
 		//		} 
+
+		//Power Gauge
+		boostBar.transform.localScale = new Vector3(1, 1 * Ball.GetComponent<AndroidControlScript> ().GetPowerGauge (), 1);
 	}
 	public bool GetJump()
 	{

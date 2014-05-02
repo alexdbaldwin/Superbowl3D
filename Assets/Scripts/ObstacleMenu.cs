@@ -19,15 +19,12 @@ public class ObstacleMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (menuActive) {
-				
 			//Check if a menu item has been clicked
-			if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Ended) {
+			if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
 				MenuClick(Input.GetTouch(0).position);
-			} else if (Input.GetMouseButtonUp (0)) {
+			} else if (Input.GetMouseButtonDown (0)) {
 				MenuClick(Input.mousePosition);
 			}
-		
-
 		}
 	}
 
