@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject ballCamera;
 	public GameObject overviewCamera;
 	public GameObject motherNode;
+	public GameObject ball;
 
 	public GameObject overviewGUICamera;
 
@@ -14,25 +15,34 @@ public class GameManager : MonoBehaviour {
 	private bool inPlacementArea = false;
 	private bool cancelZoom = false;
 
+	private bool isSwapped = false;
+
 
 	// Use this for initialization
 	void Start () {
+//		if (player2Mode) {
+//			ballCamera.SetActive (false);
+//			GUICamera.SetActive (false);
+//			overviewCamera.SetActive (true);
+//		} else {
+//			ballCamera.SetActive (true);
+//			GUICamera.SetActive (true);
+//			overviewCamera.SetActive (false);		
+//		}
 
-		if (player2Mode) {
-			ballCamera.SetActive (false);
-			GUICamera.SetActive (false);
-			overviewCamera.SetActive (true);
-		} else {
-			ballCamera.SetActive (true);
-			GUICamera.SetActive (true);
-			overviewCamera.SetActive (false);		
-		}
+//		if (Network.player.ToString () == "1") {
+//						ballCamera.SetActive (false);
+//						GUICamera.SetActive (false);
+//						overviewCamera.SetActive (true);
+//				} else if (Network.player.ToString() == "0") {
+//						ballCamera.SetActive (true);
+//						GUICamera.SetActive (true);
+//						overviewCamera.SetActive (false);
+//				} else {
+//			//Make spectator
+//				}
 
-		if (Network.player.ToString() == "1") {
-			ballCamera.SetActive (false);
-			GUICamera.SetActive (false);
-			overviewCamera.SetActive (true);
-		}
+		SetPlayerMode ();
 
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
@@ -116,12 +126,59 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	void SetPlayerMode ()
+	{
+		if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
+			ballCamera.SetActive (false);
+			GUICamera.SetActive (false);
+			overviewCamera.SetActive (true);
+			isSwapped = true;
+		}
+		else
+			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 1) {
+				ballCamera.SetActive (true);
+				GUICamera.SetActive (true);
+				overviewCamera.SetActive (false);
+				ball.GetComponent<KulanNetworkScript>().SetAsOwner();
+			}
+			else {
+				Application.Quit ();
+			}
+	}
+
+	[RPC]
+	public void SwapPlayers()
+	{
+		if (isSwapped) {
+						ballCamera.SetActive (true);
+						GUICamera.SetActive (true);
+						overviewCamera.SetActive (false);
+						ball.GetComponent<KulanNetworkScript> ().SetAsOwner ();
+						isSwapped = false;
+				} else {
+					ballCamera.SetActive (false);
+					GUICamera.SetActive (false);
+					overviewCamera.SetActive (true);
+					isSwapped = true;
+				}
+	}
+
 	void ShowOverviewAreas(){
 		overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
 
 
 	}
 
+	void OnGUI()
+	{
+		if (GUI.Button (new Rect (0, 0, 150, 150), "HEHU")) {
+			
+			//						NetworkViewID newID = Network.AllocateViewID ();
+			//						networkView.RPC ("ChangeOwner", RPCMode.All, newID);
+			networkView.RPC("SwapPlayers", RPCMode.All, null);
+		}
+		
+	}
 
 
 }

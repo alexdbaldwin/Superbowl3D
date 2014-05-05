@@ -107,7 +107,12 @@ MonoBehaviour:
   joinOn: {fileID: 2141041765}
   tiltButtonOn: {fileID: 1583005257}
   tiltButtonOff: {fileID: 538740229}
+  StartButton: {fileID: 1109382133}
+  OptionButton: {fileID: 1173659718}
+  ExitButton: {fileID: 705513228}
   NetworkManagerSc: {fileID: 742267827}
+  lobbyActive: 0
+  initMenu: 0
 --- !u!4 &362789335
 Transform:
   m_ObjectHideFlags: 0
@@ -1837,6 +1842,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c7164e04fc54f4ab86211b11c8b68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2088858974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2088858976}
+  - 114: {fileID: 2088858975}
+  m_Layer: 0
+  m_Name: Lobby
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2088858975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2088858974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bebf73da03549344a9bdbea5d9061838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Menu: {fileID: 362789333}
+  globalStorage: {fileID: 742267827}
+--- !u!4 &2088858976
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2088858974}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.2665443, y: 6.70687485, z: -22.0345802}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &2141041765
 GameObject:
   m_ObjectHideFlags: 0

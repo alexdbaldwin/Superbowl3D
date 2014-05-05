@@ -5,13 +5,13 @@ public class NetworkManager : MonoBehaviour {
 	private string gameName = "SuperBowl3D";
 	public HostData[] hostData;
 	private int serverListPosY = 40;
+	private int networkPlayerId = -1;
 	// Use this for initialization
 	void Start () {
 		StartCoroutine("refreshHostList");
 	}
 
 	void Update(){
-
 		}
 
 	public void startServer()
@@ -28,14 +28,21 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnConnectedToServer()
 	{
+		networkPlayerId = int.Parse(Network.player.ToString());
+		Network.SetLevelPrefix (10);
 		Application.LoadLevel(3);
-
-
 	}
 	
 	void OnPlayerConnected()
 	{
+		networkPlayerId = int.Parse(Network.player.ToString());
+		Network.SetLevelPrefix (10);
 		Application.LoadLevel(3);
+	}
+
+	public int GetId()
+	{
+		return networkPlayerId;
 	}
 
 	void OnDisconnectedFromServer(NetworkDisconnection info)
