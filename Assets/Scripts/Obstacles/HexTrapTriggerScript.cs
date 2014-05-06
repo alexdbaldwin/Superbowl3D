@@ -4,6 +4,7 @@ using System.Collections;
 public class HexTrapTriggerScript : MonoBehaviour {
 
 	GameObject oldTarget;
+	bool alreadyTrackingBall = false;
 
 	// Use this for initialization
 	void Start () {
@@ -18,15 +19,18 @@ public class HexTrapTriggerScript : MonoBehaviour {
 	void OnTriggerEnter(Collider collider)
 	{
 		if (collider.gameObject.name == "Kulan") {
-			collider.gameObject.GetComponent<AndroidControlScript>().SlowDown();
+			if(!alreadyTrackingBall){
+				alreadyTrackingBall = true;
+				collider.gameObject.GetComponent<AndroidControlScript>().SlowDown();
 
-			foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
-			{
-				oldTarget = l.targetObject;
-				l.targetObject = collider.gameObject;
+				foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
+				{
+					oldTarget = l.targetObject;
+					l.targetObject = collider.gameObject;
 
+				}
+				StartCoroutine("resetTarget");
 			}
-			StartCoroutine("resetTarget");
 		}
 	}
 
@@ -35,6 +39,7 @@ public class HexTrapTriggerScript : MonoBehaviour {
 		yield return new WaitForSeconds (2.0f);
 		foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
 			l.targetObject = oldTarget;
+		alreadyTrackingBall = false;
 
 	}
 }

@@ -48,7 +48,7 @@ public class ObstacleMenu : MonoBehaviour {
 				newObstacle.tag = "Obstacle";
 				newObstacle.GetComponent<ObstaclePlacementScript>().SetPlacementMode(true);
 				newObstacle.GetComponent<ObstaclePlacementScript>().SnapToTrack();
-				newObstacle.GetComponent<ObstaclePlacementScript>().SetMaxDrag(GetComponentsInChildren<Transform>()[1].localPosition.z);
+				newObstacle.GetComponent<ObstaclePlacementScript>().SetMaxDrag(GetComponentsInChildren<Transform>()[1].localPosition.z / GetComponentsInChildren<Transform>()[1].localScale.z);
 				StopRadialMenu ();
 				Destroy(gameObject);
 			}

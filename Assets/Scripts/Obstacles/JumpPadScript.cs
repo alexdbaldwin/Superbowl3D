@@ -4,22 +4,42 @@ using System.Collections;
 public class JumpPadScript : MonoBehaviour {
 	private Vector3 targetPosition;
 	private Vector3 oldPosition;
-	// Use this for initialization
-	void Start () {
-		oldPosition = transform.position;
-		targetPosition = transform.position + transform.forward * 3.0f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		this.transform.position = Vector3.Lerp(transform.position, oldPosition, Time.deltaTime / 2);
+	public GameObject pad;
+	bool goingUp = false;
+
+
+
+	void OnTriggerEnter(Collider coll){
+
+		if (coll.name == "Kulan") {
+			StartCoroutine(Bounce ());
+			coll.attachedRigidbody.AddForce(new Vector3(0.0f, 8.0f, 0.0f), ForceMode.VelocityChange);
+		}
 	}
 
-	void OnTriggerStay(Collider other)
-	{
-		if (other.name == "Kulan") {
-			this.transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 2);
-			other.attachedRigidbody.AddForce(0.0f, 25.0f, 0.0f);
+
+
+	IEnumerator Bounce(){
+		oldPosition = pad.transform.position;
+		targetPosition = pad.transform.position + transform.up * 0.3f;
+		goingUp = true;
+		while (true) {
+
+			if(goingUp){
+				pad.transform.position = Vector3.Lerp(pad.transform.position, targetPosition, Time.deltaTime *10.0f);
+				if(Vector3.Distance(pad.transform.position, targetPosition) < 0.05f){
+					goingUp = false;
+				}
+			} else {
+				pad.transform.position = Vector3.Lerp(pad.transform.position, oldPosition, Time.deltaTime *10.0f);
+				if(Vector3.Distance(pad.transform.position, oldPosition ) < 0.05f){
+					yield break;
+				}
 			}
+			yield return null;		
+		
+		}
+
+
 	}
 }
