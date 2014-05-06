@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject overviewGUICamera;
 
-	public bool player2Mode = false;
+	public bool BallView = false;
 	private bool inPlacementArea = false;
 	private bool cancelZoom = false;
 
@@ -130,7 +130,8 @@ public class GameManager : MonoBehaviour {
 
 	void SetPlayerMode ()
 	{
-		if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
+		if (Network.isClient || Network.isServer) {
+			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 1) {
 			ballCamera.SetActive (false);
 			GUICamera.SetActive (false);
 			spectatorCamera.SetActive(false);
@@ -139,7 +140,7 @@ public class GameManager : MonoBehaviour {
 			isPlaying = true;
 		}
 		else
-			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 1) {
+			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
@@ -155,6 +156,18 @@ public class GameManager : MonoBehaviour {
 			spectatorCamera.SetActive(true);
 
 			}
+		}
+		else {
+			if(BallView)
+			{
+				ballCamera.SetActive (true);
+				GUICamera.SetActive (true);
+				overviewCamera.SetActive (false);
+				spectatorCamera.SetActive(false);
+				isPlaying = true;
+			}
+		}
+		
 	}
 
 	[RPC]

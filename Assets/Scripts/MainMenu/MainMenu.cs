@@ -145,7 +145,9 @@ public class MainMenu : MonoBehaviour {
 		if (serverListIsShown) {
 			for (int i = 0; i < GlobalStorage.GetComponent<NetworkManager>().hostData.Length; i++) {
 				if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName)) {
-					GlobalStorage.GetComponent<NetworkManager>().Connect (i);	
+					GlobalStorage.GetComponent<NetworkManager>().Connect (i);
+					LobbyActive();
+					serverListIsShown = false;
 				}
 			}
 		}

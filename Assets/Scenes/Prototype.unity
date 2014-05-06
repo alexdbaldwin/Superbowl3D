@@ -11165,6 +11165,7 @@ GameObject:
   - 124: {fileID: 624675584}
   - 92: {fileID: 624675583}
   - 81: {fileID: 624675582}
+  - 114: {fileID: 624675587}
   m_Layer: 0
   m_Name: SpectatorCamera
   m_TagString: Untagged
@@ -11178,7 +11179,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 624675581}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!92 &624675583
 Behaviour:
   m_ObjectHideFlags: 0
@@ -11233,6 +11234,17 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &624675587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 624675581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e6e11e49f69f041ad9bfa73d6d44a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &637400532
 GameObject:
   m_ObjectHideFlags: 0
@@ -12337,6 +12349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f3979488f8abf148a58991c0ca5ccb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Lobby: {fileID: 0}
 --- !u!4 &741426788
 Transform:
   m_ObjectHideFlags: 0
@@ -34524,7 +34537,7 @@ MonoBehaviour:
   motherNode: {fileID: 7172119}
   ball: {fileID: 1208814408}
   overviewGUICamera: {fileID: 5408970}
-  player2Mode: 0
+  BallView: 1
 --- !u!148 &2002583114
 NetworkView:
   m_ObjectHideFlags: 0

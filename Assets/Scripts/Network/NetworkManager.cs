@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 	private string gameName = "SuperBowl3D";
+	public GameObject Lobby;
 	public HostData[] hostData;
 	private int serverListPosY = 40;
 	private int networkPlayerId = -1;
@@ -37,16 +38,16 @@ public class NetworkManager : MonoBehaviour {
 	
 	void OnPlayerConnected()
 	{
-//		//if (Network.connections.Length < 2) {
-//						networkPlayerId = int.Parse (Network.player.ToString ());
-//						Network.SetLevelPrefix (10);
-//						Application.LoadLevel (1);
-//		//		}
 	}
 
 	public int GetId()
 	{
 		return networkPlayerId;
+	}
+	
+	public void SetId(int newId)
+	{
+		networkPlayerId = newId;
 	}
 
 	void OnDisconnectedFromServer(NetworkDisconnection info)
@@ -79,13 +80,13 @@ public class NetworkManager : MonoBehaviour {
 				StartCoroutine("refreshHostList");
 			}
 			if(hostData != null){
-					for (int i = 0; i < hostData.Length; i++) {
-					if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), hostData [i].gameName + hostData [i].gameType)) {
-								
-							Connect (i);
-
-					}
-				}
+//					for (int i = 0; i < hostData.Length; i++) {
+//					if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), hostData [i].gameName + hostData [i].gameType)) {
+//								
+//							Connect (i);
+//
+//					}
+//				}
 			}
 		}
 
