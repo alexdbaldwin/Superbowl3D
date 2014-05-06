@@ -136,6 +136,7 @@ public class OverviewAreaRenderer : MonoBehaviour {
 		mesh.triangles = meshTriangles;
 		mesh.RecalculateBounds ();
 		mesh.RecalculateNormals ();
+
 		//outputMesh.GetComponent<MeshFilter> ().mesh = mesh;
 		mf.mesh = mesh;
 

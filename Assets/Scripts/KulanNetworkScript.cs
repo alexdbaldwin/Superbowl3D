@@ -3,11 +3,15 @@ using System.Collections;
 
 public class KulanNetworkScript : MonoBehaviour {
 
+	void Awake(){
+//		NetworkView newNetView = gameObject.AddComponent<NetworkView>();
+//		newNetView.stateSynchronization = NetworkStateSynchronization.ReliableDeltaCompressed;
+//		newNetView.observed = gameObject.GetComponent<Rigidbody>();
+		}
+
 	// Use this for initialization
 	void Start () {
-		NetworkView newNetView = gameObject.AddComponent<NetworkView>();
-		newNetView.stateSynchronization = NetworkStateSynchronization.ReliableDeltaCompressed;
-		newNetView.observed = gameObject.GetComponent<Rigidbody>();
+
 	}
 	
 	// Update is called once per frame
@@ -16,11 +20,11 @@ public class KulanNetworkScript : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded(int id){
-		if (id == 3) {
-			NetworkView newNetView = gameObject.AddComponent<NetworkView>();
-			newNetView.stateSynchronization = NetworkStateSynchronization.ReliableDeltaCompressed;
-			newNetView.observed = gameObject.GetComponent<Rigidbody>();
-		}
+//		if (id == 3) {
+//			NetworkView newNetView = gameObject.AddComponent<NetworkView>();
+//			newNetView.stateSynchronization = NetworkStateSynchronization.ReliableDeltaCompressed;
+//			newNetView.observed = gameObject.GetComponent<Rigidbody>();
+//		}
 	}
 
 	[RPC]
@@ -34,20 +38,16 @@ public class KulanNetworkScript : MonoBehaviour {
 	}
 
 	[RPC]
-	void ChangeOwner(NetworkViewID newID)
+	void ChangeOwner(NetworkViewID id)
 	{
-		networkView.viewID = newID;
+		networkView.viewID = id;
+		
 	}
-	
 
-	void OnGUI()
+	public void SetAsOwner()
 	{
-		if (GUI.Button (new Rect (0, 0, 150, 150), "HEHU")) {
-			networkView.RPC ("CreateBall", RPCMode.All, 1);
-//						NetworkViewID newID = Network.AllocateViewID ();
-//						networkView.RPC ("ChangeOwner", RPCMode.All, newID);
-
-				}
-
+		NetworkViewID newID = Network.AllocateViewID ();
+		
+		networkView.RPC ("ChangeOwner", RPCMode.All, newID);
 	}
 }
