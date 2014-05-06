@@ -8,7 +8,7 @@ public class ObstacleMenu : MonoBehaviour {
 	private GameObject overviewGUICamera;
 	private bool menuActive = false;
 	private Vector2 centerScreenPos;
-	private float menuButtonOffset = 1.0f;
+	private float menuButtonOffset = 2.0f;
 	private List<GameObject> menuButtons = new List<GameObject> ();
 
 	// Use this for initialization
@@ -34,13 +34,20 @@ public class ObstacleMenu : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit, 1000, 1 << 11 /*Layer mask 11*/)) {
 			if (hit.collider.gameObject.tag == "RadialMenuButton") {
 				//Debug.Log (hit.collider.gameObject.ToString());
-				GameObject newObstacle = (GameObject)Network.Instantiate (Resources.Load("Prefabs/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName), transform.position, transform.rotation, 0);
+				GameObject newObstacle;
+				if (Network.isClient || Network.isServer) {
+					newObstacle = (GameObject)Network.Instantiate (Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName), transform.position, transform.rotation, 0);
+				} else {
+					newObstacle = (GameObject)Instantiate(Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName));
+				}
+
 				newObstacle.transform.position = transform.position;
 				newObstacle.transform.rotation = transform.rotation;
-				newObstacle.transform.localScale = Vector3.one;
+				//newObstacle.transform.localScale = Vector3.one;
 				newObstacle.layer = 0;
 				newObstacle.tag = "Obstacle";
 				newObstacle.GetComponent<ObstaclePlacementScript>().SetPlacementMode(true);
+				newObstacle.GetComponent<ObstaclePlacementScript>().SnapToTrack();
 				newObstacle.GetComponent<ObstaclePlacementScript>().SetMaxDrag(GetComponentsInChildren<Transform>()[1].localPosition.z);
 				StopRadialMenu ();
 				Destroy(gameObject);
@@ -67,6 +74,7 @@ public class ObstacleMenu : MonoBehaviour {
 		for (int i = 0; i < obstacles.Count; i++) {
 
 			float angle = i* Mathf.PI * 2.0f / obstacles.Count;
+
 			float x = ((offset.x) * Mathf.Cos(angle)) - (( - offset.y) * Mathf.Sin(angle));
 			float y = ((-offset.y) * Mathf.Cos(angle)) - ((offset.x) * Mathf.Sin(angle));
 			Vector3 newOffset = new Vector3(x,y,0);
@@ -74,10 +82,48 @@ public class ObstacleMenu : MonoBehaviour {
 
 
 			GameObject go = (GameObject)Instantiate (obstacles[i]);
-			go.transform.position = centerPos + newOffset;
-			go.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
+
+
+			//Disable all colliders so we can add a new collider for clicking on the menu button
+			Collider coll = go.GetComponent<CapsuleCollider>();
+			if(coll != null)
+			{
+				coll.enabled = false;
+			}
+			coll = go.GetComponent<SphereCollider>();
+			if(coll != null)
+			{
+				coll.enabled = false;
+			}
+			coll = go.GetComponent<BoxCollider>();
+			if(coll != null)
+			{
+				coll.enabled = false;
+			}
+			coll = go.GetComponent<MeshCollider>();
+			if(coll != null)
+			{
+				coll.enabled = false;
+			}
+
+
+
+			SphereCollider newColl = go.AddComponent<SphereCollider>();
+
+			go.transform.position = centerPos - newColl.center * go.GetComponent<PlaceableParameters>().scale.x + newOffset;
+
+			go.transform.localScale = go.GetComponent<PlaceableParameters>().scale;
+			go.transform.rotation = Quaternion.Euler(go.GetComponent<PlaceableParameters>().rotation);
 			go.layer = 11;
 			go.tag = "RadialMenuButton";
+
+			Transform[] children = go.GetComponentsInChildren<Transform>();
+			foreach(Transform child in children){
+				child.gameObject.layer = 11;
+				child.gameObject.tag = "RadialMenuButton";
+			}
+
+
 
 			menuButtons.Add(go);
 

@@ -6,6 +6,7 @@ public class ObstaclePlacementScript : MonoBehaviour {
 	enum InputType {MouseControl, TouchControl}
 
 	public string prefabName = "GeosphereTower";
+	public Collider placementMesh;
 
 	bool placementMode = false;
 	bool dragging = false;
@@ -54,21 +55,11 @@ public class ObstaclePlacementScript : MonoBehaviour {
 //					transform.position = startPos;
 //					return;
 				} else {
-
-//					float scaleFactor = 1.0f;
-//					Vector3 screenDir = -(overviewCamera.camera.WorldToScreenPoint(Vector3.zero) - overviewCamera.camera.WorldToScreenPoint(transform.forward));
-//					scaleFactor = screenDir.magnitude;
-//					screenDir.Normalize();
-//					Debug.Log(screenDir.ToString());
-//					float movement = Vector2.Dot(currentScreenPos - initialScreenPos, new Vector2(screenDir.x,screenDir.y));
-//					Debug.Log ("movement " + movement.ToString());
-//					float worldMovement = movement / scaleFactor;
-//					transform.position = startPos + transform.forward * worldMovement;
-
 					Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
 					
 					Vector3 curPosition = overviewCamera.camera.ScreenToWorldPoint(curScreenPoint) + offset;
 					transform.position = startPos + Mathf.Clamp(Vector3.Dot (curPosition - startPos, transform.forward),-maxDrag, maxDrag) * transform.forward;
+					SnapToTrack();
 				}
 
 			} else {
@@ -120,6 +111,24 @@ public class ObstaclePlacementScript : MonoBehaviour {
 		placementMode = false;
 
 
+
+	}
+
+	public void SnapToTrack(){
+		Ray ray = new Ray (transform.position + transform.up * 3.0f, -transform.up);
+		RaycastHit[] hits =	Physics.RaycastAll (ray);
+		foreach (RaycastHit hit in hits) {
+			if (hit.collider.gameObject.tag == "TheLevel") {
+				Vector3 hitPos = hit.point;
+				float halfHeight = placementMesh.bounds.size.y / 2;
+				float distanceToMove = Vector3.Distance (hitPos, transform.position);
+				distanceToMove -= halfHeight;
+				transform.Translate (new Vector3 (0, -distanceToMove, 0));
+
+				//transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler (hit.normal),10000.0f);
+				transform.rotation = Quaternion.FromToRotation (Vector3.up, hit.normal);
+			}
+		}
 	}
 
 	[RPC]

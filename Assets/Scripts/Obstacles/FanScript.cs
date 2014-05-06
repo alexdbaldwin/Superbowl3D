@@ -4,13 +4,15 @@ using System.Collections;
 public class FanScript : MonoBehaviour {
 	// Use this for initialization
 	public float pushValue;
+	public GameObject blades;
+
 	void Start () {
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		this.transform.Rotate (Vector3.forward * Time.deltaTime * 200);
+		blades.transform.Rotate (Vector3.forward * Time.deltaTime * 200);
 	}
 
 	void OnTriggerStay(Collider other)
