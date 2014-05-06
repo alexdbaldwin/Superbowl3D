@@ -128,7 +128,7 @@ MeshCollider:
   m_GameObject: {fileID: 100002}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_SmoothSphereCollisions: 0
   m_Convex: 0
@@ -140,7 +140,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.90846574, y: 1.73085713, z: 6.78999996}
@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation: {x: 0, y: 210, z: 0}
   scale: {x: 1, y: 1, z: 1}
+  rotateAfterPlacement: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
