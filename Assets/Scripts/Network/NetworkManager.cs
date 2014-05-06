@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 	private string gameName = "SuperBowl3D";
+	public GameObject Lobby;
 	public HostData[] hostData;
 	private int serverListPosY = 40;
 	private int networkPlayerId = -1;
@@ -14,10 +15,10 @@ public class NetworkManager : MonoBehaviour {
 	void Update(){
 		}
 
-	public void startServer()
+	public void startServer(string serverName)
 	{
 		Network.InitializeServer (32, 25001, !Network.HavePublicAddress());
-		MasterServer.RegisterHost (gameName, "Server up. Press to join", "Vi testar");
+		MasterServer.RegisterHost (gameName, serverName);
 		Debug.Log ("Started server");
 	}
 
@@ -28,24 +29,25 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnConnectedToServer()
 	{
-		networkPlayerId = int.Parse(Network.player.ToString());
-		Network.SetLevelPrefix (10);
-		Application.LoadLevel(1);
+//		networkPlayerId = int.Parse(Network.player.ToString());
+//		Network.SetLevelPrefix (10);
+//		Application.LoadLevel(1);
+
 
 	}
 	
 	void OnPlayerConnected()
 	{
-		if (Network.connections.Length < 2) {
-						networkPlayerId = int.Parse (Network.player.ToString ());
-						Network.SetLevelPrefix (10);
-						Application.LoadLevel (1);
-				}
 	}
 
 	public int GetId()
 	{
 		return networkPlayerId;
+	}
+	
+	public void SetId(int newId)
+	{
+		networkPlayerId = newId;
 	}
 
 	void OnDisconnectedFromServer(NetworkDisconnection info)
@@ -71,20 +73,20 @@ public class NetworkManager : MonoBehaviour {
 
 		if (!Network.isClient && !Network.isServer) {
 			if (GUI.Button (new Rect (Screen.width - 100, Screen.height - 100, 100, 100), "Start Server")){
-				startServer ();
+				//startServer ();
 			}
 		
 			if (GUI.Button (new Rect (Screen.width - 100, 100, 100, 100), "Refresh")) {
 				StartCoroutine("refreshHostList");
 			}
 			if(hostData != null){
-					for (int i = 0; i < hostData.Length; i++) {
-					if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), hostData [i].gameName + hostData [i].gameType)) {
-								
-							Connect (i);
-
-					}
-				}
+//					for (int i = 0; i < hostData.Length; i++) {
+//					if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), hostData [i].gameName + hostData [i].gameType)) {
+//								
+//							Connect (i);
+//
+//					}
+//				}
 			}
 		}
 
