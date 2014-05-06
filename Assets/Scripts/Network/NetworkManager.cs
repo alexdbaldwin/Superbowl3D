@@ -14,10 +14,10 @@ public class NetworkManager : MonoBehaviour {
 	void Update(){
 		}
 
-	public void startServer()
+	public void startServer(string serverName)
 	{
 		Network.InitializeServer (32, 25001, !Network.HavePublicAddress());
-		MasterServer.RegisterHost (gameName, "Server up. Press to join", "Vi testar");
+		MasterServer.RegisterHost (gameName, serverName);
 		Debug.Log ("Started server");
 	}
 
@@ -28,19 +28,20 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnConnectedToServer()
 	{
-		networkPlayerId = int.Parse(Network.player.ToString());
-		Network.SetLevelPrefix (10);
-		Application.LoadLevel(1);
+//		networkPlayerId = int.Parse(Network.player.ToString());
+//		Network.SetLevelPrefix (10);
+//		Application.LoadLevel(1);
+
 
 	}
 	
 	void OnPlayerConnected()
 	{
-		if (Network.connections.Length < 2) {
-						networkPlayerId = int.Parse (Network.player.ToString ());
-						Network.SetLevelPrefix (10);
-						Application.LoadLevel (1);
-				}
+//		//if (Network.connections.Length < 2) {
+//						networkPlayerId = int.Parse (Network.player.ToString ());
+//						Network.SetLevelPrefix (10);
+//						Application.LoadLevel (1);
+//		//		}
 	}
 
 	public int GetId()
@@ -71,7 +72,7 @@ public class NetworkManager : MonoBehaviour {
 
 		if (!Network.isClient && !Network.isServer) {
 			if (GUI.Button (new Rect (Screen.width - 100, Screen.height - 100, 100, 100), "Start Server")){
-				startServer ();
+				//startServer ();
 			}
 		
 			if (GUI.Button (new Rect (Screen.width - 100, 100, 100, 100), "Refresh")) {

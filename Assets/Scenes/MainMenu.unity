@@ -110,7 +110,7 @@ MonoBehaviour:
   StartButton: {fileID: 1109382133}
   OptionButton: {fileID: 1173659718}
   ExitButton: {fileID: 705513228}
-  NetworkManagerSc: {fileID: 742267827}
+  GlobalStorage: {fileID: 742267827}
   lobbyActive: 0
   initMenu: 0
 --- !u!4 &362789335
@@ -120,7 +120,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 362789333}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.42407155, y: -1.36909485, z: 7.19020081}
+  m_LocalPosition: {x: -5.89708138, y: 4.63246155, z: -6.13099051}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1851,6 +1851,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2088858976}
   - 114: {fileID: 2088858975}
+  - 148: {fileID: 2088858977}
   m_Layer: 0
   m_Name: Lobby
   m_TagString: Untagged
@@ -1882,6 +1883,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!148 &2088858977
+NetworkView:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2088858974}
+  m_Enabled: 1
+  m_StateSynchronization: 1
+  m_Observed: {fileID: 0}
+  m_ViewID:
+    m_ID: 1
+    m_Type: 1
 --- !u!1 &2141041765
 GameObject:
   m_ObjectHideFlags: 0

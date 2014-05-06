@@ -4,13 +4,18 @@ using System.Collections;
 public class MainMenu : MonoBehaviour {
 	public Sprite tiltOff, tiltOn;
 	public GameObject hostOn, joinOn, tiltButtonOn, tiltButtonOff, StartButton, OptionButton, ExitButton;
-	public GameObject NetworkManagerSc;
+	public GameObject GlobalStorage;
 	bool tilt, optionsClicked = false;
 	public bool lobbyActive = false;
 	public bool initMenu = false;
+	bool hostClicked = false;
 	bool refreshServerList;
+	bool serverListIsShown = false;
+//Server list stuff
+	int serverListPosY = 40;
 //	string nameString = SystemInfo.deviceName.ToString();
 	string playerName = "Alex";
+	string serverName = "";
 	// Use this for initialization
 	void Start () {
 		hostOn.SetActive (false);
@@ -55,14 +60,15 @@ public class MainMenu : MonoBehaviour {
 			} else if (hit.collider.gameObject.name == "HostButton") {
 					SavePreferences ();
 					//startserver();
-					LobbyActive ();
-					NetworkManagerSc.GetComponent<NetworkManager>().startServer();
-			} else if (hit.collider.gameObject.name == "Join") {
+					hostClicked = true;
+
+			} else if (hit.collider.gameObject.name == "JoinButton") {
 					SavePreferences ();
 					//joinserver();
-					for (int i = 0; i < NetworkManagerSc.GetComponent<NetworkManager>().hostData.Length; i++) {
-							NetworkManagerSc.GetComponent<NetworkManager> ().Connect (i);
-					}
+//					for (int i = 0; i < NetworkManagerSc.GetComponent<NetworkManager>().hostData.Length; i++) {
+//							NetworkManagerSc.GetComponent<NetworkManager> ().Connect (i);
+//					}
+					PresentServerList();
 			} else if (hit.collider.gameObject.name == "OptionButton") {
 					tiltButtonOn.SetActive (false);
 					tiltButtonOff.SetActive (true);
@@ -82,6 +88,19 @@ public class MainMenu : MonoBehaviour {
 		}
 		}
 	}
+
+	void PresentServerList()
+	{
+		StartButton.SetActive(false);
+		OptionButton.SetActive(false);
+		ExitButton.SetActive(false);
+		hostOn.SetActive(false);
+		joinOn.SetActive(false);
+		serverListIsShown = true;
+		GlobalStorage.GetComponent<NetworkManager>().refreshHostList();
+
+	}
+
 	void MenuReset(){	
 		hostOn.SetActive(false);
 		joinOn.SetActive(false);
@@ -114,7 +133,21 @@ public class MainMenu : MonoBehaviour {
 	{
 		if (optionsClicked) {
 			playerName = GUI.TextField (new Rect (350f, 125f, 150.0f, 30.0f), playerName);
+		}
+		if (hostClicked) {
+			serverName = GUI.TextField (new Rect (650f, 125f, 150.0f, 30.0f), serverName);
+			if (GUI.Button( new Rect(650f, 165f, 150.0f, 30.0f), "OK")) {
+				LobbyActive ();
+				GlobalStorage.GetComponent<NetworkManager>().startServer(serverName);
+				hostClicked = false;
+			}
+			}
+		if (serverListIsShown) {
+			for (int i = 0; i < GlobalStorage.GetComponent<NetworkManager>().hostData.Length; i++) {
+				if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName)) {
+					GlobalStorage.GetComponent<NetworkManager>().Connect (i);	
 				}
-	
+			}
+		}
 	}
 }
