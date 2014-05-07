@@ -16,7 +16,7 @@ public class MenuCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate(dir * 0.002f);
+		transform.Translate(dir * 0.5f * Time.deltaTime);
 		if(Vector3.Distance(startPos, transform.position) >= maxBounce){
 			dir = startPos - transform.position;
 			dir = Vector3.RotateTowards(dir, -dir, Random.Range (0, Mathf.PI/2.0f),0.0f); 

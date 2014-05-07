@@ -69,15 +69,15 @@ public class NetworkManager : MonoBehaviour {
 	void OnGUI()
 	{
 
-		if (!Network.isClient && !Network.isServer) {
-			if (GUI.Button (new Rect (Screen.width - 100, Screen.height - 100, 100, 100), "Start Server")){
-				//startServer ();
-			}
-		
-			if (GUI.Button (new Rect (Screen.width - 100, 100, 100, 100), "Refresh")) {
-				StartCoroutine("refreshHostList");
-			}
-			if(hostData != null){
+//		if (!Network.isClient && !Network.isServer) {
+//			if (GUI.Button (new Rect (Screen.width - 100, Screen.height - 100, 100, 100), "Start Server")){
+//				//startServer ();
+//			}
+//		
+//			if (GUI.Button (new Rect (Screen.width - 100, 100, 100, 100), "Refresh")) {
+//				StartCoroutine("refreshHostList");
+//			}
+//			if(hostData != null){
 //					for (int i = 0; i < hostData.Length; i++) {
 //					if(GUI.Button (new Rect (Screen.width - 300, serverListPosY * i, 300, 50), hostData [i].gameName + hostData [i].gameType)) {
 //								
@@ -85,8 +85,8 @@ public class NetworkManager : MonoBehaviour {
 //
 //					}
 //				}
-			}
-		}
+		//	}
+		//}
 
 	}
 }

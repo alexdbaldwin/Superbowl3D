@@ -17,6 +17,7 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 64: {fileID: 6400000}
+  - 148: {fileID: 14800002}
   m_Layer: 0
   m_Name: LaserTurret
   m_TagString: Untagged
@@ -129,6 +130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation: {x: 0, y: 120, z: 0}
   scale: {x: 5, y: 5, z: 5}
+  rotateAfterPlacement: 0
+  cost: 1
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -142,6 +145,18 @@ SphereCollider:
   m_Radius: 1.52999997
   m_Center: {x: .00380168296, y: .0950043648, z: .0519313924}
 --- !u!148 &14800000
+NetworkView:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_StateSynchronization: 1
+  m_Observed: {fileID: 400000}
+  m_ViewID:
+    m_ID: 0
+    m_Type: 0
+--- !u!148 &14800002
 NetworkView:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

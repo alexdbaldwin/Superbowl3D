@@ -134,6 +134,7 @@ public class GameManager : MonoBehaviour {
 				GUICamera.SetActive (false);
 				spectatorCamera.SetActive(false);
 				overviewCamera.SetActive (true);
+				overviewGUICamera.SetActive(true);
 				isSwapped = true;
 				isPlaying = true;
 			}
@@ -141,11 +142,12 @@ public class GameManager : MonoBehaviour {
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
+				overviewGUICamera.SetActive(false);
 				spectatorCamera.SetActive(false);
 				ball.GetComponent<KulanNetworkScript>().SetAsOwner();
 				isPlaying = true;
 			}
-			else {
+			else { //Spectator
 				ballCamera.SetActive(false);
 				overviewCamera.SetActive(false);
 				GUICamera.SetActive(false);
@@ -181,32 +183,40 @@ public class GameManager : MonoBehaviour {
 	[RPC]
 	public void SwapPlayers()
 	{
+
 		if (isPlaying) {
 			if (isSwapped) {
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
+				overviewGUICamera.SetActive(false);
 				ball.GetComponent<KulanNetworkScript> ().SetAsOwner ();
+				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 				isSwapped = false;
 			} else {
 				ballCamera.SetActive (false);
 				GUICamera.SetActive (false);
 				overviewCamera.SetActive (true);
+				overviewGUICamera.SetActive(true);
 				isSwapped = true;
+				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 			}
 		}
 
 	}
 
 	public void StartNewRound(){
-		networkView.RPC("SwapPlayers", RPCMode.All, null);
-		ball.GetComponent<BallUtilityScript> ().ResetPosition ();
+		if (isPlaying && IsBall ()) {
+						networkView.RPC ("SwapPlayers", RPCMode.All, null);
+						
+				}
 		spectatorCamera.GetComponent<SpectatorCamScript> ().ResetToStart ();
+
+		
 		ballCamera.GetComponent<CameraPositioningScript> ().ResetToStart ();
 		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Collectable")) {
-					go.GetComponent<CollectableScript>().ResetCollectable();
-				}
-
+			go.GetComponent<CollectableScript> ().ResetCollectable ();
+		}
 	}
 
 	public bool IsBall(){

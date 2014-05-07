@@ -9,14 +9,25 @@ public enum PlayerState {
 
 public class LobbyScript : MonoBehaviour {
 	public GameObject Menu;
+	public GUIStyle guiStyle, launchStyle, labelStyle;
+	private GUIStyle playerStyle;
 	List<string> observerList = new List<string>(5);
 	List<ConnectedPlayer> playerList = new List<ConnectedPlayer>();
 	bool[] observerLocks = new bool[5];
-	string player1 = "Player 1";
-	string player2 = "Player 2";
+	const string observerText = "-Free Slot-";
+	const string playerJoinText = "-Free Slot-";
+	string player1 = playerJoinText;
+	string player2 = playerJoinText;
+	const string launchText = "Let's Roll!";
+	const string ballLabel = "Play as Ball";
+	const string trackLabel = "Play as Track";
+	const string observerLabel = "Join as Observer";
 	bool player1Locked = false;
 	bool player2Locked = false;
 	int currentObserverIndex = -1;
+	float offsetX = Screen.width * 0.05f;
+	float offsetY = Screen.height * 0.05f;
+	float textScale;
 	
 	PlayerState currentPlayerState = PlayerState.NONE;
 
@@ -36,9 +47,19 @@ public class LobbyScript : MonoBehaviour {
 	void Start () {
 		globalStorage.GetComponent<NetworkManager>().SetId(2);
 		for (int i = 0; i < 5; i++) {
-				observerList.Add("Observer");
+			observerList.Add(observerText);
 				observerLocks[i] = false;
 		}
+
+		textScale = (guiStyle.fontSize * (Screen.width * 0.001f));
+		guiStyle.fontSize = (int)textScale;
+		textScale = (launchStyle.fontSize * (Screen.width * 0.001f));
+		launchStyle.fontSize = (int)(textScale);
+		textScale = (labelStyle.fontSize * (Screen.width * 0.001f));
+		labelStyle.fontSize = (int)(textScale);
+
+		playerStyle = labelStyle;
+
 	}
 	
 	// Update is called once per frame
@@ -52,6 +73,8 @@ public class LobbyScript : MonoBehaviour {
 //		}
 	}
 
+
+
 	[RPC]
 	void SetPlayer1(string name)
 	{
@@ -62,7 +85,7 @@ public class LobbyScript : MonoBehaviour {
 	[RPC]
 	void RemovePlayer1()
 	{
-		player1 = "Player 1";
+		player1 = playerJoinText;
 		player1Locked = false;
 	}
 
@@ -76,7 +99,7 @@ public class LobbyScript : MonoBehaviour {
 	[RPC]
 	void RemovePlayer2()
 	{
-		player2 = "Player 2";
+		player2 = playerJoinText;
 		player2Locked = false;
 	}
 	
@@ -90,7 +113,7 @@ public class LobbyScript : MonoBehaviour {
 	[RPC] 
 	void RemoveObserver(int index)
 	{
-		observerList[index] = "Observer";
+		observerList[index] = observerText;
 		observerLocks[index] = false;
 	}
 	
@@ -100,11 +123,41 @@ public class LobbyScript : MonoBehaviour {
 		Application.LoadLevel(1);
 	}
 
+	void Click(Vector2 position)
+	{
+		if (Menu.GetComponent<MainMenu>().BackButtonClicked(position)) {
+			Menu.GetComponent<MainMenu>().MenuReset();
+			player1 = "";
+			player2 = "";
+			observerList.Clear();
+			Network.Disconnect();
+			if(Network.isServer)
+			{
+				MasterServer.UnregisterHost();
+			}
+		}
+//		if (GUI.Button (new Rect (offsetX, Screen.height * 0.1f, 0, 0), "")) {
+//			Menu.GetComponent<MainMenu>().initMenu = true;
+//			player1 = "";
+//			player2 = "";
+//			observerList.Clear();
+//			Network.Disconnect();
+//			
+//		}
+	}
+
 	void OnGUI()
 	{
-		
 		if (Menu.GetComponent<MainMenu>().lobbyActive) {
-			if (GUI.Button (new Rect (100, 100, 200, 40), player1) && !player1Locked) {
+
+			//Mode labels
+			GUI.Label(new Rect(offsetX, offsetY + Screen.height * 0.0f, 200, 40), ballLabel, labelStyle);
+			GUI.Label(new Rect(offsetX + Screen.width * 0.3f, offsetY + Screen.height * 0.0f, 200, 40), trackLabel, labelStyle);
+			GUI.Label(new Rect(offsetX + Screen.width * 0.6f, offsetY + Screen.height * 0.0f, 200, 40), observerLabel, labelStyle);
+
+			//Player1 button
+			if (GUI.Button (new Rect (offsetX, offsetY + Screen.height * 0.1f, 200, 40), player1, player1Locked ? playerStyle : guiStyle) && !player1Locked) {
+				
 				if(currentPlayerState == PlayerState.PLAYERTWO)
 					networkView.RPC("RemovePlayer2", RPCMode.AllBuffered, null);
 				else if(currentPlayerState == PlayerState.OBSERVER)
@@ -116,7 +169,8 @@ public class LobbyScript : MonoBehaviour {
 				globalStorage.GetComponent<NetworkManager>().SetId(0);
 				currentObserverIndex = -1;
 			}
-			if (GUI.Button (new Rect (350, 100, 200, 40), player2) && !player2Locked) {
+			//Player2 button
+			if (GUI.Button (new Rect (offsetX + Screen.width * 0.3f, offsetY + Screen.height * 0.1f, 200, 40), player2, player2Locked ? playerStyle : guiStyle) && !player2Locked) {
 				if(currentPlayerState == PlayerState.PLAYERONE)
 					networkView.RPC("RemovePlayer1", RPCMode.AllBuffered, null);
 				else if(currentPlayerState == PlayerState.OBSERVER)
@@ -131,9 +185,10 @@ public class LobbyScript : MonoBehaviour {
 //			for (int i = 0; i < playerList.Count; i++) {
 //				GUI.Button (new Rect (600, 100 + i * 50, 200, 40), "Observer: " + playerList[i].GetName());
 //			}
+
 			for (int i = 0; i < observerList.Count; i++) {
 				
-				if(GUI.Button (new Rect (600, 100 + i * 50, 200, 40), observerList[i].ToString()) && !observerLocks[i]){
+				if(GUI.Button (new Rect (offsetX + Screen.width * 0.6f, offsetY + Screen.height * 0.1f + i * Screen.height * 0.1f, 200, 40), observerList[i].ToString(), guiStyle) && !observerLocks[i]){
 					if(currentPlayerState == PlayerState.PLAYERONE)
 						networkView.RPC("RemovePlayer1", RPCMode.AllBuffered, null);
 					else if(currentPlayerState == PlayerState.PLAYERTWO)
@@ -148,17 +203,23 @@ public class LobbyScript : MonoBehaviour {
 					currentObserverIndex = i;
 				}
 			}
-			if (GUI.Button (new Rect (100, 500, 200, 40), "Back")) {
-				Menu.GetComponent<MainMenu>().initMenu = true;
-				player1 = "";
-				player2 = "";
-				observerList.Clear();
-				Network.Disconnect();
-			}
-			if(Network.isServer){
-					if (GUI.Button (new Rect (350, 500, 200, 40), "Launch") && player1Locked && player2Locked) {
+
+
+			if(Network.isServer && player1Locked && player2Locked){
+				if (GUI.Button (new Rect (Screen.width * 0.6f, Screen.height * 0.7f , launchStyle.fontSize * launchText.Length * 0.5f, launchStyle.fontSize * 2), launchText, launchStyle) && player1Locked && player2Locked) {
 						networkView.RPC("StartGame", RPCMode.All, null);
 				}
+			}
+			else {
+				string text = "";
+				if(player1Locked && player2Locked)
+				{
+					text = "Waiting for host to launch...";
+				}
+				else {
+					text = "Waiting for players...";
+				}
+				GUI.Label(new Rect (Screen.width * 0.6f, Screen.height * 0.7f , launchStyle.fontSize * launchText.Length * 0.5f, launchStyle.fontSize * 2), text, guiStyle);
 			}
 		}
 	}

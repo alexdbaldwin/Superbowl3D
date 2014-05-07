@@ -80,7 +80,7 @@ public class AndroidControlScript : MonoBehaviour {
 	void FixedUpdate () 
 	{
 		//comment this out for android
-		if (Application.platform == RuntimePlatform.WindowsEditor) {
+		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsWebPlayer) {
 			horizontalMovement = Input.GetAxis ("Horizontal");
 				}
 		//float horizontalMovement = Input.GetAxis ("Horizontal");

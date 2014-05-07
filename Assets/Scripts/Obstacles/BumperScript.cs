@@ -15,7 +15,7 @@ public class BumperScript : MonoBehaviour {
 		foreach (ContactPoint contact in cO.contacts){
 			Vector3 direction = Vector3.Reflect(cO.gameObject.rigidbody.velocity, contact.normal);
 			direction -= Vector3.Dot(direction, transform.up)* transform.up;
-			cO.gameObject.rigidbody.AddForce(direction * 8.0f,ForceMode.VelocityChange);
+			cO.gameObject.rigidbody.AddForce(direction * 3.0f,ForceMode.VelocityChange);
 		}
 
 	}
