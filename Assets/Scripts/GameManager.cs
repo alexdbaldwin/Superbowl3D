@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 	public bool BallView = false;
 	private bool inPlacementArea = false;
 	private GameObject currentPlacementBox = null;
+	private bool areaOverlayVisible = true;
 	private bool cancelZoom = false;
 
 	private bool isSwapped = false;
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviour {
 	void Click(Vector2 position)
 	{
 
-		if (!inPlacementArea) {
+		if (!inPlacementArea && areaOverlayVisible) {
 			Ray ray = overviewGUICamera.camera.ScreenPointToRay (position);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 100, 1 << LayerMask.NameToLayer("OverviewGUIAreas"))) {
@@ -88,6 +89,7 @@ public class GameManager : MonoBehaviour {
 					//Show back arrow
 					overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = true;
 					overviewGUICamera.camera.cullingMask = 1 << LayerMask.NameToLayer("OverviewGUI");
+					areaOverlayVisible = false;
 				}
 			}
 
@@ -192,7 +194,7 @@ public class GameManager : MonoBehaviour {
 
 	void ShowOverviewAreas(){
 		overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
-
+		areaOverlayVisible = true;
 
 	}
 

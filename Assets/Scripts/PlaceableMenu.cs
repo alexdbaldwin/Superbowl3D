@@ -147,6 +147,8 @@ public class PlaceableMenu : MonoBehaviour {
 		float time = 0;
 		float maxTime = 0.15f;
 		while (true) {
+			if(go == null)
+				yield break;
 			go.transform.position = Vector3.Lerp(start, destination, time/maxTime);
 			go.transform.localScale = Vector3.Lerp(Vector3.zero, scale, time/maxTime);
 			if(Vector3.Distance(go.transform.position, destination) < 0.01f)
