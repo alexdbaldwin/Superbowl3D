@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
 	private bool isSwapped = false;
 	private bool isPlaying = false;
 
+	private bool skipIt = false;
+
 	private int points = 20;
 
 
@@ -92,6 +94,7 @@ public class GameManager : MonoBehaviour {
 					overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = true;
 					overviewGUICamera.camera.cullingMask = 1 << LayerMask.NameToLayer("OverviewGUI");
 					areaOverlayVisible = false;
+					skipIt = true;
 				}
 			}
 
@@ -255,7 +258,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public GameObject GetPlacementBox(){
-
+		if (skipIt) {
+			skipIt = false;	
+			return null;
+		}
 		return currentPlacementBox;
 
 	}

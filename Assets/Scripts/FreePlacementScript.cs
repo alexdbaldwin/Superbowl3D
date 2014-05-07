@@ -7,7 +7,6 @@ public class FreePlacementScript : MonoBehaviour {
 	PlaceableMenu menu;
 	public GameObject overviewCamera;
 
-
 	// Use this for initialization
 	void Start () {
 	

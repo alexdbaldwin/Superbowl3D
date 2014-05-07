@@ -71,6 +71,8 @@ public class PlaceableMenu : MonoBehaviour {
 	
 	public void StartRadialMenu(Vector2 position, Vector3 spawnPosition, Vector3 spawnNormal){
 
+		Vector2 clickPos = position;
+
 		if (blocked)
 			return;
 
@@ -80,9 +82,27 @@ public class PlaceableMenu : MonoBehaviour {
 		this.spawnNormal = spawnNormal;
 
 		Vector2 offset = new Vector2(0.0f,menuButtonOffset);
+
+		float scaleFactor = Vector3.Magnitude(overviewGUICamera.camera.WorldToScreenPoint (Vector3.right) - overviewGUICamera.camera.WorldToScreenPoint (Vector3.zero));
 		
-		Vector3 centerPos = overviewGUICamera.camera.ScreenToWorldPoint (new Vector3 (position.x, position.y, overviewGUICamera.camera.nearClipPlane)) + overviewGUICamera.transform.forward * 5;
-		
+
+
+		if (clickPos.x + menuButtonOffset * scaleFactor > Screen.width) {
+			clickPos -= new Vector2(clickPos.x + menuButtonOffset * scaleFactor - Screen.width,0);
+		}
+		if (clickPos.x - menuButtonOffset * scaleFactor < 0) {
+			clickPos += new Vector2(-clickPos.x + menuButtonOffset * scaleFactor,0);
+		}
+		if (clickPos.y + menuButtonOffset * scaleFactor > Screen.height) {
+			clickPos -= new Vector2(0,clickPos.y + menuButtonOffset * scaleFactor - Screen.height);
+		}
+		if (clickPos.y - menuButtonOffset * scaleFactor < 0) {
+			clickPos += new Vector2(0,-clickPos.y + menuButtonOffset * scaleFactor);
+		}
+
+
+		Vector3 centerPos = overviewGUICamera.camera.ScreenToWorldPoint (new Vector3 (clickPos.x, clickPos.y, overviewGUICamera.camera.nearClipPlane)) + overviewGUICamera.transform.forward * 5;
+		Vector3 trueCenterPos = overviewGUICamera.camera.ScreenToWorldPoint (new Vector3 (position.x, position.y, overviewGUICamera.camera.nearClipPlane)) + overviewGUICamera.transform.forward * 5;
 		for (int i = 0; i < placeables.Count; i++) {
 			
 			float angle = i* Mathf.PI * 2.0f / placeables.Count;
@@ -130,7 +150,7 @@ public class PlaceableMenu : MonoBehaviour {
 			
 			//go.transform.localScale = go.GetComponent<PlaceableParameters>().scale;
 			go.transform.rotation = Quaternion.Euler(go.GetComponent<PlaceableParameters>().rotation);
-			StartCoroutine(ExpandMenu (go, centerPos, centerPos - newColl.center * go.GetComponent<PlaceableParameters>().scale.x + newOffset, go.GetComponent<PlaceableParameters>().scale));
+			StartCoroutine(ExpandMenu (go, trueCenterPos, centerPos - newColl.center * go.GetComponent<PlaceableParameters>().scale.x + newOffset, go.GetComponent<PlaceableParameters>().scale));
 
 			go.layer = 11;
 			go.tag = "RadialMenuButton";
