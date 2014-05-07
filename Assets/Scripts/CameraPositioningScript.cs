@@ -16,14 +16,20 @@ public class CameraPositioningScript : MonoBehaviour {
 	public float lerpything;
 	public float d;
 
+	private Vector3 initialPos;
+
 	public Vector3 GetCurrentNodePosition()
 	{
 		return currentNodePos;
 	}
 
+	public void ResetToStart(){
+		transform.position = initialPos;
+		}
+
 	// Use this for initialization
 	void Start () {
-
+		initialPos = transform.position;
 	}
 	
 	// Update is called once per frame

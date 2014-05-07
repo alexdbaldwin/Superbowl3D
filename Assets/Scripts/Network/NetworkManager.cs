@@ -68,8 +68,6 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnGUI()
 	{
-		//Debug output on screen
-		GUI.Label (new Rect (0, 0, 100, 100), "Player NetID: " + Network.player.ToString());
 
 		if (!Network.isClient && !Network.isServer) {
 			if (GUI.Button (new Rect (Screen.width - 100, Screen.height - 100, 100, 100), "Start Server")){

@@ -7,9 +7,9 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
+  - enabled: 1
+    path: Assets/Scenes/Prototype.unity
   - enabled: 0
     path: Assets/Scenes/Test course two.unity
   - enabled: 0
     path: Assets/Scenes/TestBana.unity
-  - enabled: 1
-    path: Assets/Scenes/Prototype.unity

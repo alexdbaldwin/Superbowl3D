@@ -13,8 +13,12 @@ public class PlaceableMenu : MonoBehaviour {
 	Vector3 spawnPosition;
 	Vector3 spawnNormal;
 	bool blocked = false;
+	public Material disabledButtonMaterial;
+	private GameObject gameManager;
 
-
+	void Start(){
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+	}
 	
 	void Update () {
 		if (menuActive) {
@@ -33,12 +37,19 @@ public class PlaceableMenu : MonoBehaviour {
 		foreach(RaycastHit hit in hits){
 			if (hit.collider.gameObject.tag == "RadialMenuButton") {
 
+				if(hit.collider.gameObject.GetComponent<PlaceableParameters>().cost > gameManager.GetComponent<GameManager>().GetPoints()){
+					break;
+				}
+
+
 				GameObject newObstacle;
 				if (Network.isClient || Network.isServer) {
 					newObstacle = (GameObject)Network.Instantiate (Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName), transform.position, transform.rotation, 0);
 				} else {
 					newObstacle = (GameObject)Instantiate(Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName));
 				}
+
+				gameManager.GetComponent<GameManager>().RemovePoints(newObstacle.GetComponent<PlaceableParameters>().cost);
 	
 				newObstacle.transform.position = spawnPosition;
 				newObstacle.transform.rotation = Quaternion.FromToRotation (Vector3.up, spawnNormal);
@@ -83,7 +94,13 @@ public class PlaceableMenu : MonoBehaviour {
 			
 			
 			GameObject go = (GameObject)Instantiate (placeables[i]);
-			
+
+			if(go.GetComponent<PlaceableParameters>().cost > gameManager.GetComponent<GameManager>().GetPoints()){
+				MeshRenderer[] renderers = go.GetComponentsInChildren<MeshRenderer>();
+				foreach(MeshRenderer mr in renderers){
+					mr.material = disabledButtonMaterial;
+				}
+			}
 			
 			//Disable all colliders so we can add a new collider for clicking on the menu button
 			Collider coll = go.GetComponent<CapsuleCollider>();

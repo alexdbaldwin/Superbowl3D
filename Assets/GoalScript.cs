@@ -16,7 +16,8 @@ public class GoalScript : MonoBehaviour {
 	void OnTriggerEnter(Collider collInfo)
 	{
 		if (collInfo.gameObject.tag == "TheBall") {
-			collInfo.gameObject.GetComponent<BallUtilityScript>().ResetPosition();
+//			collInfo.gameObject.GetComponent<BallUtilityScript>().ResetPosition();
+			GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().StartNewRound();
 				}
 		}
 }

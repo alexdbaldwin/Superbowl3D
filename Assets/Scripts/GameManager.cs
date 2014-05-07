@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
 	private bool isSwapped = false;
 	private bool isPlaying = false;
 
+	private int points = 20;
+
 
 	// Use this for initialization
 	void Start () {
@@ -149,6 +151,7 @@ public class GameManager : MonoBehaviour {
 				GUICamera.SetActive(false);
 				overviewGUICamera.SetActive(false);
 				spectatorCamera.SetActive(true);
+				isPlaying = false;
 			}
 		}
 		else {
@@ -160,6 +163,7 @@ public class GameManager : MonoBehaviour {
 				spectatorCamera.SetActive(false);
 				overviewGUICamera.SetActive(false);
 				isPlaying = true;
+				isSwapped = false;
 			} else {
 
 				ballCamera.SetActive (false);
@@ -167,6 +171,8 @@ public class GameManager : MonoBehaviour {
 				spectatorCamera.SetActive(false);
 				overviewCamera.SetActive (true);
 				overviewGUICamera.SetActive(true);
+				isPlaying = true;
+				isSwapped = true;
 			}
 		}
 		
@@ -192,20 +198,49 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	public void StartNewRound(){
+		networkView.RPC("SwapPlayers", RPCMode.All, null);
+		ball.GetComponent<BallUtilityScript> ().ResetPosition ();
+		spectatorCamera.GetComponent<SpectatorCamScript> ().ResetToStart ();
+		ballCamera.GetComponent<CameraPositioningScript> ().ResetToStart ();
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Collectable")) {
+					go.GetComponent<CollectableScript>().ResetCollectable();
+				}
+
+	}
+
+	public bool IsBall(){
+		return !isSwapped;
+	}
+
 	void ShowOverviewAreas(){
 		overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
 		areaOverlayVisible = true;
 
 	}
 
+	public void AddPoints(int points){
+		this.points += points;
+	}
+
+	public void RemovePoints(int points){
+		this.points -= points;
+	}
+
+	public int GetPoints(){
+		return points;
+	}
+
 	void OnGUI()
 	{
-		if (GUI.Button (new Rect (0, 0, 150, 150), "HEHU")) {
-			
-			//						NetworkViewID newID = Network.AllocateViewID ();
-			//						networkView.RPC ("ChangeOwner", RPCMode.All, newID);
-			networkView.RPC("SwapPlayers", RPCMode.All, null);
-		}
+//		if (GUI.Button (new Rect (0, 0, 150, 150), "HEHU")) {
+//			
+//			//						NetworkViewID newID = Network.AllocateViewID ();
+//			//						networkView.RPC ("ChangeOwner", RPCMode.All, newID);
+//			networkView.RPC("SwapPlayers", RPCMode.All, null);
+//		}
+
+		GUI.Label (new Rect (0, 0, 100, 50), points.ToString ());
 		
 	}
 
