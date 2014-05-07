@@ -12,8 +12,11 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject overviewGUICamera;
 
+
 	public bool BallView = false;
 	private bool inPlacementArea = false;
+	private GameObject currentPlacementBox = null;
+	private bool areaOverlayVisible = true;
 	private bool cancelZoom = false;
 
 	private bool isSwapped = false;
@@ -75,20 +78,21 @@ public class GameManager : MonoBehaviour {
 	void Click(Vector2 position)
 	{
 
-		if (!inPlacementArea) {
+		if (!inPlacementArea && areaOverlayVisible) {
 			Ray ray = overviewGUICamera.camera.ScreenPointToRay (position);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 100, 1 << LayerMask.NameToLayer("OverviewGUIAreas"))) {
 				if (hit.collider.gameObject.name == "OverviewArea") {
 					overviewCamera.GetComponent<OverviewCameraScript>().LerpTo(hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.position + hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.up * 30 ,Quaternion.LookRotation(-hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.up, hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.forward), null);
 					inPlacementArea = true;
+					currentPlacementBox = hit.collider.gameObject.GetComponent<OverviewAreaRenderer>().alignmentBox.gameObject;
 					//Show back arrow
 					overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = true;
 					overviewGUICamera.camera.cullingMask = 1 << LayerMask.NameToLayer("OverviewGUI");
+					areaOverlayVisible = false;
 				}
 			}
 
-//			RaycastHit2D hit = Physics2D.Raycast(overviewGUICamera.camera.
 
 		}
 
@@ -98,16 +102,7 @@ public class GameManager : MonoBehaviour {
 			//Only check for collision with layer 10 (placement objects)
 			if (Physics.Raycast(ray, out hit, 1000, 1 << 10)) {
 				if (hit.collider.gameObject.name == "Cylinder") {
-
 					hit.collider.gameObject.GetComponent<ObstacleMenu>().StartRadialMenu(position);
-//					GameObject obst = (GameObject)Instantiate(Resources.Load("Prefabs/GeosphereTower"));
-//					obst.transform.position = hit.collider.gameObject.transform.position;
-					//obst.transform.rotation = hit.collider.gameObject.transform.rotation;
-
-					//Destroy(hit.collider.gameObject);
-
-
-
 				}		
 			} else {
 				Ray rayB = overviewGUICamera.camera.ScreenPointToRay (position);
@@ -116,6 +111,7 @@ public class GameManager : MonoBehaviour {
 					if (hitB.collider.gameObject.name == "BackArrow") {
 						overviewCamera.GetComponent<OverviewCameraScript>().GoBackToStart(ShowOverviewAreas);	
 						inPlacementArea = false;
+						currentPlacementBox = null;
 						//Hide back arrow
 						overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = false;
 						//overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
@@ -132,15 +128,14 @@ public class GameManager : MonoBehaviour {
 	{
 		if (Network.isClient || Network.isServer) {
 			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 1) {
-			ballCamera.SetActive (false);
-			GUICamera.SetActive (false);
-			spectatorCamera.SetActive(false);
-			overviewCamera.SetActive (true);
-			isSwapped = true;
-			isPlaying = true;
-		}
-		else
-			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
+				ballCamera.SetActive (false);
+				GUICamera.SetActive (false);
+				spectatorCamera.SetActive(false);
+				overviewCamera.SetActive (true);
+				isSwapped = true;
+				isPlaying = true;
+			}
+			else if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
@@ -149,12 +144,11 @@ public class GameManager : MonoBehaviour {
 				isPlaying = true;
 			}
 			else {
-			ballCamera.SetActive(false);
-			overviewCamera.SetActive(false);
-			GUICamera.SetActive(false);
-			overviewGUICamera.SetActive(false);
-			spectatorCamera.SetActive(true);
-
+				ballCamera.SetActive(false);
+				overviewCamera.SetActive(false);
+				GUICamera.SetActive(false);
+				overviewGUICamera.SetActive(false);
+				spectatorCamera.SetActive(true);
 			}
 		}
 		else {
@@ -164,7 +158,15 @@ public class GameManager : MonoBehaviour {
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
 				spectatorCamera.SetActive(false);
+				overviewGUICamera.SetActive(false);
 				isPlaying = true;
+			} else {
+
+				ballCamera.SetActive (false);
+				GUICamera.SetActive (false);
+				spectatorCamera.SetActive(false);
+				overviewCamera.SetActive (true);
+				overviewGUICamera.SetActive(true);
 			}
 		}
 		
@@ -192,7 +194,7 @@ public class GameManager : MonoBehaviour {
 
 	void ShowOverviewAreas(){
 		overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
-
+		areaOverlayVisible = true;
 
 	}
 
@@ -205,6 +207,12 @@ public class GameManager : MonoBehaviour {
 			networkView.RPC("SwapPlayers", RPCMode.All, null);
 		}
 		
+	}
+
+	public GameObject GetPlacementBox(){
+
+		return currentPlacementBox;
+
 	}
 
 
