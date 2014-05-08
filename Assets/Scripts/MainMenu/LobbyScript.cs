@@ -19,8 +19,8 @@ public class LobbyScript : MonoBehaviour {
 	string player1 = playerJoinText;
 	string player2 = playerJoinText;
 	const string launchText = "Let's Roll!";
-	const string ballLabel = "Play as Ball";
-	const string trackLabel = "Play as Track";
+	const string ballLabel = "Team Ball";
+	const string trackLabel = "Team Track";
 	const string observerLabel = "Join as Observer";
 	bool player1Locked = false;
 	bool player2Locked = false;
@@ -28,6 +28,7 @@ public class LobbyScript : MonoBehaviour {
 	float offsetX = Screen.width * 0.05f;
 	float offsetY = Screen.height * 0.05f;
 	float textScale;
+	Color textColorGray = new Color(64.0f, 64.0f, 64.0f);
 	
 	PlayerState currentPlayerState = PlayerState.NONE;
 
@@ -71,8 +72,22 @@ public class LobbyScript : MonoBehaviour {
 //				}
 //			}
 //		}
+		if(Menu.GetComponent<MainMenu>().lobbyActive)
+		WaitingForLobby ();
 	}
 
+	void WaitingForLobby ()
+	{
+		if (Network.connections.Length == 0) {
+			Menu.GetComponent<SplashScreen> ().Show ();
+			Menu.GetComponent<SplashScreen> ().SetText("Waiting for other players to connect...");
+			guiStyle.normal.textColor = textColorGray;
+			labelStyle.normal.textColor = textColorGray;
+		}
+		else {
+			Menu.GetComponent<SplashScreen> ().Hide ();
+		}
+	}
 
 
 	[RPC]
@@ -148,7 +163,7 @@ public class LobbyScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-		if (Menu.GetComponent<MainMenu>().lobbyActive) {
+		if (Menu.GetComponent<MainMenu>().lobbyActive && !Menu.GetComponent<SplashScreen> ().IsActive()) {
 
 			//Mode labels
 			GUI.Label(new Rect(offsetX, offsetY + Screen.height * 0.0f, 200, 40), ballLabel, labelStyle);
@@ -156,7 +171,7 @@ public class LobbyScript : MonoBehaviour {
 			GUI.Label(new Rect(offsetX + Screen.width * 0.6f, offsetY + Screen.height * 0.0f, 200, 40), observerLabel, labelStyle);
 
 			//Player1 button
-			if (GUI.Button (new Rect (offsetX, offsetY + Screen.height * 0.1f, 200, 40), player1, player1Locked ? playerStyle : guiStyle) && !player1Locked) {
+			if (GUI.Button (new Rect (offsetX, offsetY + Screen.height * 0.1f, 200, 40), player1, player1Locked ? playerStyle : guiStyle) && !player1Locked && Network.connections.Length > 0) {
 				
 				if(currentPlayerState == PlayerState.PLAYERTWO)
 					networkView.RPC("RemovePlayer2", RPCMode.AllBuffered, null);
@@ -170,7 +185,7 @@ public class LobbyScript : MonoBehaviour {
 				currentObserverIndex = -1;
 			}
 			//Player2 button
-			if (GUI.Button (new Rect (offsetX + Screen.width * 0.3f, offsetY + Screen.height * 0.1f, 200, 40), player2, player2Locked ? playerStyle : guiStyle) && !player2Locked) {
+			if (GUI.Button (new Rect (offsetX + Screen.width * 0.3f, offsetY + Screen.height * 0.1f, 200, 40), player2, player2Locked ? playerStyle : guiStyle) && !player2Locked && Network.connections.Length > 0) {
 				if(currentPlayerState == PlayerState.PLAYERONE)
 					networkView.RPC("RemovePlayer1", RPCMode.AllBuffered, null);
 				else if(currentPlayerState == PlayerState.OBSERVER)
@@ -188,7 +203,7 @@ public class LobbyScript : MonoBehaviour {
 
 			for (int i = 0; i < observerList.Count; i++) {
 				
-				if(GUI.Button (new Rect (offsetX + Screen.width * 0.6f, offsetY + Screen.height * 0.1f + i * Screen.height * 0.1f, 200, 40), observerList[i].ToString(), guiStyle) && !observerLocks[i]){
+				if(GUI.Button (new Rect (offsetX + Screen.width * 0.6f, offsetY + Screen.height * 0.1f + i * Screen.height * 0.1f, 200, 40), observerList[i].ToString(), guiStyle) && !observerLocks[i] && Network.connections.Length > 0){
 					if(currentPlayerState == PlayerState.PLAYERONE)
 						networkView.RPC("RemovePlayer1", RPCMode.AllBuffered, null);
 					else if(currentPlayerState == PlayerState.PLAYERTWO)
@@ -203,8 +218,6 @@ public class LobbyScript : MonoBehaviour {
 					currentObserverIndex = i;
 				}
 			}
-
-
 			if(Network.isServer && player1Locked && player2Locked){
 				if (GUI.Button (new Rect (Screen.width * 0.6f, Screen.height * 0.7f , launchStyle.fontSize * launchText.Length * 0.5f, launchStyle.fontSize * 2), launchText, launchStyle) && player1Locked && player2Locked) {
 						networkView.RPC("StartGame", RPCMode.All, null);

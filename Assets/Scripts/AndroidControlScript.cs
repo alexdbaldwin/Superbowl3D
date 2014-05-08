@@ -5,6 +5,7 @@ public class AndroidControlScript : MonoBehaviour {
 	public GameObject gameCamera;
 	public GameObject GUIManager;
 	public AudioSource boostEffect;
+	public AudioSource jumpEffect;
 
 	public float defaultBodyDrag;
 	private float rigidbodyDrag;
@@ -73,6 +74,7 @@ public class AndroidControlScript : MonoBehaviour {
 ////			}
 //		}
 		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
+		isBoosting = Input.GetKey (KeyCode.UpArrow);
 		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
 		//		TouchStick();
 	}
@@ -98,7 +100,7 @@ public class AndroidControlScript : MonoBehaviour {
 		if(isBoosting && powerGauge > minPower){
 			if(!audio.isPlaying)
 			{
-				audio.Play();
+				boostEffect.Play();
 			}
 			Vector3 boostDir = transform.position - gameCamera.transform.position;
 			boostDir.Normalize();
@@ -111,8 +113,8 @@ public class AndroidControlScript : MonoBehaviour {
 		}
 		else
 		{
-			audio.Stop();
-			audio.pitch = 1;
+			boostEffect.Stop();
+			boostEffect.pitch = 1;
 			powerGauge += 0.5f;
 			boostModifier = 0;
 			if(powerGauge > maxPower)
@@ -121,9 +123,10 @@ public class AndroidControlScript : MonoBehaviour {
 		//isBoosting = false;
 
 
-		if (isJumping && isOnSurface) {
+		if ((isJumping || Input.GetKey(KeyCode.Space)) && isOnSurface) {
 			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0), ForceMode.Impulse);
 			isJumping = false;
+			jumpEffect.Play();
 		}
 
 

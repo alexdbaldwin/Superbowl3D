@@ -14,6 +14,7 @@ public class JumpPadScript : MonoBehaviour {
 		if (coll.name == "Kulan") {
 			StartCoroutine(Bounce ());
 			coll.attachedRigidbody.AddForce(new Vector3(0.0f, 8.0f, 0.0f), ForceMode.VelocityChange);
+			GetComponent<AudioSource>().Play();
 		}
 	}
 

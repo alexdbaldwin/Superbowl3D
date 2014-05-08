@@ -9,7 +9,7 @@ public class NetworkManager : MonoBehaviour {
 	private int networkPlayerId = -1;
 	// Use this for initialization
 	void Start () {
-		StartCoroutine("refreshHostList");
+		//StartCoroutine("refreshHostList");
 	}
 
 	void Update(){

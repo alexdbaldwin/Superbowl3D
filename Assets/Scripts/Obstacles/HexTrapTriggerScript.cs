@@ -31,12 +31,15 @@ public class HexTrapTriggerScript : MonoBehaviour {
 				}
 				StartCoroutine("resetTarget");
 			}
+			GetComponent<AudioSource>().Play();
 		}
 	}
+
 
 	IEnumerator resetTarget()
 	{
 		yield return new WaitForSeconds (2.0f);
+		GetComponent<AudioSource>().loop = false;
 		foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
 			l.targetObject = oldTarget;
 		alreadyTrackingBall = false;

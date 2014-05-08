@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class MainMenu : MonoBehaviour {
-	public Sprite tiltOff, tiltOn;
-	public GameObject hostOn, joinOn, tiltButtonOn, tiltButtonOff, StartButton, OptionButton, ExitButton, NameButton, BackButton;
+	public Sprite tiltOff, tiltOn, on, off;
+	public GameObject hostOn, joinOn, tiltButtonOn, tiltButtonOff, StartButton, OptionButton, ExitButton, NameButton, BackButton, MuteButton, OnOffButton;
 	public GameObject GlobalStorage;
 	bool tilt, optionsClicked, nameClicked = false, startClicked = false;
 	public bool lobbyActive = false;
@@ -13,12 +13,17 @@ public class MainMenu : MonoBehaviour {
 	bool hostClicked = false;
 	bool backButtonEnabled = false;
 	bool refreshServerList;
+	bool mute = false;
 	bool serverListIsShown = false;
+	float textScale;
 //Server list stuff
-	int serverListPosY = 40;
+	int serverListOffestY = (int)(Screen.height * 0.1f);
+	int serverListPosY = (int)(Screen.height * 0.1f);
 //	string nameString = SystemInfo.deviceName.ToString();
 	string playerName = "PlayerName";
 	string serverName = "DefaultServerName";
+	float serverListRefreshTimer = 0;
+
 	// Use this for initialization
 	void Start () {
 		hostOn.SetActive (false);
@@ -27,8 +32,13 @@ public class MainMenu : MonoBehaviour {
 		tiltButtonOn.SetActive(false);
 		tiltButtonOff.SetActive(false);
 		BackButton.SetActive (false);
+		MuteButton.SetActive (false);
+		OnOffButton.SetActive (false);
+
+		textScale = (nameInputFieldStyle.fontSize * (Screen.width * 0.001f));
+		nameInputFieldStyle.fontSize = (int)textScale;
+
 		serverNameLabel = nameInputFieldStyle;
-		serverNameLabel.fontSize = 40;
 	}
 	
 	// Update is called once per frame
@@ -51,8 +61,9 @@ public class MainMenu : MonoBehaviour {
 				}
 
 		if (serverListIsShown) {
-			if((int)Time.deltaTime % 2 == 0)
-			{
+			serverListRefreshTimer += Time.deltaTime;
+			if (serverListRefreshTimer > 1.0f) {
+				serverListRefreshTimer = 0;
 				GlobalStorage.GetComponent<NetworkManager>().StartCoroutine("refreshHostList");
 			}
 		}
@@ -63,76 +74,87 @@ public class MainMenu : MonoBehaviour {
 	void Click(Vector2 position)
 	{
 
-						Ray ray = Camera.main.ScreenPointToRay (position);
-						RaycastHit hit;
-						if (Physics.Raycast (ray, out hit)) {
-							if (lobbyActive == false) {
-								if (hit.collider.gameObject.name == "StartButton") {
-										if (!startClicked) {
-												hostOn.SetActive (true);
-												joinOn.SetActive (true);
-												NameButton.SetActive (false);
-												tiltButtonOn.SetActive (false);
-												tiltButtonOff.SetActive (false);
-												optionsClicked = false;
-												nameClicked = false;
-												refreshServerList = true;
-												startClicked = true;
-										} else {
-												MenuReset ();
-										}
+		Ray ray = Camera.main.ScreenPointToRay (position);
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit)) {
+			if (lobbyActive == false) {
+				if (hit.collider.gameObject.name == "StartButton") {
+					if (!startClicked) {
+							MenuReset();
+							hostOn.SetActive (true);
+							joinOn.SetActive (true);
+							refreshServerList = true;
+							startClicked = true;
+					} else {
+							MenuReset ();
+					}
 
-								} else if (hit.collider.gameObject.name == "ExitButton") {
-										Application.Quit ();
-								} else if (hit.collider.gameObject.name == "HostButton") {
-										SavePreferences ();
-										//startserver();
-										hostClicked = true;
-										MenuHide ();
-										hostClicked = true;
+				} else if (hit.collider.gameObject.name == "ExitButton") {
+						Application.Quit ();
+				} else if (hit.collider.gameObject.name == "HostButton") {
+						SavePreferences ();
+						//startserver();
+						MenuHide ();
+						hostClicked = true;
 
-								} else if (hit.collider.gameObject.name == "JoinButton") {
-										SavePreferences ();
-										PresentServerList ();
-								} else if (hit.collider.gameObject.name == "OptionButton") {
-										if (!optionsClicked) {
-												tiltButtonOn.SetActive (false);
-												tiltButtonOff.SetActive (true);
-												hostOn.SetActive (false);
-												joinOn.SetActive (false);
-												NameButton.SetActive (true);
-												optionsClicked = true;
-										} else {
-												MenuReset ();
-										}
-
-								} else if (hit.collider.gameObject.name == "TiltButton") {
-										if (tilt) {
-												hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = tiltOff;
-										} else {
-												hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = tiltOn;
-										}
-										tilt = !tilt;
-								} else if (hit.collider.gameObject.name == "NameButton") {
-										nameClicked = true;
-								}
-			
+				} else if (hit.collider.gameObject.name == "JoinButton") {
+						SavePreferences ();
+						PresentServerList ();
+						
+				} else if (hit.collider.gameObject.name == "OptionButton") {
+						if (!optionsClicked) {
+							tiltButtonOn.SetActive (false);
+							tiltButtonOff.SetActive (true);
+							hostOn.SetActive (false);
+							joinOn.SetActive (false);
+							NameButton.SetActive (true);
+							MuteButton.SetActive(true);
+							OnOffButton.SetActive(true);
+							optionsClicked = true;
 						} else {
-								if (!nameClicked || !hostClicked)
-										MenuReset ();
+								MenuReset ();
 						}
 
-
-						
+				} else if (hit.collider.gameObject.name == "TiltButton") {
+						if (tilt) {
+								hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = tiltOff;
+						} else {
+								hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = tiltOn;
+						}
+						tilt = !tilt;
+				} else if (hit.collider.gameObject.name == "NameButton") {
+						nameClicked = true;
+				} else if (hit.collider.gameObject.name == "MuteButton") {
+					if (!mute) {
+						OnOffButton.GetComponent<SpriteRenderer> ().sprite = on;
+						AudioListener.pause = true;
+					} else {
+						OnOffButton.GetComponent<SpriteRenderer> ().sprite = off;
+						AudioListener.pause = false;
+					}
+					mute = !mute;
+				}else if (hit.collider.gameObject.name == "On/OffButton") {
+					if (!mute) {
+						hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = on;
+						AudioListener.pause = true;
+					} else {
+						hit.collider.gameObject.GetComponent<SpriteRenderer> ().sprite = off;
+						AudioListener.pause = false;
+					}
+					mute = !mute;
 				}
+
+			} else {
+				if (!nameClicked || !hostClicked)
+						MenuReset ();
+			}	
+		}
 		if (backButtonEnabled) {
 			if (BackButtonClicked(position)) {
 				MenuReset();
 			}
 		}
-		}
-		
-
+	}
 	public bool BackButtonClicked(Vector2 position)
 	{
 		Ray ray = Camera.main.ScreenPointToRay (position);
@@ -150,7 +172,8 @@ public class MainMenu : MonoBehaviour {
 		MenuHide ();
 		serverListIsShown = true;
 		GlobalStorage.GetComponent<NetworkManager>().refreshHostList();
-
+		backButtonEnabled = true;
+		SetBackButtonEnable (true);
 	}
 
 	void MenuHide(){
@@ -158,7 +181,7 @@ public class MainMenu : MonoBehaviour {
 		StartButton.SetActive(false);
 		OptionButton.SetActive(false);
 		ExitButton.SetActive(false);
-		
+		serverListIsShown = false;
 		}
 
 	public void MenuReset(){	
@@ -172,8 +195,12 @@ public class MainMenu : MonoBehaviour {
 		startClicked = false;
 		nameClicked = false;
 		hostClicked = false;
+		serverListIsShown = false;
+		MuteButton.SetActive (false);
+		OnOffButton.SetActive (false);
+		gameObject.GetComponent<SplashScreen> ().Hide ();
+		gameObject.GetComponent<SplashScreen> ().SetText ("No Text");
 		if (lobbyActive) {
-
 			lobbyActive = false;
 				}
 		StartButton.SetActive(true);
@@ -182,6 +209,7 @@ public class MainMenu : MonoBehaviour {
 		}
 	void SavePreferences(){
 		PlayerPrefs.SetInt ("Tilt", tilt ? 1 : 0);
+		PlayerPrefs.SetInt ("Mute", mute ? 1 : 0);
 		PlayerPrefs.SetString ("PlayerName", playerName);
 	}
 	void LobbyActive()
@@ -193,6 +221,8 @@ public class MainMenu : MonoBehaviour {
 		joinOn.SetActive(false);
 		tiltButtonOn.SetActive(false);
 		tiltButtonOff.SetActive(false);
+		MuteButton.SetActive (false);
+		OnOffButton.SetActive (false);
 		lobbyActive = true;
 	}
 
@@ -219,11 +249,11 @@ public class MainMenu : MonoBehaviour {
 		if (hostClicked) {
 
 			SetBackButtonEnable(true);
-			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.1f, 150.0f, 30.0f), "Server Name: ", serverNameLabel);
+			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.1f, 0, 0), "Server Name: ", serverNameLabel);
 
-			serverName = GUI.TextField (new Rect (Screen.width * 0.5f, Screen.height * 0.3f, 150.0f, 30.0f), serverName, 20, nameInputFieldStyle);
+			serverName = GUI.TextField (new Rect (Screen.width * 0.5f, Screen.height * 0.3f, 0, 0), serverName, 20, nameInputFieldStyle);
 
-			if (GUI.Button( new Rect (Screen.width * 0.5f, Screen.height * 0.4f, 150.0f, 30.0f), "OK", serverNameLabel)) {
+			if (GUI.Button( new Rect (Screen.width * 0.4f, Screen.height * 0.4f, Screen.width * 0.2f, 30.0f), "OK", serverNameLabel)) {
 				LobbyActive ();
 				GlobalStorage.GetComponent<NetworkManager>().startServer(serverName);
 				hostClicked = false;
@@ -231,10 +261,10 @@ public class MainMenu : MonoBehaviour {
 			}
 			}
 		if (serverListIsShown) {
-
+			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.05f, 0, 0), "Click servers to join", serverNameLabel);
 			if (GlobalStorage.GetComponent<NetworkManager>().hostData.Length > 0) {
 				for (int i = 0; i < GlobalStorage.GetComponent<NetworkManager>().hostData.Length; i++) {
-					if(GUI.Button (new Rect (Screen.width * 0.5f, serverListPosY * i, 300, 50), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName, serverNameLabel)) {
+					if(GUI.Button (new Rect (Screen.width * 0.4f, serverListPosY * i + serverListOffestY, Screen.width * 0.2f, serverListPosY), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName, serverNameLabel)) {
 						GlobalStorage.GetComponent<NetworkManager>().Connect (i);
 						LobbyActive();
 						serverListIsShown = false;
