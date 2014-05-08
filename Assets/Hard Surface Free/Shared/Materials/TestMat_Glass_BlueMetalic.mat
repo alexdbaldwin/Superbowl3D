@@ -52,7 +52,7 @@ Material:
       data:
         first:
           name: _Reflection
-        second: .880596995
+        second: .89845413
       data:
         first:
           name: _Shininess
@@ -60,7 +60,7 @@ Material:
       data:
         first:
           name: _Gloss
-        second: .75
+        second: .696428597
       data:
         first:
           name: _FrezPow
