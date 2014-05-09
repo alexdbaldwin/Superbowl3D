@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject spectatorCamera;
 	public GameObject motherNode;
 	public GameObject ball;
-
+	public GameObject ballOverviewSprite;
 	public GameObject overviewGUICamera;
 
 
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 //		if (player2Mode) {
 //			ballCamera.SetActive (false);
 //			GUICamera.SetActive (false);
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour {
 					overviewGUICamera.camera.cullingMask = 1 << LayerMask.NameToLayer("OverviewGUI");
 					areaOverlayVisible = false;
 					skipIt = true;
+					ballOverviewSprite.GetComponent<SpriteRenderer>().enabled = false;
 				}
 			}
 
@@ -120,7 +122,7 @@ public class GameManager : MonoBehaviour {
 						//Hide back arrow
 						overviewGUICamera.GetComponentInChildren<SpriteRenderer>().enabled = false;
 						//overviewGUICamera.camera.cullingMask = (1 << LayerMask.NameToLayer("OverviewGUI")) | (1 << LayerMask.NameToLayer("OverviewGUIAreas"));
-
+						ballOverviewSprite.GetComponent<SpriteRenderer>().enabled = true;
 					}
 				}
 

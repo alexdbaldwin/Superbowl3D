@@ -19,23 +19,23 @@ public class BumperScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!bumped) {
-			if (fade) {
-				pointLight.GetComponent<Light> ().intensity -= Time.deltaTime * pulseRate;
-				GetComponent<MeshRenderer> ().materials [1].color = new Color (89.0f / 256.0f + colorModifier, 30.0f / 256.0f + colorModifier, 150.0f / 256.0f + colorModifier);
-				colorModifier -= Time.deltaTime * colorRate;
-				if (pointLight.GetComponent<Light> ().intensity < minIntensity) {
-					fade = false;		
-				}
-			} else {
-				pointLight.GetComponent<Light> ().intensity += Time.deltaTime * pulseRate;
-				GetComponent<MeshRenderer> ().materials [1].color = new Color (89.0f / 256.0f + colorModifier, 30.0f / 256.0f + colorModifier, 150.0f / 256.0f + colorModifier);
-				colorModifier += Time.deltaTime * colorRate;
-				if (pointLight.GetComponent<Light> ().intensity > maxIntensity) {
-					fade = true;		
-				}
-			}
-		}
+//		if (!bumped) {
+//			if (fade) {
+//				//pointLight.GetComponent<Light> ().intensity -= Time.deltaTime * pulseRate;
+//				GetComponent<MeshRenderer> ().materials [1].color = new Color (89.0f / 256.0f + colorModifier, 30.0f / 256.0f + colorModifier, 150.0f / 256.0f + colorModifier);
+//				colorModifier -= Time.deltaTime * colorRate;
+//				if (pointLight.GetComponent<Light> ().intensity < minIntensity) {
+//					fade = false;		
+//				}
+//			} else {
+//				pointLight.GetComponent<Light> ().intensity += Time.deltaTime * pulseRate;
+//				GetComponent<MeshRenderer> ().materials [1].color = new Color (89.0f / 256.0f + colorModifier, 30.0f / 256.0f + colorModifier, 150.0f / 256.0f + colorModifier);
+//				colorModifier += Time.deltaTime * colorRate;
+//				if (pointLight.GetComponent<Light> ().intensity > maxIntensity) {
+//					fade = true;		
+//				}
+//			}
+//		}
 	}
 
 
@@ -48,7 +48,7 @@ public class BumperScript : MonoBehaviour {
 		}
 		GetComponent<AudioSource>().Play();
 
-		StartCoroutine (Bump ());
+		//StartCoroutine (Bump ());
 
 	}
 

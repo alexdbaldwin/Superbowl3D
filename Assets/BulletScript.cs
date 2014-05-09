@@ -6,7 +6,7 @@ public class BulletScript : MonoBehaviour {
 	float speed = 15.0f;
 
 	void Start () {
-	
+		Invoke ("DestroyMe", 5.0f);
 	}
 	
 
@@ -18,5 +18,9 @@ public class BulletScript : MonoBehaviour {
 		if (coll.gameObject.name != "TurretBarrel") {
 			Destroy (gameObject);
 		}
+	}
+
+	void DestroyMe(){
+		Destroy (gameObject);
 	}
 }

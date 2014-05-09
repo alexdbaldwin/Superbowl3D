@@ -74,7 +74,9 @@ public class AndroidControlScript : MonoBehaviour {
 ////			}
 //		}
 		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
-		isBoosting = Input.GetKey (KeyCode.UpArrow);
+		if (Application.isEditor || Application.isWebPlayer) {
+						isBoosting = Input.GetKey (KeyCode.UpArrow);
+				}
 		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
 		//		TouchStick();
 	}

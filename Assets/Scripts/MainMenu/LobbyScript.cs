@@ -135,6 +135,7 @@ public class LobbyScript : MonoBehaviour {
 	[RPC]
 	void StartGame()
 	{
+		Time.timeScale = 0;
 		Application.LoadLevel(1);
 	}
 

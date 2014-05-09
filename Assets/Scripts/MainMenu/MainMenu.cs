@@ -242,7 +242,7 @@ public class MainMenu : MonoBehaviour {
 				nameClicked = true;
 				optionsClicked = true;
 				GUI.SetNextControlName("nameControll");
-				playerName = GUI.TextField (new Rect (Screen.width * 0.5f, Screen.height * 0.5f, 150.0f, 30.0f), playerName, 10, nameInputFieldStyle);
+				playerName = GUI.TextField (new Rect ((Screen.width * 0.5f) - (Screen.width * 0.15f), Screen.height * 0.5f, Screen.width * 0.3f, Screen.height * 0.1f), playerName, 10, nameInputFieldStyle);
 				GUI.FocusControl("nameControll");
 			}
 		}
@@ -251,7 +251,7 @@ public class MainMenu : MonoBehaviour {
 			SetBackButtonEnable(true);
 			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.1f, 0, 0), "Server Name: ", serverNameLabel);
 
-			serverName = GUI.TextField (new Rect (Screen.width * 0.5f, Screen.height * 0.3f, 0, 0), serverName, 20, nameInputFieldStyle);
+			serverName = GUI.TextField (new Rect ((Screen.width * 0.5f) - (Screen.width * 0.15f), Screen.height * 0.3f, Screen.width * 0.3f, Screen.height * 0.1f), serverName, 20, nameInputFieldStyle);
 
 			if (GUI.Button( new Rect (Screen.width * 0.4f, Screen.height * 0.4f, Screen.width * 0.2f, 30.0f), "OK", serverNameLabel)) {
 				LobbyActive ();
@@ -262,12 +262,15 @@ public class MainMenu : MonoBehaviour {
 			}
 		if (serverListIsShown) {
 			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.05f, 0, 0), "Click servers to join", serverNameLabel);
-			if (GlobalStorage.GetComponent<NetworkManager>().hostData.Length > 0) {
-				for (int i = 0; i < GlobalStorage.GetComponent<NetworkManager>().hostData.Length; i++) {
-					if(GUI.Button (new Rect (Screen.width * 0.4f, serverListPosY * i + serverListOffestY, Screen.width * 0.2f, serverListPosY), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName, serverNameLabel)) {
-						GlobalStorage.GetComponent<NetworkManager>().Connect (i);
-						LobbyActive();
-						serverListIsShown = false;
+			if(GlobalStorage.GetComponent<NetworkManager>().hostData != null)
+			{
+				if (GlobalStorage.GetComponent<NetworkManager>().hostData.Length > 0) {
+					for (int i = 0; i < GlobalStorage.GetComponent<NetworkManager>().hostData.Length; i++) {
+						if(GUI.Button (new Rect (Screen.width * 0.4f, serverListPosY * i + serverListOffestY, Screen.width * 0.2f, serverListPosY), GlobalStorage.GetComponent<NetworkManager>().hostData [i].gameName, serverNameLabel)) {
+							GlobalStorage.GetComponent<NetworkManager>().Connect (i);
+							LobbyActive();
+							serverListIsShown = false;
+						}
 					}
 				}
 			}

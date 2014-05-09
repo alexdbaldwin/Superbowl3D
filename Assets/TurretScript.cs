@@ -43,10 +43,10 @@ public class TurretScript : MonoBehaviour {
 
 	void Shoot(){
 
-		burst.GetComponent<ParticleSystem> ().Play ();
+		//burst.GetComponent<ParticleSystem> ().Play ();
 		GameObject bullet = (GameObject)Instantiate (Resources.Load ("Prefabs/Placeables/Bullet"));
 		bullet.transform.position = burst.transform.position;
 		bullet.transform.rotation = barrel.transform.rotation;
-		bullet.GetComponent<ParticleSystem> ().Play ();
+		//bullet.GetComponent<ParticleSystem> ().Play ();
 	}
 }

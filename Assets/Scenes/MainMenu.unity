@@ -385,7 +385,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 610558236}
   m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
-  m_LocalPosition: {x: -2.58942819, y: .596149445, z: .343057096}
+  m_LocalPosition: {x: -2.86865282, y: .886457443, z: .343057096}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -547,6 +547,7 @@ GameObject:
   - 4: {fileID: 742267828}
   - 114: {fileID: 742267829}
   - 114: {fileID: 742267830}
+  - 148: {fileID: 742267831}
   m_Layer: 0
   m_Name: GlobalStorage
   m_TagString: Untagged
@@ -588,6 +589,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Lobby: {fileID: 2088858974}
+--- !u!148 &742267831
+NetworkView:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 742267827}
+  m_Enabled: 1
+  m_StateSynchronization: 1
+  m_Observed: {fileID: 0}
+  m_ViewID:
+    m_ID: 2
+    m_Type: 1
 --- !u!1 &1109382133
 GameObject:
   m_ObjectHideFlags: 0
