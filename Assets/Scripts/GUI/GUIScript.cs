@@ -8,6 +8,7 @@ public class GUIScript : MonoBehaviour {
 	public GameObject steeringCircle = null;
 	public GameObject steeringArrows = null;
 	public GameObject jumpArrow = null;
+	public GameObject steeringBorder = null;
 	
 	bool steering = false;
 	bool jumpDown = false;
@@ -28,6 +29,8 @@ public class GUIScript : MonoBehaviour {
 	Vector2 jumpTouchStart;
 	Vector3 steeringCircleStart;
 	Vector3 jumpArrowStart;
+
+	bool tiltControls = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -37,6 +40,13 @@ public class GUIScript : MonoBehaviour {
 		boostAmount = 0.0f;
 		steeringCircleStart = steeringCircle.transform.position;
 		jumpArrowStart = jumpArrow.transform.position;
+
+		if (PlayerPrefs.GetInt ("Tilt") == 1) {
+			tiltControls = true;
+			steeringArrows.GetComponent<SpriteRenderer>().enabled = false;
+			steeringCircle.GetComponent<SpriteRenderer>().enabled = false;
+			steeringBorder.GetComponent<SpriteRenderer>().enabled = false;
+		}
 	}
 	
 	// Update is called once per frame
@@ -44,40 +54,41 @@ public class GUIScript : MonoBehaviour {
 		if(Ball == null)
 			Ball = GameObject.FindGameObjectWithTag("TheBall");
 
-
-		//Steering controls
-		if (!steering) {
-			for (int i = 0; i < Input.touchCount; i++) {
-				if (Input.GetTouch (i).phase == TouchPhase.Began) {
-					Ray ray = GUICamera.GetComponent<Camera>().ScreenPointToRay (Input.GetTouch (i).position);
-					RaycastHit hit;
-					if (Physics.Raycast (ray, out hit)) {
-						if (hit.collider.gameObject.name == "SteeringCircle") {
-							steering = true;
-							steeringTouchStart = Input.GetTouch (i).position;
-							steeringTouch = Input.GetTouch (i).fingerId;
-							steeringArrows.GetComponent<SpriteRenderer>().enabled = false;
-						} 
+		if (!tiltControls) {
+			//Steering controls
+			if (!steering) {
+				for (int i = 0; i < Input.touchCount; i++) {
+					if (Input.GetTouch (i).phase == TouchPhase.Began) {
+						Ray ray = GUICamera.GetComponent<Camera> ().ScreenPointToRay (Input.GetTouch (i).position);
+						RaycastHit hit;
+						if (Physics.Raycast (ray, out hit)) {
+							if (hit.collider.gameObject.name == "SteeringCircle") {
+								steering = true;
+								steeringTouchStart = Input.GetTouch (i).position;
+								steeringTouch = Input.GetTouch (i).fingerId;
+								steeringArrows.GetComponent<SpriteRenderer> ().enabled = false;
+							} 
+						}
+					}
+				}		
+			} else {
+				//Find the touch with the right fingerId
+				int touchIndex = -1;
+				for (int i = 0; i < Input.touchCount; i++) {
+					if (Input.GetTouch (i).fingerId == steeringTouch) {
+						touchIndex = i;
+						break;
 					}
 				}
-			}		
-		} else {
-			//Find the touch with the right fingerId
-			int touchIndex = -1;
-			for (int i = 0; i < Input.touchCount; i++) {
-				if(Input.GetTouch(i).fingerId == steeringTouch){
-					touchIndex = i;
-					break;
-				}
-			}
-			if(touchIndex != -1 && (Input.GetTouch(touchIndex).phase == TouchPhase.Ended || Input.GetTouch(touchIndex).phase == TouchPhase.Canceled)){
-				steering = false;
-				steeringCircle.transform.position = steeringCircleStart;
-				steeringArrows.GetComponent<SpriteRenderer>().enabled = true;
-			} else {
-				currentScreenSteer = Mathf.Clamp(Input.GetTouch(touchIndex).position.x - steeringTouchStart.x, -maxScreenSteer, maxScreenSteer);
-				if(steeringCircle != null){
-					steeringCircle.transform.position = steeringCircleStart + steeringCircle.transform.right * currentScreenSteer / maxScreenSteer * maxSteer;
+				if (touchIndex != -1 && (Input.GetTouch (touchIndex).phase == TouchPhase.Ended || Input.GetTouch (touchIndex).phase == TouchPhase.Canceled)) {
+					steering = false;
+					steeringCircle.transform.position = steeringCircleStart;
+					steeringArrows.GetComponent<SpriteRenderer> ().enabled = true;
+				} else {
+					currentScreenSteer = Mathf.Clamp (Input.GetTouch (touchIndex).position.x - steeringTouchStart.x, -maxScreenSteer, maxScreenSteer);
+					if (steeringCircle != null) {
+							steeringCircle.transform.position = steeringCircleStart + steeringCircle.transform.right * currentScreenSteer / maxScreenSteer * maxSteer;
+					}
 				}
 			}
 		}
@@ -128,8 +139,6 @@ public class GUIScript : MonoBehaviour {
 
 		}
 
-		//ControlScript.GetComponent<AndroidControlScript> ().GetPowerGauge (); 
-		//restet 
 		if (Input.touchCount == 0) {
 			steering = false;
 			jumpDown = false;
@@ -137,10 +146,6 @@ public class GUIScript : MonoBehaviour {
 			jumpTouch = 0;
 			steeringTouch = 0;
 		}
-
-		//		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
-		//			TouchDown(Input.GetTouch(0).position);
-		//		} 
 
 		//Power Gauge
 		boostBar.transform.localScale = new Vector3(1, 1 * Ball.GetComponent<AndroidControlScript> ().GetPowerGauge (), 1);
@@ -168,22 +173,5 @@ public class GUIScript : MonoBehaviour {
 		} else {
 			return 0.0f;		
 		}
-	}
-
-
-
-	void OnGUI()
-	{
-//		GUI.Label (new Rect (0, 80, 200, 100), "Boosting : " + boosting.ToString());
-//		GUI.Label (new Rect (0, 100, 200, 100), "Jump Down : " + jumpDown.ToString());
-//		GUI.Label (new Rect (0, 120, 200, 100), "Jump touch (FingerId) : " + jumpTouch.ToString());
-
-		//		GUI.Button (jumpBtn, "Jumpuru");
-		//		GUI.Button (boostBtn, "Boosturu");
-		//		if (IsTouching()) {
-		//			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
-		//		}
-		
-		
 	}
 }

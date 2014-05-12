@@ -49,7 +49,8 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 520902f6b2369204bb5685aba0205eb0, type: 2}
+  - {fileID: 2100000, guid: 15adee826ecb8ad43a2539eeec7c9c67, type: 2}
+  - {fileID: 2100000, guid: 8f5a0e4310717a746be2d5753ec5b7a5, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -64,7 +65,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 63ce54da01edffc40b6f2c50951f5481, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 4d5e0ac9db9b7a147973b714ea806eb9, type: 3}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -259,8 +260,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .230496824
-  m_Center: {x: .00152682513, y: -.000196702822, z: .00032456973}
+  m_Radius: .25
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!148 &14800000
 NetworkView:
   m_ObjectHideFlags: 1
