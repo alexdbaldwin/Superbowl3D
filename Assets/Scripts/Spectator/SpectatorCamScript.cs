@@ -32,6 +32,9 @@ public class SpectatorCamScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(ball == null)
+			ball = GameObject.FindGameObjectWithTag("TheBall");
+	
 		transform.position = Vector3.Lerp(transform.position, targetNode.transform.position, camSpeed * Time.deltaTime);
 		transform.LookAt(ball.transform.position);
 		

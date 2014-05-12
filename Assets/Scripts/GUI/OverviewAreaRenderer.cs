@@ -119,9 +119,7 @@ public class OverviewAreaRenderer : MonoBehaviour {
 			
 		}
 		
-
-		Debug.Log ("overview: " + overviewCamera.camera.pixelRect.ToString());
-		Debug.Log ("overviewGUI: " + overviewGUICamera.camera.pixelRect.ToString ());
+	
 
 		Vector3[] meshVerts = new Vector3[verts3d.Length];
 		//Vector3[] meshVerts2 = new Vector3[verts3d.Length];

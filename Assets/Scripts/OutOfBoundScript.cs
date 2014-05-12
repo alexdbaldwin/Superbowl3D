@@ -17,6 +17,7 @@ public class OutOfBoundScript : MonoBehaviour {
 	{
 		if (collInfo.gameObject.tag == "TheBall") {
 					collInfo.gameObject.transform.position = collInfo.gameObject.GetComponent<AndroidControlScript>().GetLastActiveNodePos();
+				GameObject.FindGameObjectWithTag ("GameManager").GetComponent<CountdownScript> ().StartCountDown ();
 			collInfo.gameObject.rigidbody.velocity = Vector3.zero;
 				}
 	}

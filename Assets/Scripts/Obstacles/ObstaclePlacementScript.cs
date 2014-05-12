@@ -15,6 +15,8 @@ public class ObstaclePlacementScript : MonoBehaviour {
 	InputType inputType;
 //	Vector3 startPos;
 	GameObject overviewCamera;
+	GameObject overviewGUICamera;
+	GameObject rotateArrow;
 //	Vector3 offset;
 //	Vector3 screenPoint;
 //	float maxDrag;
@@ -30,6 +32,8 @@ public class ObstaclePlacementScript : MonoBehaviour {
 
 	void Start () {
 		overviewCamera = GameObject.FindGameObjectWithTag ("OverviewCamera");
+		overviewGUICamera = GameObject.FindGameObjectWithTag ("OverviewGUICamera");
+		rotateArrow = GameObject.FindGameObjectWithTag ("RotateArrow");
 	}
 
 	void Update () {
@@ -69,6 +73,15 @@ public class ObstaclePlacementScript : MonoBehaviour {
 					angle = 0;
 				}
 				transform.RotateAround(transform.position, transform.up,angle);
+				rotateArrow.transform.rotation = Quaternion.identity;
+
+				Vector3 tempPos= overviewGUICamera.camera.ScreenToWorldPoint(overviewCamera.camera.WorldToScreenPoint(transform.position) + new Vector3(Screen.width * 0.1f,0,0));
+				tempPos.z = 5;
+				
+				rotateArrow.transform.position = tempPos;
+				Vector3 pivot = overviewGUICamera.camera.ScreenToWorldPoint(overviewCamera.camera.WorldToScreenPoint(transform.position));
+				pivot.z = rotateArrow.transform.position.z;
+				rotateArrow.transform.RotateAround(pivot, rotateArrow.transform.forward, -angle);
 
 			} else {
 
@@ -94,6 +107,7 @@ public class ObstaclePlacementScript : MonoBehaviour {
 //			if (hit.collider.gameObject == gameObject) {
 				dragging = true;
 				initialScreenPos = position;
+				
 				centerScreenPos = overviewCamera.camera.WorldToScreenPoint(transform.position);
 				return true;
 //			}
@@ -108,12 +122,20 @@ public class ObstaclePlacementScript : MonoBehaviour {
 		dragging = false;
 		rotating = true;
 		startRotation = transform.rotation;
+		Start ();
+		Vector3 tempPos= overviewGUICamera.camera.ScreenToWorldPoint(overviewCamera.camera.WorldToScreenPoint(transform.position) + new Vector3(Screen.width * 0.1f,0,0));
+		tempPos.z = 5;
+		rotateArrow.GetComponent<SpriteRenderer> ().enabled = true;
+		rotateArrow.transform.rotation = Quaternion.identity;
+		rotateArrow.transform.position = tempPos;
+
 	}
 	
 
 	void Place(){
 		dragging = false;
 		rotating = false;
+		rotateArrow.GetComponent<SpriteRenderer> ().enabled = false;
 		if(rotateCallback != null) rotateCallback ();
 	}
 

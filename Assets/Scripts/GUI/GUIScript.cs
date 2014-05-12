@@ -41,6 +41,9 @@ public class GUIScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(Ball == null)
+			Ball = GameObject.FindGameObjectWithTag("TheBall");
+
 
 		//Steering controls
 		if (!steering) {

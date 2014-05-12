@@ -15,26 +15,30 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void Update(){
-		if (!firstRoundStarted && Network.isServer && numOfPlayersLoaded == Network.connections.Length 
-						&& Application.loadedLevel == 1) {
-				firstRoundStarted = true;
-				networkView.RPC ("StartFirstRound", RPCMode.AllBuffered, null);	
-			}
-		}
-
-	void OnLevelWasLoaded(int i){
-		if(i == 1)
-			networkView.RPC ("HasLoadedLevel", RPCMode.Server, null);
-		}
-
-	[RPC]
-	void StartFirstRound(){
-		Time.timeScale = 1;
+//		if (!firstRoundStarted && Network.isServer && numOfPlayersLoaded == Network.connections.Length 
+//					&& Application.loadedLevel == 1) {
+//			firstRoundStarted = true;
+//			networkView.RPC ("StartFirstRound", RPCMode.All, null);	
+//		}
 	}
-	[RPC] 
-	void HasLoadedLevel(){
-		numOfPlayersLoaded++;
-	}
+
+//	void OnLevelWasLoaded(int i){
+//		if (i == 1) {
+////			NetworkViewID newID = Network.AllocateViewID();
+////			networkView.viewID = newID;
+//			networkView.RPC ("HasLoadedLevel", RPCMode.Server, null);
+//		}
+//	}
+
+//	[RPC]
+//	void StartFirstRound(){
+//		Time.timeScale = 1;
+//		GameObject.FindGameObjectWithTag ("GameManager").GetComponent<CountdownScript> ().StartCountDown ();
+//	}
+//	[RPC] 
+//	void HasLoadedLevel(){
+//		numOfPlayersLoaded++;
+//	}
 
 	public void startServer(string serverName)
 	{

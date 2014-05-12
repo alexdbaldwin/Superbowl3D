@@ -46,7 +46,7 @@ public class FreePlacementScript : MonoBehaviour {
 						bool spaceFree = true;
 						Collider[] colliders = Physics.OverlapSphere(hit.point, 0.9f); //Totally arbitrary size
 						foreach(Collider coll in colliders){
-							if (coll.gameObject.tag == "Obstacle" && !coll.isTrigger){
+							if (coll.gameObject.tag == "Obstacle" && coll.isTrigger){
 								spaceFree = false;
 								break;
 							}

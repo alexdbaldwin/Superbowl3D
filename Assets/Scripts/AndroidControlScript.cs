@@ -6,6 +6,7 @@ public class AndroidControlScript : MonoBehaviour {
 	public GameObject GUIManager;
 	public AudioSource boostEffect;
 	public AudioSource jumpEffect;
+	private GameObject gameManager;
 
 	public float defaultBodyDrag;
 	private float rigidbodyDrag;
@@ -40,11 +41,16 @@ public class AndroidControlScript : MonoBehaviour {
 	private float boostEffectModifier = 0.05f;
 
 	private bool tiltControls = false;
+	private bool lockedControls = false;
 
 
 
 	// Use this for initialization
 	void Start () {
+		gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+		GUIManager = GameObject.FindGameObjectWithTag("GUIManager");
+		gameManager = GameObject.FindGameObjectWithTag("GameManager");
+	
 		ballStartPos = transform.position;
 		jumpBtn = new Rect (Screen.width - 150, Screen.height - 150, 100, 100);
 		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
@@ -55,6 +61,12 @@ public class AndroidControlScript : MonoBehaviour {
 
 	void Update()
 	{
+		if(gameManager == null)
+			gameManager = GameObject.FindGameObjectWithTag("GameManager");
+	
+	
+		if (lockedControls || !gameManager.GetComponent<GameManager>().IsBall())
+			return;
 
 		if (tiltControls) {
 			AccelerometerControls ();
@@ -65,29 +77,27 @@ public class AndroidControlScript : MonoBehaviour {
 			Application.LoadLevel(Application.loadedLevelName);
 		}
 
-//		if (IsTouching()) {
-////			if (jumpBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
-////				isJumping = true;
-////			}
-////			if (boostBtn.Contains(ConvertToTopLeftOrigin(Input.GetTouch(0).position))) {
-////				isBoosting = true;
-////			}
-//		}
+
 		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
 		if (Application.isEditor || Application.isWebPlayer) {
 						isBoosting = Input.GetKey (KeyCode.UpArrow);
 				}
 		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
-		//		TouchStick();
 	}
-	// Update is called once per frame
+
+
 	void FixedUpdate () 
 	{
-		//comment this out for android
+		if(gameManager == null)
+			gameManager = GameObject.FindGameObjectWithTag("GameManager");
+	
+	
+		if (lockedControls || !gameManager.GetComponent<GameManager>().IsBall())
+			return;
+
 		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsWebPlayer) {
 			horizontalMovement = Input.GetAxis ("Horizontal");
 				}
-		//float horizontalMovement = Input.GetAxis ("Horizontal");
 
 		
 		Vector3 right = gameCamera.transform.right;
@@ -153,16 +163,6 @@ public class AndroidControlScript : MonoBehaviour {
 
 	void OnGUI()
 	{
-//		GUI.Label (new Rect (0, 0, 200, 100), "OnSurface: " + isOnSurface.ToString() + " Jump: " + isJumping.ToString());
-//		GUI.Label (new Rect (0, 20, 200, 100), "Power Gauge: " + powerGauge.ToString());
-//		GUI.Label (new Rect (0, 40, 200, 100), "Boost modifier : " + boostModifier.ToString());
-//		GUI.Label (new Rect (0, 60, 200, 100), "Touch count : " + Input.touchCount);
-//		GUI.Button (jumpBtn, "Jumpuru");
-//		GUI.Button (boostBtn, "Boosturu");
-//		if (IsTouching()) {
-//			GUI.Label (new Rect (0, 60, 200, 100), ConvertToTopLeftOrigin(Input.GetTouch(0).position).ToString());
-//		}
-
 
 	}
 	
@@ -181,7 +181,7 @@ public class AndroidControlScript : MonoBehaviour {
 	void OnCollisionExit(Collision collisionInfo)
 	{
 		isOnSurface = false;
-		if (collisionInfo.gameObject.tag == "TheLevel")
+		if (collisionInfo.gameObject.tag == "TheLevel" && gameManager.GetComponent<GameManager>().IsBall())
 						lastActiveNodePos = gameCamera.GetComponent<CameraPositioningScript> ().GetCurrentNodePosition();
 	}
 
@@ -221,12 +221,7 @@ public class AndroidControlScript : MonoBehaviour {
 
 	}
 
-
-//	bool IsTouching()
-//	{
-//		return Input.touchCount > 0;
-//
-//	}
+	
 
 	Vector2 ConvertToTopLeftOrigin(Vector2 andPos)
 	{
@@ -240,5 +235,13 @@ public class AndroidControlScript : MonoBehaviour {
 	public GameObject GetGameCamera()
 	{
 		return gameCamera;
+	}
+
+	public void LockControls(){
+		lockedControls = true;
+	}
+
+	public void UnlockControls(){
+		lockedControls = false;
 	}
 }

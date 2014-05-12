@@ -137,6 +137,7 @@ public class LobbyScript : MonoBehaviour {
 	{
 		Time.timeScale = 0;
 		Application.LoadLevel(1);
+
 	}
 
 	void Click(Vector2 position)
@@ -182,7 +183,8 @@ public class LobbyScript : MonoBehaviour {
 				}
 				networkView.RPC("SetPlayer1", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"));
 				currentPlayerState = PlayerState.PLAYERONE;
-				globalStorage.GetComponent<NetworkManager>().SetId(0);
+//				globalStorage.GetComponent<NetworkManager>().SetId(0);
+				PlayerPrefs.SetInt("PlayerType", 0);
 				currentObserverIndex = -1;
 			}
 			//Player2 button
@@ -195,7 +197,8 @@ public class LobbyScript : MonoBehaviour {
 				}
 				networkView.RPC("SetPlayer2", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"));
 				currentPlayerState = PlayerState.PLAYERTWO;
-				globalStorage.GetComponent<NetworkManager>().SetId(1);
+//				globalStorage.GetComponent<NetworkManager>().SetId(1);
+				PlayerPrefs.SetInt("PlayerType", 1);
 				currentObserverIndex = -1;
 			}
 //			for (int i = 0; i < playerList.Count; i++) {
@@ -215,7 +218,8 @@ public class LobbyScript : MonoBehaviour {
 					}
 					networkView.RPC("SetObserver", RPCMode.AllBuffered, i, PlayerPrefs.GetString("PlayerName"));
 					currentPlayerState = PlayerState.OBSERVER;
-					globalStorage.GetComponent<NetworkManager>().SetId(2);
+//					globalStorage.GetComponent<NetworkManager>().SetId(2);
+					PlayerPrefs.SetInt("PlayerPrefs", 2);
 					currentObserverIndex = i;
 				}
 			}

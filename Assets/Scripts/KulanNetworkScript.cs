@@ -3,6 +3,7 @@ using System.Collections;
 
 public class KulanNetworkScript : MonoBehaviour {
 
+
 	void Awake(){
 //		NetworkView newNetView = gameObject.AddComponent<NetworkView>();
 //		newNetView.stateSynchronization = NetworkStateSynchronization.ReliableDeltaCompressed;
@@ -40,14 +41,24 @@ public class KulanNetworkScript : MonoBehaviour {
 	[RPC]
 	void ChangeOwner(NetworkViewID id)
 	{
-		networkView.viewID = id;
-		
+			networkView.viewID = id;
 	}
 
 	public void SetAsOwner()
 	{
+
+		
 		NetworkViewID newID = Network.AllocateViewID ();
 		
-		networkView.RPC ("ChangeOwner", RPCMode.All, newID);
+//		networkView.RPC ("ChangeOwner", RPCMode.AllBuffered, newID);
+		GameObject oldBall = GameObject.FindGameObjectWithTag("TheBall");
+		oldBall.GetComponent<BallUtilityScript>().ResetPosition();
+		Network.Instantiate(Resources.Load("Prefabs/Kulan"), oldBall.transform.position, Quaternion.identity, 1);
+		Network.Destroy(oldBall);
+	}
+	
+	void OnGUI()
+	{
+		GUI.Label (new Rect(20, 150, 100, 50), networkView.viewID.ToString());
 	}
 }

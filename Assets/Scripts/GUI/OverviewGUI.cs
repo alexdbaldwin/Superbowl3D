@@ -18,6 +18,9 @@ public class OverviewGUI : MonoBehaviour {
 	
 
 	void Update () {
+		if(theBall == null) 
+			theBall = GameObject.FindWithTag ("TheBall");
+	
 		if (!bounds.Equals (gameObject.camera.pixelRect)) {
 			RefreshGUILayout();
 			bounds = gameObject.camera.pixelRect;

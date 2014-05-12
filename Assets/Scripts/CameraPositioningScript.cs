@@ -34,7 +34,8 @@ public class CameraPositioningScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		
+		if(target == null)
+			target = GameObject.FindGameObjectWithTag("TheBall");
 
 		directionNodes = motherNode.GetComponentsInChildren<Transform>();
 		float minDistance = 10000.0f;
@@ -95,14 +96,14 @@ public class CameraPositioningScript : MonoBehaviour {
 				meshRenderers[i].material.SetColor("_Color", Color.yellow);
 			else
 				meshRenderers[i].material.SetColor("_Color", Color.white);
-//			meshRenderers[i].material.SetColor("_Color", i == closestIndex ? Color.red : Color.cyan);
 		}
 		
 		currentNodePos = closest.position;
 
 		Transform secondClosestToUse = currentSecond;
+
 		usingOld = false;
-		if(Vector3.Dot(target.rigidbody.velocity, closest.position - target.transform.position) > 0.0f && 
+		if(oldSecond != null && Vector3.Dot(target.rigidbody.velocity, closest.position - target.transform.position) > 0.0f && 
 			Vector3.Dot(target.rigidbody.velocity, currentSecond.position - target.transform.position) > 0.0f)
 		{
 			secondClosestToUse = oldSecond;
@@ -127,11 +128,6 @@ public class CameraPositioningScript : MonoBehaviour {
 		transform.rotation = Quaternion.Lerp(oldRot,newRot,2.0f*Time.deltaTime);
 
 
-
-//		Vector3 targetVelocity = -target.rigidbody.velocity;
-//		targetVelocity.Normalize ();
-//		transform.position = Vector3.Lerp(transform.position, target.transform.position + targetVelocity + new Vector3(0, cameraHeight, 0), Time.deltaTime * 2.0f);
-//		transform.LookAt (target.transform);
 	}
 
 	void SetTarget(GameObject target)

@@ -18,6 +18,7 @@ public class BallUtilityScript : MonoBehaviour {
 	public void ResetPosition()
 	{
 		transform.position = startPos;
+		rigidbody.velocity = Vector3.zero;
 	}
 
 }
