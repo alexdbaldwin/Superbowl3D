@@ -70068,7 +70068,7 @@ MonoBehaviour:
   - {fileID: 100002, guid: c7c0ba75067d1a24e96d4628549532ef, type: 2}
   - {fileID: 100000, guid: 306a36ae8a53de64cbccc8aaabce3005, type: 2}
   - {fileID: 100000, guid: b8c249f74edcb444b99997ab40e0aa09, type: 2}
-  - {fileID: 100006, guid: 34e8ad0133d98f14785b7addde54d8b3, type: 2}
+  - {fileID: 100004, guid: 34e8ad0133d98f14785b7addde54d8b3, type: 2}
   overviewGUICamera: {fileID: 5408970}
   disabledButtonMaterial: {fileID: 2100000, guid: 4d2b5209e21cc2b4bab6db2509a1c35d,
     type: 2}

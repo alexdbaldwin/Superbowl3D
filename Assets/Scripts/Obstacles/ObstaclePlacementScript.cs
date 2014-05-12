@@ -6,7 +6,6 @@ public class ObstaclePlacementScript : MonoBehaviour {
 	enum InputType {MouseControl, TouchControl}
 
 	public string prefabName = "Bumper";
-	public Collider placementMesh;
 
 	bool rotating = false;
 	bool dragging = false;

@@ -17,6 +17,8 @@ public class TurretScript : MonoBehaviour {
 
 	void Update () {
 
+		if (GetComponent<PlaceableParameters> ().lockUpdate)
+			return;
 
 		if (Vector3.Distance (transform.position, ball.transform.position) < range) {
 			shootTimer += Time.deltaTime;

@@ -161,6 +161,8 @@ public class PlaceableMenu : MonoBehaviour {
 				child.gameObject.layer = 11;
 				//child.gameObject.tag = "RadialMenuButton";
 			}
+
+			go.GetComponent<PlaceableParameters>().lockUpdate = true;
 	
 			menuButtons.Add(go);
 			
