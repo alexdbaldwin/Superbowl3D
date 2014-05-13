@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 	private GameObject currentPlacementBox = null;
 	private bool areaOverlayVisible = true;
 	private bool cancelZoom = false;
-
+	
 	private bool isSwapped = false;
 	private bool isPlaying = false;
 
@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour {
 	private int points = 20;
 	private int maxRounds = 4;
 	private int currentRound = 1;
+	private float pointGainTimer = 0.0f;
+	private float pointGainInterval = 5.0f;
+	private int pointGainAmount = 1;
 
 	private string debugText = "";
 
@@ -50,7 +53,6 @@ public class GameManager : MonoBehaviour {
 		{
 			cl.enabled = false;
 		}
-
 	}
 
 
@@ -58,6 +60,15 @@ public class GameManager : MonoBehaviour {
 
 		if(ball == null)
 			ball = GameObject.FindGameObjectWithTag("TheBall");
+
+		//Give the non-ball player extra points over time
+		if (!IsBall () && isPlaying) {
+			pointGainTimer += Time.deltaTime;
+			if(pointGainTimer >= pointGainInterval){
+				pointGainTimer -= pointGainInterval;
+				AddPoints(pointGainAmount);
+			}
+		}
 
 		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
 			Click(Input.GetTouch(0).position);
@@ -137,6 +148,7 @@ public class GameManager : MonoBehaviour {
 				overviewGUICamera.SetActive(false);
 				spectatorCamera.SetActive(true);
 				isPlaying = false;
+
 			}
 		}
 		else {
@@ -266,6 +278,8 @@ public class GameManager : MonoBehaviour {
 		return currentPlacementBox;
 
 	}
+
+
 
 
 }

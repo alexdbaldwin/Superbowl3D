@@ -16,17 +16,13 @@ public class FreePlacementScript : MonoBehaviour {
 		menu = GetComponent<PlaceableMenu> ();
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 
+	void Update () {
 		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
 			Click(Input.GetTouch(0).position);
 		} else if (Input.GetMouseButtonDown (0)) {
 			Click(Input.mousePosition);
 		}
-
 	}
 
 	void Click(Vector2 position){

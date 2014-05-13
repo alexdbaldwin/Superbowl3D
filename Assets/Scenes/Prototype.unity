@@ -29201,7 +29201,10 @@ Prefab:
       propertyPath: m_LocalScale.x
       value: 378.73407
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6400000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
+    - {fileID: 3300000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
+    - {fileID: 2300000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
   m_RootGameObject: {fileID: 842924329}
   m_IsPrefabParent: 0
@@ -31600,10 +31603,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 842924334}
-  - 33: {fileID: 842924333}
-  - 64: {fileID: 842924332}
-  - 23: {fileID: 842924331}
   - 114: {fileID: 842924330}
+  - 65: {fileID: 842924331}
   m_Layer: 0
   m_Name: OutOfBoundPlane
   m_TagString: Untagged
@@ -31623,50 +31624,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711cf0bc1cc925d4bb741e1acb8b8d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!23 &842924331
-Renderer:
+--- !u!65 &842924331
+BoxCollider:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: acf310b430ecc844b83b96a52d3c5494,
-    type: 2}
-  m_PrefabInternal: {fileID: 769337883}
-  m_GameObject: {fileID: 842924329}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortingLayerID: 0
---- !u!64 &842924332
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 6400000, guid: acf310b430ecc844b83b96a52d3c5494,
-    type: 2}
-  m_PrefabInternal: {fileID: 769337883}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 842924329}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!33 &842924333
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: acf310b430ecc844b83b96a52d3c5494,
-    type: 2}
-  m_PrefabInternal: {fileID: 769337883}
-  m_GameObject: {fileID: 842924329}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Size: {x: 10.000001, y: 5.55000019, z: 10.0000019}
+  m_Center: {x: 0, y: 1.90734863e-06, z: 0}
 --- !u!4 &842924334
 Transform:
   m_ObjectHideFlags: 0
@@ -70740,7 +70709,7 @@ MonoBehaviour:
   ball: {fileID: 0}
   ballOverviewSprite: {fileID: 2018903290}
   overviewGUICamera: {fileID: 5408970}
-  BallView: 0
+  BallView: 1
 --- !u!148 &2002583114
 NetworkView:
   m_ObjectHideFlags: 0
