@@ -16192,6 +16192,10 @@ Prefab:
       propertyPath: m_ViewID.m_Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8200000, guid: 893b9e9b166cd1a42926916d14ba198b, type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 893b9e9b166cd1a42926916d14ba198b, type: 2}
   m_RootGameObject: {fileID: 2113858726}
@@ -29167,15 +29171,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -7.25580883
+      value: -7.11215544
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -85.3034286
+      value: -102.575195
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -53.5291214
+      value: -40.1522598
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: acf310b430ecc844b83b96a52d3c5494, type: 2}
       propertyPath: m_LocalRotation.x
@@ -31643,7 +31647,7 @@ Transform:
   m_PrefabInternal: {fileID: 769337883}
   m_GameObject: {fileID: 842924329}
   m_LocalRotation: {x: -.231088161, y: .669541359, z: -.226500079, w: .66858834}
-  m_LocalPosition: {x: -7.25580883, y: -85.3034286, z: -53.5291214}
+  m_LocalPosition: {x: -7.11215544, y: -102.575195, z: -40.1522598}
   m_LocalScale: {x: 378.73407, y: 3.48645711, z: 229.401611}
   m_Children: []
   m_Father: {fileID: 0}
@@ -41605,6 +41609,32 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1126212027}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1127645726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1127645727}
+  m_Layer: 0
+  m_Name: BallStartPos
+  m_TagString: BallStartPos
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1127645727
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1127645726}
+  m_LocalRotation: {x: 0, y: .254166514, z: 0, w: .967160463}
+  m_LocalPosition: {x: -20.8840809, y: -111.822403, z: -109.740601}
+  m_LocalScale: {x: 4.55231667, y: 4.84256554, z: 2.04786086}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1001 &1139175842
 Prefab:
   m_ObjectHideFlags: 0
@@ -70672,6 +70702,7 @@ GameObject:
   - 114: {fileID: 2002583115}
   - 114: {fileID: 2002583117}
   - 114: {fileID: 2002583118}
+  - 114: {fileID: 2002583119}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -70706,9 +70737,127 @@ MonoBehaviour:
   overviewCamera: {fileID: 1517063817}
   spectatorCamera: {fileID: 460054607}
   motherNode: {fileID: 7172119}
-  ball: {fileID: 0}
+  ball: {fileID: 2113858726}
   ballOverviewSprite: {fileID: 2018903290}
   overviewGUICamera: {fileID: 5408970}
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: 2240ad7273bde0c45b516fed6a4c1428, type: 3}
+    m_FontSize: 150
+    m_FontStyle: 3
+    m_Alignment: 4
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  endGameTextStyle:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: 2240ad7273bde0c45b516fed6a4c1428, type: 3}
+    m_FontSize: 75
+    m_FontStyle: 3
+    m_Alignment: 7
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
   BallView: 1
 --- !u!148 &2002583114
 NetworkView:
@@ -70837,6 +70986,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3077b782186af174ca6cb027013d2e2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2002583119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2002583111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1f8418ad512df4fbd551eadd6d56d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: 2240ad7273bde0c45b516fed6a4c1428, type: 3}
+    m_FontSize: 32
+    m_FontStyle: 3
+    m_Alignment: 1
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
 --- !u!1 &2009822216
 GameObject:
   m_ObjectHideFlags: 0
@@ -74578,7 +74797,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 3
   m_audioClip: {fileID: 8300000, guid: 28ade4c90bb2a524c9392b9258dcda41, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1

@@ -7,10 +7,12 @@ public class CountdownScript : MonoBehaviour {
 	float textScale;
 	float countdownTime = 3;
 	public bool countingDown = false;
-	// Use this for initialization
+	public delegate void CountdownFinished();
+	CountdownFinished callback;
 	
-	public void StartCountDown()
+	public void StartCountDown(CountdownFinished callback)
 	{
+		this.callback = callback;
 		if(ball == null)
 			ball = GameObject.FindGameObjectWithTag("TheBall");
 	
@@ -30,14 +32,15 @@ public class CountdownScript : MonoBehaviour {
 	
 		if (countingDown) {
 			countdownTime = countdownTime -Time.deltaTime;
-
+			if (countdownTime <= 0) {
+				countingDown = false;
+				countdownTime = 3;
+				ball.rigidbody.WakeUp();
+				ball.GetComponent<AndroidControlScript> ().UnlockControls();
+				if(callback != null) callback();
 			}
-		if (countdownTime <= 0) {
-			countingDown = false;
-			countdownTime = 3;
-			ball.rigidbody.WakeUp();
-			ball.GetComponent<AndroidControlScript> ().UnlockControls();
 		}
+		
 	}
 	void OnGUI()
 	{

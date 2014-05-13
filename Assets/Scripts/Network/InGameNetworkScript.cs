@@ -22,7 +22,14 @@ public class InGameNetworkScript : MonoBehaviour {
 	[RPC]
 	void StartFirstRound(){
 		Time.timeScale = 1;
-		GameObject.FindGameObjectWithTag ("GameManager").GetComponent<CountdownScript> ().StartCountDown ();
+		GetComponent<CountdownScript> ().StartCountDown (GetComponent<LapTimerScript>().Unpause);
+		GetComponent<LapTimerScript>().ResetTimer();
+		GetComponent<LapTimerScript>().Pause();
+	}
+	
+	void OnDisconnectedFromServer(NetworkDisconnection info)
+	{
+		Application.LoadLevel (0);
 	}
 
 	[RPC] 

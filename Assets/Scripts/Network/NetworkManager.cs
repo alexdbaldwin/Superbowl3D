@@ -75,13 +75,6 @@ public class NetworkManager : MonoBehaviour {
 		networkPlayerId = newId;
 	}
 
-	void OnDisconnectedFromServer(NetworkDisconnection info)
-	{
-//		Network.Disconnect ();
-		Application.LoadLevel (0);
-
-	}
-
 	public IEnumerator refreshHostList()
 	{
 		MasterServer.RequestHostList (gameName);

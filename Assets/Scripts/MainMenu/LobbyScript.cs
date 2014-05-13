@@ -219,7 +219,7 @@ public class LobbyScript : MonoBehaviour {
 					networkView.RPC("SetObserver", RPCMode.AllBuffered, i, PlayerPrefs.GetString("PlayerName"));
 					currentPlayerState = PlayerState.OBSERVER;
 //					globalStorage.GetComponent<NetworkManager>().SetId(2);
-					PlayerPrefs.SetInt("PlayerPrefs", 2);
+					PlayerPrefs.SetInt("PlayerType", 2);
 					currentObserverIndex = i;
 				}
 			}

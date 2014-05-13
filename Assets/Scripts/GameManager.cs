@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Timing;
 
 public class GameManager : MonoBehaviour {
 
@@ -11,6 +13,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject ball;
 	public GameObject ballOverviewSprite;
 	public GameObject overviewGUICamera;
+	public GUIStyle style;
+	public GUIStyle endGameTextStyle;
 
 
 	public bool BallView = false;
@@ -30,17 +34,30 @@ public class GameManager : MonoBehaviour {
 	private float pointGainTimer = 0.0f;
 	private float pointGainInterval = 5.0f;
 	private int pointGainAmount = 1;
+	private int expectedTime = 120;
 
 	private string debugText = "";
+	private string message = "";
+	private string endGameText = "";
+	private string playerOneScoresText = "";
+	private string playerTwoScoresText = "";
+	
+	private List<LapTime> PlayerOneLapTimes = new List<LapTime>();
+	private List<LapTime> PlayerTwoLapTimes = new List<LapTime>();
+	
+	//End of lap
+	private bool displayEndOfLapInfo = false;
 
 	// Use this for initialization
 	void Start () {
 
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
+		if(ball == null)
+			ball = GameObject.FindGameObjectWithTag("TheBall");
 
 		SetPlayerMode ();
-
+		
+		
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
@@ -54,13 +71,33 @@ public class GameManager : MonoBehaviour {
 			cl.enabled = false;
 		}
 	}
-
-
+	
+	[RPC]
+	void ClientDisconnected(string name, int playerType)
+	{
+		message = name + " playerType: " + playerType + " has disconnected"; 	
+	}
+	void QuitGame()
+	{
+		if(isPlaying)
+		{
+			if(Network.isClient)
+			{
+				networkView.RPC("ClientDisconnected", RPCMode.Others, PlayerPrefs.GetString("PlayerName"), PlayerPrefs.GetInt("PlayerType"));
+			}
+		}
+		Network.Disconnect();
+		Application.LoadLevel(0);
+	}
 	void Update () {
-
+		
 		if(ball == null)
 			ball = GameObject.FindGameObjectWithTag("TheBall");
-
+		
+		if (Input.GetKey(KeyCode.Escape)) 
+		{	
+			QuitGame();
+		}
 		//Give the non-ball player extra points over time
 		if (!IsBall () && isPlaying) {
 			pointGainTimer += Time.deltaTime;
@@ -172,7 +209,7 @@ public class GameManager : MonoBehaviour {
 				isSwapped = true;
 			}
 			//This is normally called by the network manager, but needs to be done manually if we are playing single-player
-			GetComponent<CountdownScript> ().StartCountDown ();
+			GetComponent<CountdownScript> ().StartCountDown (null);
 		}
 		
 	}
@@ -180,10 +217,8 @@ public class GameManager : MonoBehaviour {
 	[RPC]
 	public void SwapPlayers()
 	{
-		debugText = "I am useless";
 		if (isPlaying) {
 			if (isSwapped) {
-				debugText = "I am the new ball";
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
@@ -192,7 +227,6 @@ public class GameManager : MonoBehaviour {
 				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 				isSwapped = false;
 			} else {
-				debugText = "I am the new trackmaster";
 				ballCamera.SetActive (false);
 				GUICamera.SetActive (false);
 				overviewCamera.SetActive (true);
@@ -201,28 +235,115 @@ public class GameManager : MonoBehaviour {
 				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 			}
 		}
-
-	}
-
-	public void StartNewRound(){
-
-		if (isPlaying && IsBall ()) {
-			networkView.RPC ("SwapPlayers", RPCMode.All, null);
-			networkView.RPC ("IncrementRound", RPCMode.All, null);
-			if(currentRound > maxRounds){
-
-				networkView.RPC ("EndGame", RPCMode.All, null);
-
-			}
-		}
+		GetComponent<LapTimerScript>().ResetTimer();
+		GetComponent<LapTimerScript>().Pause();
+		GetComponent<CountdownScript> ().StartCountDown (GetComponent<LapTimerScript>().Unpause);
 		spectatorCamera.GetComponent<SpectatorCamScript> ().ResetToStart ();
-
+		
 		
 		ballCamera.GetComponent<CameraPositioningScript> ().ResetToStart ();
 		//Reactivate collectibles
 		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Collectable")) {
 			go.GetComponent<CollectableScript> ().ResetCollectable ();
 		}
+
+	}
+	
+	public void EndOfLap(){
+		displayEndOfLapInfo = true;
+		BonusPoints();
+		networkView.RPC ("SendLapTime", RPCMode.All, GetComponent<LapTimerScript>().GetLapTime(), PlayerPrefs.GetInt ("PlayerType"));
+	}
+	public void StartNewRound(){
+
+		if (isPlaying && IsBall ()) {
+			ball.rigidbody.Sleep();
+			ball.GetComponent<AndroidControlScript>().LockControls();
+			BonusPoints();
+			networkView.RPC ("SendLapTime", RPCMode.All, GetComponent<LapTimerScript>().GetLapTime().GetMinutes(),GetComponent<LapTimerScript>().GetLapTime().GetSeconds(), PlayerPrefs.GetInt ("PlayerType"));
+			
+			if(currentRound == maxRounds)
+			{
+				networkView.RPC("EndGame", RPCMode.All, CalculateWinner());
+			}
+			else
+			{
+				displayEndOfLapInfo = true;
+				StartCoroutine(ResetRound());
+			}
+		}
+	}
+	
+	private int CalculateWinner()
+	{
+		float playerOneAverageTime = 0;
+		float playerTwoAverageTime = 0;
+		for(int i = 0; i < maxRounds / 2; i ++)
+		{
+			playerOneAverageTime += PlayerOneLapTimes[i].GetLapTimeInSeconds();
+			playerTwoAverageTime += PlayerTwoLapTimes[i].GetLapTimeInSeconds();
+		}
+		playerOneAverageTime /= maxRounds / 2;
+		playerTwoAverageTime /= maxRounds / 2;
+		
+		if(playerOneAverageTime > playerTwoAverageTime)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	
+	private IEnumerator ResetRound(){
+		yield return new WaitForSeconds(4);
+		displayEndOfLapInfo = false;
+		networkView.RPC ("SwapPlayers", RPCMode.All, null);
+		networkView.RPC ("IncrementRound", RPCMode.All, null);
+		if(currentRound > maxRounds){
+			networkView.RPC ("EndGame", RPCMode.All, null);
+		}
+	} 
+	
+	[RPC]
+	void EndGame(int winner){
+		ball.rigidbody.Sleep();
+		ball.GetComponent<AndroidControlScript>().LockControls();
+		if(isPlaying)
+		{
+			if(PlayerPrefs.GetInt("PlayerType") == winner)
+				endGameText = "YOU WON!\n";
+			else
+				endGameText = "YOU SUCK!\n";
+				
+		}
+		else
+		{
+			endGameText = "THANK YOU FOR WATCHING! PLAYER " + (winner + 1) + " WON!";
+		}
+		
+		for(int i = 0; i < PlayerOneLapTimes.Count; i++){
+			playerOneScoresText += PlayerOneLapTimes[i].ToString() + "\n";
+		}
+		for(int i = 0; i < PlayerTwoLapTimes.Count; i++){
+			playerTwoScoresText += PlayerTwoLapTimes[i].ToString() + "\n";
+		}
+		
+		StartCoroutine(DelayedExit());
+	}
+	
+	IEnumerator DelayedExit()
+	{
+		yield return new WaitForSeconds(10);
+		Network.Disconnect();
+		Application.LoadLevel (0);
+	}
+	
+	void BonusPoints(){
+		int difference = expectedTime - (int)GetComponent<LapTimerScript>().GetLapTime().GetLapTimeInSeconds();
+		if(difference > 0)
+			AddPoints(difference);
 	}
 
 	[RPC]
@@ -230,13 +351,16 @@ public class GameManager : MonoBehaviour {
 		currentRound++;
 		debugText = "incremented";
 	}
-
-	[RPC]
-	void EndGame(){
-
-		//Change this!!!!!!!
-		Application.LoadLevel (0);
 	
+	[RPC]
+	void SendLapTime(int minutes, float seconds, int playerType){
+		if(playerType == 0){
+			PlayerOneLapTimes.Add(new LapTime(minutes, seconds));
+		} else if (playerType == 1){
+			PlayerTwoLapTimes.Add(new LapTime(minutes, seconds));
+		} else {
+			Debug.LogError ("Invalid lap time");
+		}
 	}
 
 	public bool IsBall(){
@@ -266,7 +390,26 @@ public class GameManager : MonoBehaviour {
 	{
 
 		GUI.Label (new Rect (0, 0, 100, 50), points.ToString ());
-		GUI.Label (new Rect (0, 50, 1000, 50), debugText);
+		GUI.Label (new Rect(0, 40, 100, 50), message);
+		endGameTextStyle.alignment = TextAnchor.UpperCenter;
+		GUI.Label ( new Rect(Screen.width * 0.5f, Screen.height * 0.4f, 0.0f,0.0f), endGameText, endGameTextStyle);
+		endGameTextStyle.alignment = TextAnchor.UpperRight;
+		GUI.Label(new Rect(0, Screen.height * 0.5f, Screen.width * 0.5f - 20.0f, Screen.height * 0.5f), playerOneScoresText, endGameTextStyle);
+		endGameTextStyle.alignment = TextAnchor.UpperLeft;
+		GUI.Label(new Rect(Screen.width * 0.5f + 20.0f, Screen.height * 0.5f, Screen.width * 0.5f - 20.0f, Screen.height * 0.5f), playerTwoScoresText, endGameTextStyle);
+		if(IsBall())
+		{
+			GUI.Label (new Rect(20,400,100,50), "Lap : " + (((currentRound - 1) / 2) + 1).ToString() + "/" + (maxRounds/2).ToString());
+		}
+		if(displayEndOfLapInfo){
+			Debug.Log(currentRound / 2 + " - " + PlayerOneLapTimes.Count);
+			if(currentRound%2 == 1){
+				GUI.Label( new Rect(Screen.width * 0.5f, Screen.height * 0.4f, 0.0f,0.0f), PlayerOneLapTimes[currentRound / 2].ToString(), style);
+			}
+			else{
+				GUI.Label( new Rect(Screen.width * 0.5f, Screen.height * 0.4f, 0.0f,0.0f), PlayerTwoLapTimes[currentRound / 2 - 1].ToString(), style);
+			}
+		}
 		
 	}
 

@@ -73,9 +73,6 @@ public class AndroidControlScript : MonoBehaviour {
 		} else {
 			TouchControls();	
 		}
-		if (Input.GetKey(KeyCode.Escape)) {
-			Application.LoadLevel(Application.loadedLevelName);
-		}
 
 
 		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
@@ -105,7 +102,7 @@ public class AndroidControlScript : MonoBehaviour {
 		right.Normalize ();
 		Vector3 cross = Vector3.Cross (currentCollisionNormal, right);
 		Vector3 forceDir = Vector3.Cross (cross, currentCollisionNormal);
-		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed, ForceMode.VelocityChange);
+		rigidbody.AddForce (forceDir * horizontalMovement * turnSpeed * (isOnSurface ? 1.0f : 0.4f), ForceMode.VelocityChange);
 		
 
 		
