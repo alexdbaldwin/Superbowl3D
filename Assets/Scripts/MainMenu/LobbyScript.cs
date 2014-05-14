@@ -46,7 +46,7 @@ public class LobbyScript : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		globalStorage.GetComponent<NetworkManager>().SetId(2);
+		//globalStorage.GetComponent<NetworkManager>().SetId(2);
 		for (int i = 0; i < 5; i++) {
 			observerList.Add(observerText);
 				observerLocks[i] = false;

@@ -6,7 +6,7 @@ public class SpectatorCamScript : MonoBehaviour {
 	private GameObject firstNode;
 	public GameObject ball;
 	public GameObject targetNode;
-	private float camSpeed = 2f;
+	private float camSpeed = 0.5f;
 	public GUIStyle uiOverlayStyle;
 	public int player1Score = 0, player2Score = 0;
 	public string scoreUnit = "sp", speedUnit = "ly/s";
@@ -18,6 +18,10 @@ public class SpectatorCamScript : MonoBehaviour {
 	{
 		targetNode = newTargetNode;
 		
+	}
+
+	public void SetSpeed(float speed){
+		camSpeed = speed;
 	}
 	
 	public void ResetToStart(){

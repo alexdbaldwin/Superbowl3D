@@ -7,6 +7,7 @@ public class AndroidControlScript : MonoBehaviour {
 	public AudioSource boostEffect;
 	public AudioSource jumpEffect;
 	private GameObject gameManager;
+	private GameObject boostTrail;
 
 	public float defaultBodyDrag;
 	private float rigidbodyDrag;
@@ -50,13 +51,15 @@ public class AndroidControlScript : MonoBehaviour {
 		gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
 		GUIManager = GameObject.FindGameObjectWithTag("GUIManager");
 		gameManager = GameObject.FindGameObjectWithTag("GameManager");
-	
+		boostTrail = GameObject.FindGameObjectWithTag("BoostTrail");
+
 		ballStartPos = transform.position;
 		jumpBtn = new Rect (Screen.width - 150, Screen.height - 150, 100, 100);
 		boostBtn = new Rect(Screen.width - 150, Screen.height - 300, 100, 100);
 		defaultBodyDrag = rigidbody.drag;
 		tiltControls = PlayerPrefs.GetInt ("Tilt") == 1 ? true : false;
-
+		LockControls ();
+		rigidbody.Sleep ();
 	}
 
 	void Update()
@@ -80,6 +83,12 @@ public class AndroidControlScript : MonoBehaviour {
 						isBoosting = Input.GetKey (KeyCode.UpArrow);
 				}
 		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
+
+		if (isBoosting && powerGauge > minPower) {
+			boostTrail.GetComponent<BoostTrailScript> ().Show ();		
+		} else {
+			boostTrail.GetComponent<BoostTrailScript> ().Hide ();
+		}
 	}
 
 

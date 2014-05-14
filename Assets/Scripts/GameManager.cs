@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour {
 	private bool inPlacementArea = false;
 	private GameObject currentPlacementBox = null;
 	private bool areaOverlayVisible = true;
-	private bool cancelZoom = false;
 	
 	private bool isSwapped = false;
 	private bool isPlaying = false;
@@ -36,7 +35,6 @@ public class GameManager : MonoBehaviour {
 	private int pointGainAmount = 1;
 	private int expectedTime = 120;
 
-	private string debugText = "";
 	private string message = "";
 	private string endGameText = "";
 	private string playerOneScoresText = "";
@@ -56,8 +54,7 @@ public class GameManager : MonoBehaviour {
 			ball = GameObject.FindGameObjectWithTag("TheBall");
 
 		SetPlayerMode ();
-		
-		
+
 		MeshRenderer[] meshRenderers;
 		meshRenderers = motherNode.GetComponentsInChildren<MeshRenderer>();
 		CapsuleCollider[] colliders;
@@ -75,8 +72,19 @@ public class GameManager : MonoBehaviour {
 	[RPC]
 	void ClientDisconnected(string name, int playerType)
 	{
-		message = name + " playerType: " + playerType + " has disconnected"; 	
+		ball.rigidbody.Sleep ();
+		ball.GetComponent<AndroidControlScript> ().LockControls ();
+
+		message = name + " has disconnected!"; 
+		if (isPlaying) {
+			message += " You win!";
+		}
+		message += " You will be returned to the menu in 5 seconds";
+
+		Invoke("QuitGame", 5.0f);
 	}
+
+
 	void QuitGame()
 	{
 		if(isPlaying)
@@ -349,7 +357,6 @@ public class GameManager : MonoBehaviour {
 	[RPC]
 	void IncrementRound(){
 		currentRound++;
-		debugText = "incremented";
 	}
 	
 	[RPC]
