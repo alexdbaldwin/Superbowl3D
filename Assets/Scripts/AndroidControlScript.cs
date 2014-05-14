@@ -25,8 +25,8 @@ public class AndroidControlScript : MonoBehaviour {
 	private float horizontalMovement;
 	private float turnSpeed = 0.25f;
 	private float powerGauge = 100f;
-	private int maxPower = 100;
-	private int minPower = 0;
+	private float maxPower = 100;
+	private float minPower = 0;
 	
 	private Rect jumpBtn;
 	private Rect boostBtn;
@@ -85,9 +85,11 @@ public class AndroidControlScript : MonoBehaviour {
 		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
 
 		if (isBoosting && powerGauge > minPower) {
-			boostTrail.GetComponent<BoostTrailScript> ().Show ();		
+			boostTrail.GetComponent<BoostTrailScript> ().Show ();	
+			GetComponent<MeshRenderer>().materials[1].color = Color.Lerp(new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f), Color.white, powerGauge/maxPower);
 		} else {
-			boostTrail.GetComponent<BoostTrailScript> ().Hide ();
+			boostTrail.GetComponent<BoostTrailScript> ().Hide();
+			GetComponent<MeshRenderer>().materials[1].color = new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f);
 		}
 	}
 
@@ -100,11 +102,15 @@ public class AndroidControlScript : MonoBehaviour {
 	
 		if (lockedControls || !gameManager.GetComponent<GameManager>().IsBall())
 			return;
+			
+		
 
 		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsWebPlayer) {
 			horizontalMovement = Input.GetAxis ("Horizontal");
 				}
 
+		if(gameCamera == null)
+			gameCamera = GameObject.FindGameObjectWithTag("MainCamera");
 		
 		Vector3 right = gameCamera.transform.right;
 		right.y = 0;

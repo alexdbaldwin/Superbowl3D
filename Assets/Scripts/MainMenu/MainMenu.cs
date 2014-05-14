@@ -145,12 +145,13 @@ public class MainMenu : MonoBehaviour {
 				}
 
 			} else {
-				if (!nameClicked || !hostClicked)
-						MenuReset ();
+				if (!nameClicked || !hostClicked){
+						//MenuReset ();
+						}
 			}	
 		}
 		if (backButtonEnabled) {
-			if (BackButtonClicked(position)) {
+			if (BackButtonClicked(position) && !lobbyActive) {
 				MenuReset();
 			}
 		}
@@ -164,7 +165,7 @@ public class MainMenu : MonoBehaviour {
 								return true;
 						}
 				}
-	return false;
+		return false;
 	}
 
 	void PresentServerList()
@@ -176,7 +177,7 @@ public class MainMenu : MonoBehaviour {
 		SetBackButtonEnable (true);
 	}
 
-	void MenuHide(){
+	public void MenuHide(){
 		MenuReset ();
 		StartButton.SetActive(false);
 		OptionButton.SetActive(false);

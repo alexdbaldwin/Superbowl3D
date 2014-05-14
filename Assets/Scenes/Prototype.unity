@@ -18675,9 +18675,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  player1Score: 0
-  player2Score: 0
-  scoreUnit: sp
+  scoreUnit: SpacePoints
   speedUnit: ly/s
 --- !u!81 &460054609
 AudioListener:
@@ -18685,7 +18683,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 460054607}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!92 &460054610
 Behaviour:
   m_ObjectHideFlags: 0
@@ -44339,7 +44337,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1127645726}
   m_LocalRotation: {x: 0, y: .254166514, z: 0, w: .967160463}
-  m_LocalPosition: {x: -20.8840809, y: -111.822403, z: -109.740601}
+  m_LocalPosition: {x: 57.3229713, y: 111.909317, z: 131.353973}
   m_LocalScale: {x: 4.55231667, y: 4.84256554, z: 2.04786086}
   m_Children: []
   m_Father: {fileID: 0}

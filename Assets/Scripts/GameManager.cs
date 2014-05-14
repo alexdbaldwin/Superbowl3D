@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
 	private bool skipIt = false;
 
 	private int points = 20;
-	private int maxRounds = 4;
+	private int maxRounds = 2;
 	private int currentRound = 1;
 	private float pointGainTimer = 0.0f;
 	private float pointGainInterval = 5.0f;
@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour {
 		{
 			cl.enabled = false;
 		}
+		
+		
 	}
 	
 	[RPC]
@@ -98,6 +100,9 @@ public class GameManager : MonoBehaviour {
 		Application.LoadLevel(0);
 	}
 	void Update () {
+		Debug.Log("IsBall: " + IsBall().ToString());
+		Debug.Log("IsPLaying: " + isPlaying.ToString());
+		Debug.Log("IsSwapped: " + isSwapped.ToString());
 		
 		if(ball == null)
 			ball = GameObject.FindGameObjectWithTag("TheBall");
@@ -167,7 +172,7 @@ public class GameManager : MonoBehaviour {
 	{
 		if (Network.isClient || Network.isServer) {
 //			if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 1) {
-			if (PlayerPrefs.GetInt("PlayerType") == 1) {
+			if (PlayerPrefs.GetInt("PlayerType") == 1) { //Trackplayer
 				ballCamera.SetActive (false);
 				GUICamera.SetActive (false);
 				spectatorCamera.SetActive(false);
@@ -175,9 +180,11 @@ public class GameManager : MonoBehaviour {
 				overviewGUICamera.SetActive(true);
 				isSwapped = true;
 				isPlaying = true;
+				networkView.RPC("SendPlayerNameToSpectator", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"), PlayerPrefs.GetInt("PlayerType"));
+				networkView.RPC("SendPointsToSpectator", RPCMode.All, this.points, PlayerPrefs.GetInt ("PlayerType"));
 			}
 //			else if (GameObject.Find ("GlobalStorage").GetComponent<NetworkManager> ().GetId () == 0) {
-			else if (PlayerPrefs.GetInt("PlayerType") == 0) {
+			else if (PlayerPrefs.GetInt("PlayerType") == 0) { //Ballplayer
 				ballCamera.SetActive (true);
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
@@ -185,6 +192,8 @@ public class GameManager : MonoBehaviour {
 				spectatorCamera.SetActive(false);
 				ball.GetComponent<KulanNetworkScript>().SetAsOwner();
 				isPlaying = true;
+				networkView.RPC("SendPlayerNameToSpectator", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"), PlayerPrefs.GetInt("PlayerType"));
+				networkView.RPC("SendPointsToSpectator", RPCMode.All, this.points, PlayerPrefs.GetInt ("PlayerType"));
 			}
 			else { //Spectator
 				ballCamera.SetActive(false);
@@ -193,6 +202,7 @@ public class GameManager : MonoBehaviour {
 				overviewGUICamera.SetActive(false);
 				spectatorCamera.SetActive(true);
 				isPlaying = false;
+				isSwapped = false;
 
 			}
 		}
@@ -231,6 +241,7 @@ public class GameManager : MonoBehaviour {
 				GUICamera.SetActive (true);
 				overviewCamera.SetActive (false);
 				overviewGUICamera.SetActive(false);
+				spectatorCamera.SetActive(false);
 				ball.GetComponent<KulanNetworkScript> ().SetAsOwner ();
 				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 				isSwapped = false;
@@ -239,6 +250,7 @@ public class GameManager : MonoBehaviour {
 				GUICamera.SetActive (false);
 				overviewCamera.SetActive (true);
 				overviewGUICamera.SetActive(true);
+				spectatorCamera.SetActive(false);
 				isSwapped = true;
 				ball.GetComponent<BallUtilityScript> ().ResetPosition ();
 			}
@@ -268,10 +280,13 @@ public class GameManager : MonoBehaviour {
 			ball.rigidbody.Sleep();
 			ball.GetComponent<AndroidControlScript>().LockControls();
 			BonusPoints();
+			
+			
 			networkView.RPC ("SendLapTime", RPCMode.All, GetComponent<LapTimerScript>().GetLapTime().GetMinutes(),GetComponent<LapTimerScript>().GetLapTime().GetSeconds(), PlayerPrefs.GetInt ("PlayerType"));
 			
 			if(currentRound == maxRounds)
 			{
+//				networkView.RPC ("ShowEndGameView", RPCMode.All, null);
 				networkView.RPC("EndGame", RPCMode.All, CalculateWinner());
 			}
 			else
@@ -315,8 +330,23 @@ public class GameManager : MonoBehaviour {
 	} 
 	
 	[RPC]
+	void SendPlayerNameToSpectator(string name, int playerType){
+		
+		spectatorCamera.GetComponent<SpectatorCamScript>().SetPlayerName(name, playerType);
+	}
+	
+	[RPC]
 	void EndGame(int winner){
-		ball.rigidbody.Sleep();
+//		ball.rigidbody.Sleep();
+		ballCamera.SetActive(false);
+		overviewCamera.SetActive(false);
+		GUICamera.SetActive(false);
+		overviewGUICamera.SetActive(false);
+		spectatorCamera.SetActive(true);
+		spectatorCamera.GetComponent<SpectatorCamScript>().ResetToStart();
+		ball.GetComponent<BallUtilityScript>().ResetPosition();
+		ball.rigidbody.WakeUp();
+		
 		ball.GetComponent<AndroidControlScript>().LockControls();
 		if(isPlaying)
 		{
@@ -361,6 +391,7 @@ public class GameManager : MonoBehaviour {
 	
 	[RPC]
 	void SendLapTime(int minutes, float seconds, int playerType){
+	
 		if(playerType == 0){
 			PlayerOneLapTimes.Add(new LapTime(minutes, seconds));
 		} else if (playerType == 1){
@@ -369,8 +400,25 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError ("Invalid lap time");
 		}
 	}
+	
+	[RPC]
+	void ShowEndGameView(){
+		//Nytt
+		ballCamera.SetActive(false);
+		overviewCamera.SetActive(false);
+		GUICamera.SetActive(false);
+		overviewGUICamera.SetActive(false);
+		spectatorCamera.SetActive(true);
+		spectatorCamera.GetComponent<SpectatorCamScript>().ResetToStart();
+		ball.rigidbody.WakeUp();
+	
+	}
 
 	public bool IsBall(){
+		if(!isPlaying)
+		{
+			return false;
+		}
 		return !isSwapped;
 	}
 
@@ -383,10 +431,16 @@ public class GameManager : MonoBehaviour {
 
 	public void AddPoints(int points){
 		this.points += points;
+		networkView.RPC("SendPointsToSpectator", RPCMode.All, this.points, PlayerPrefs.GetInt ("PlayerType"));
 	}
 
 	public void RemovePoints(int points){
 		this.points -= points;
+	}
+	
+	[RPC]
+	void SendPointsToSpectator(int points, int playerType){
+		spectatorCamera.GetComponent<SpectatorCamScript>().AddPoints(points, playerType);
 	}
 
 	public int GetPoints(){

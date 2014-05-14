@@ -8,8 +8,9 @@ public class SpectatorCamScript : MonoBehaviour {
 	public GameObject targetNode;
 	private float camSpeed = 0.5f;
 	public GUIStyle uiOverlayStyle;
-	public int player1Score = 0, player2Score = 0;
-	public string scoreUnit = "sp", speedUnit = "ly/s";
+	private int player1Score = 0, player2Score = 0;
+	public string scoreUnit = "SpacePoints", speedUnit = "ly/s";
+	private string player1Name = "Player1", player2Name = "Player2";
 	private float ballSpeed = 0;
 	
 	// Use this for initialization
@@ -32,6 +33,7 @@ public class SpectatorCamScript : MonoBehaviour {
 	void Start () {
 		transform.position = targetNode.transform.position;
 		firstNode = targetNode;
+		
 	}
 	
 	// Update is called once per frame
@@ -48,14 +50,36 @@ public class SpectatorCamScript : MonoBehaviour {
 	void OnGUI()
 	{
 		
-		string text = "Player1: " + player1Score.ToString () + " " + scoreUnit;
+		string text = player1Name + ": " + player1Score.ToString () + " " + scoreUnit;
 		GUI.Label (new Rect (0, 0, 200, 200), text, uiOverlayStyle);
-		text = "Player2: " + player2Score.ToString () + " " + scoreUnit;
+		text = player2Name + ": " + player2Score.ToString () + " " + scoreUnit;
 		Vector2 labelSize = uiOverlayStyle.CalcSize(new GUIContent(text));
 		GUI.Label (new Rect (Screen.width - labelSize.x, 0, 200, 200), text,uiOverlayStyle);
 		text = "Speed: " + ballSpeed.ToString () + speedUnit;
 		GUI.Label (new Rect (0, Screen.height - labelSize.y, 200, 200), text, uiOverlayStyle);
 		
+	}
+	
+	public void SetPlayerName(string name, int playerType)
+	{
+		if (playerType == 0) {
+			player1Name = name;
+		}
+		else {
+			player2Name = name;
+		}
+	}
+	
+	public void AddPoints(int points, int playerType)
+	{
+		if (playerType == 0) {
+			player1Score = points;
+		}
+		else if (playerType == 1) {
+			player2Score = points;
+		}
+	
+	
 	}
 	
 }

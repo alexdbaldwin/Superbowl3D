@@ -24,6 +24,8 @@ public class LobbyScript : MonoBehaviour {
 	const string observerLabel = "Join as Observer";
 	bool player1Locked = false;
 	bool player2Locked = false;
+	bool showDisconnectedFromServerText = false;
+	float timer = 0;
 	int currentObserverIndex = -1;
 	float offsetX = Screen.width * 0.05f;
 	float offsetY = Screen.height * 0.05f;
@@ -74,6 +76,37 @@ public class LobbyScript : MonoBehaviour {
 //		}
 		if(Menu.GetComponent<MainMenu>().lobbyActive)
 		WaitingForLobby ();
+		
+		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Ended) {
+			Click(Input.GetTouch(0).position);
+		} else if (Input.GetMouseButtonUp (0)) {
+			Click(Input.mousePosition);
+			}
+			
+		if(showDisconnectedFromServerText)
+		{
+			timer += Time.deltaTime;
+			if (timer > 2.0f) {
+				timer = 0;
+				showDisconnectedFromServerText = false;
+				Menu.GetComponent<MainMenu>().MenuReset();
+			}
+		
+		}
+	}
+	
+	void OnDisconnectedFromServer(NetworkDisconnection info) {
+	
+		RemovePlayer1();
+		RemovePlayer2();
+		for (int i = 0; i < observerList.Count; i++) {
+			RemoveObserver(i);
+		}
+		
+		
+		showDisconnectedFromServerText = true;
+		Menu.GetComponent<MainMenu>().MenuHide();
+		
 	}
 
 	void WaitingForLobby ()
@@ -142,31 +175,39 @@ public class LobbyScript : MonoBehaviour {
 
 	void Click(Vector2 position)
 	{
+		Ray ray = Camera.main.ScreenPointToRay (position);
+	
 		if (Menu.GetComponent<MainMenu>().BackButtonClicked(position)) {
-			Menu.GetComponent<MainMenu>().MenuReset();
-			player1 = "";
-			player2 = "";
-			observerList.Clear();
+			
+			if(currentPlayerState == PlayerState.PLAYERONE)
+				networkView.RPC("RemovePlayer1", RPCMode.AllBuffered, null);
+			else if(currentPlayerState == PlayerState.PLAYERTWO)
+				networkView.RPC("RemovePlayer2", RPCMode.AllBuffered, null);
+			else if(currentPlayerState == PlayerState.OBSERVER)
+				networkView.RPC("RemoveObserver", RPCMode.AllBuffered, currentObserverIndex);
 			Network.Disconnect();
 			if(Network.isServer)
 			{
 				MasterServer.UnregisterHost();
+				
 			}
+			RemovePlayer1();
+			RemovePlayer2();
+			Menu.GetComponent<MainMenu>().MenuReset();
 		}
-//		if (GUI.Button (new Rect (offsetX, Screen.height * 0.1f, 0, 0), "")) {
-//			Menu.GetComponent<MainMenu>().initMenu = true;
-//			player1 = "";
-//			player2 = "";
-//			observerList.Clear();
-//			Network.Disconnect();
-//			
-//		}
+
 	}
 
 	void OnGUI()
 	{
+		if(showDisconnectedFromServerText)
+		{
+			string text = "Disconnected from server";
+			GUI.Label(new Rect(Screen.width * 0.5f, Screen.height * 0.5f, 0, 0), text, labelStyle);
+		}
+		
 		if (Menu.GetComponent<MainMenu>().lobbyActive && !Menu.GetComponent<SplashScreen> ().IsActive()) {
-
+			
 			//Mode labels
 			GUI.Label(new Rect(offsetX, offsetY + Screen.height * 0.0f, 200, 40), ballLabel, labelStyle);
 			GUI.Label(new Rect(offsetX + Screen.width * 0.3f, offsetY + Screen.height * 0.0f, 200, 40), trackLabel, labelStyle);

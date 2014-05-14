@@ -16,7 +16,10 @@ public class TurretScript : MonoBehaviour {
 	}
 
 	void Update () {
-
+		if(ball == null)
+		{
+			ball = GameObject.FindGameObjectWithTag ("TheBall");
+		}
 		if (GetComponent<PlaceableParameters> ().lockUpdate)
 			return;
 
