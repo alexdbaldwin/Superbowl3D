@@ -35,18 +35,20 @@ public class CollectableScript : MonoBehaviour {
 	//Disables the collectible and gives the ball-controlling player some points on collision
 	void OnTriggerEnter(Collider coll){
 
-		//Give the ball-controlling player 'points' points and play a jolly sound effect
-		if (gameManager.GetComponent<GameManager>().IsBall()) {
-			gameManager.GetComponent<GameManager> ().AddPoints (points);
+		if(coll.gameObject.tag == "TheBall"){
+			//Give the ball-controlling player 'points' points and play a jolly sound effect
+			if (gameManager.GetComponent<GameManager>().IsBall()) {
+				gameManager.GetComponent<GameManager> ().AddPoints (points);
+			}
 			GetComponent<AudioSource> ().Play ();
+			//Disble the collectible until the next round
+			GetComponent<MeshRenderer> ().enabled = false;
+			GetComponent<SphereCollider> ().enabled = false;
+			
+			//Spawn a one-shot particle system at the collectible's center
+			GameObject particles = (GameObject)Instantiate (Resources.Load ("Prefabs/Collectables/Pickup"), transform.position + transform.forward * 0.6f , Quaternion.identity);
+
 		}
-
-		//Disble the collectible until the next round
-		GetComponent<MeshRenderer> ().enabled = false;
-		GetComponent<SphereCollider> ().enabled = false;
-
-		//Spawn a one-shot particle system at the collectible's center
-		GameObject particles = (GameObject)Instantiate (Resources.Load ("Prefabs/Collectables/Pickup"), transform.position + transform.forward * 0.6f , Quaternion.identity);
 
 	}
 }

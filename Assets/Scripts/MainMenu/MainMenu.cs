@@ -15,6 +15,7 @@ public class MainMenu : MonoBehaviour {
 	bool refreshServerList;
 	bool mute = false;
 	bool serverListIsShown = false;
+	bool duplicateServer = false;
 	float textScale;
 //Server list stuff
 	int serverListOffestY = (int)(Screen.height * 0.1f);
@@ -26,6 +27,12 @@ public class MainMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		playerName = PlayerPrefs.GetString("PlayerName");
+		if(playerName == "") playerName = "PlayerName";
+		mute = PlayerPrefs.GetInt ("Mute") == 1 ? true : false;
+		tilt = PlayerPrefs.GetInt ("Tilt") == 1 ? true : false;
+		
+	
 		hostOn.SetActive (false);
 		joinOn.SetActive (false);
 		NameButton.SetActive (false);
@@ -39,6 +46,13 @@ public class MainMenu : MonoBehaviour {
 		nameInputFieldStyle.fontSize = (int)textScale;
 
 		serverNameLabel = nameInputFieldStyle;
+		
+		InvokeRepeating("GetHostList",0.0f,2.0f);
+	}
+	
+	void GetHostList(){
+		MasterServer.RequestHostList (GlobalStorage.GetComponent<NetworkManager>().gameName);
+	
 	}
 	
 	// Update is called once per frame
@@ -66,6 +80,11 @@ public class MainMenu : MonoBehaviour {
 				serverListRefreshTimer = 0;
 				GlobalStorage.GetComponent<NetworkManager>().StartCoroutine("refreshHostList");
 			}
+		}
+		
+		if(nameClicked && Input.GetKeyDown(KeyCode.KeypadEnter)){
+			SavePreferences();
+			MenuReset();
 		}
 		//NetworkManagerSc.GetComponent<NetworkManager> ().StartCoroutine ("refreshHostList");
 		//StartCoroutine("refreshHostList");
@@ -162,7 +181,8 @@ public class MainMenu : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit)) {
 						if (hit.collider.gameObject.name == "BackButton") {
-								return true;
+							SavePreferences();
+							return true;
 						}
 				}
 		return false;
@@ -212,6 +232,7 @@ public class MainMenu : MonoBehaviour {
 		PlayerPrefs.SetInt ("Tilt", tilt ? 1 : 0);
 		PlayerPrefs.SetInt ("Mute", mute ? 1 : 0);
 		PlayerPrefs.SetString ("PlayerName", playerName);
+		PlayerPrefs.Save();
 	}
 	void LobbyActive()
 	{
@@ -238,13 +259,16 @@ public class MainMenu : MonoBehaviour {
 	{
 		if (optionsClicked) {
 			if (nameClicked) {
+				playerName = playerName.Replace("\n", "");
 				MenuHide();
 				SetBackButtonEnable(true);
 				nameClicked = true;
 				optionsClicked = true;
 				GUI.SetNextControlName("nameControll");
-				playerName = GUI.TextField (new Rect ((Screen.width * 0.5f) - (Screen.width * 0.15f), Screen.height * 0.5f, Screen.width * 0.3f, Screen.height * 0.1f), playerName, 10, nameInputFieldStyle);
+				playerName = GUI.TextField (new Rect ((Screen.width * 0.5f) - (Screen.width * 0.15f), Screen.height * 0.5f, Screen.width * 0.3f, Screen.height * 0.1f), playerName, 12, nameInputFieldStyle);
 				GUI.FocusControl("nameControll");
+				playerName = playerName.Replace("\n", "");
+				
 			}
 		}
 		if (hostClicked) {
@@ -253,14 +277,25 @@ public class MainMenu : MonoBehaviour {
 			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.1f, 0, 0), "Server Name: ", serverNameLabel);
 
 			serverName = GUI.TextField (new Rect ((Screen.width * 0.5f) - (Screen.width * 0.15f), Screen.height * 0.3f, Screen.width * 0.3f, Screen.height * 0.1f), serverName, 20, nameInputFieldStyle);
-
+			
 			if (GUI.Button( new Rect (Screen.width * 0.4f, Screen.height * 0.4f, Screen.width * 0.2f, 30.0f), "OK", serverNameLabel)) {
-				LobbyActive ();
-				GlobalStorage.GetComponent<NetworkManager>().startServer(serverName);
-				hostClicked = false;
-				SetBackButtonEnable(false);
+				
+				if(GlobalStorage.GetComponent<NetworkManager>().startServer(serverName)){
+					LobbyActive ();
+					hostClicked = false;
+					SetBackButtonEnable(false);
+				} else {
+				
+					duplicateServer = true;
+					//do something here
+				
+				}
+				
 			}
+			if (duplicateServer) {
+				GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.65f, 0, 0), "Server name is taken", serverNameLabel);
 			}
+		}
 		if (serverListIsShown) {
 			GUI.Label(new Rect (Screen.width * 0.5f, Screen.height * 0.05f, 0, 0), "Click servers to join", serverNameLabel);
 			if(GlobalStorage.GetComponent<NetworkManager>().hostData != null)

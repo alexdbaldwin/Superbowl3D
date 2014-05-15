@@ -16,6 +16,8 @@ public class SplashScreen : MonoBehaviour {
 	private Vector2 centerScreen;
 	public Texture texture = null;
 	private float textScale;
+	private float timer = 0.0f;
+	private float showTime = 3.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +31,18 @@ public class SplashScreen : MonoBehaviour {
 				}
 		if (text != null) {
 			hasText = true;
-				}
+		}
+		
+				
+	}
+	
+	void Update(){
+		if(showing){
+			timer += Time.deltaTime;
+			if(timer >= showTime){
+				showing = false;
+			}
+		}
 	}
 
 	public void SetText(string text)
@@ -70,7 +83,7 @@ public class SplashScreen : MonoBehaviour {
 			if(hasText)
 			{
 				GUI.Label(new Rect(centerScreen.x, centerScreen.y, 0, 0), text, TextStyle);
-			}
+			} 
 
 		}
 	}

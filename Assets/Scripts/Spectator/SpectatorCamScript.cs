@@ -49,12 +49,17 @@ public class SpectatorCamScript : MonoBehaviour {
 	
 	void OnGUI()
 	{
-		
-		string text = player1Name + ": " + player1Score.ToString () + " " + scoreUnit;
-		GUI.Label (new Rect (0, 0, 200, 200), text, uiOverlayStyle);
-		text = player2Name + ": " + player2Score.ToString () + " " + scoreUnit;
+		GUI.Label (new Rect (Screen.width * 0.045f, 0, 0, 0), player1Score.ToString (), uiOverlayStyle);
+		GUI.Label (new Rect (Screen.width * 0.01f, Screen.height * 0.05f, 0, 0), player1Name, uiOverlayStyle);
+//		string text = player1Name + ": " + player1Score.ToString () + " " + scoreUnit;
+//		GUI.Label (new Rect (0, 0, 200, 200), text, uiOverlayStyle);
+		string text = player2Score.ToString ();
 		Vector2 labelSize = uiOverlayStyle.CalcSize(new GUIContent(text));
-		GUI.Label (new Rect (Screen.width - labelSize.x, 0, 200, 200), text,uiOverlayStyle);
+		GUI.Label (new Rect (Screen.width - Screen.width * 0.045f - labelSize.x, 0, 0, 0), player2Score.ToString (), uiOverlayStyle);
+		
+		labelSize = uiOverlayStyle.CalcSize(new GUIContent(player2Name));
+		GUI.Label (new Rect (Screen.width - Screen.width * 0.01f - labelSize.x, Screen.height * 0.05f, 0, 0), player2Name, uiOverlayStyle);
+//		GUI.Label (new Rect (Screen.width - labelSize.x, 0, 200, 200), text,uiOverlayStyle);
 		text = "Speed: " + ballSpeed.ToString () + speedUnit;
 		GUI.Label (new Rect (0, Screen.height - labelSize.y, 200, 200), text, uiOverlayStyle);
 		

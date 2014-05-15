@@ -7,6 +7,7 @@ public class LapTimerScript : MonoBehaviour {
 	float counterInSec;
 	int counterInMin;
 	bool paused = false;
+	float textScale;
 	// Use this for initialization
 	public LapTime GetLapTime(){
 		return new LapTime(counterInMin, counterInSec);
@@ -27,7 +28,8 @@ public class LapTimerScript : MonoBehaviour {
 	}
 	
 	void Start () {
-
+		textScale = (style.fontSize * (Screen.width * 0.001f));
+		style.fontSize = (int)textScale;
 	}
 	
 	// Update is called once per frame

@@ -15,7 +15,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject overviewGUICamera;
 	public GUIStyle style;
 	public GUIStyle endGameTextStyle;
-
+	public GUIStyle lapStyle;
+	public GUIStyle resourceStyle;
+	public Texture crystal;
 
 	public bool BallView = false;
 	private bool inPlacementArea = false;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour {
 	private float pointGainInterval = 5.0f;
 	private int pointGainAmount = 1;
 	private int expectedTime = 120;
+	private float textScale;
 
 	private string message = "";
 	private string endGameText = "";
@@ -68,6 +71,14 @@ public class GameManager : MonoBehaviour {
 			cl.enabled = false;
 		}
 		
+		textScale = (style.fontSize * (Screen.width * 0.001f));
+		style.fontSize = (int)textScale;
+		textScale = (endGameTextStyle.fontSize * (Screen.width * 0.001f));
+		endGameTextStyle.fontSize = (int)textScale;
+		textScale = (lapStyle.fontSize * (Screen.width * 0.001f));
+		lapStyle.fontSize = (int)textScale;
+		textScale = (resourceStyle.fontSize * (Screen.width * 0.001f));
+		resourceStyle.fontSize = (int)textScale;
 		
 	}
 	
@@ -309,7 +320,7 @@ public class GameManager : MonoBehaviour {
 		playerOneAverageTime /= maxRounds / 2;
 		playerTwoAverageTime /= maxRounds / 2;
 		
-		if(playerOneAverageTime > playerTwoAverageTime)
+		if(playerOneAverageTime < playerTwoAverageTime)
 		{
 			return 0;
 		}
@@ -450,7 +461,14 @@ public class GameManager : MonoBehaviour {
 	void OnGUI()
 	{
 
-		GUI.Label (new Rect (0, 0, 100, 50), points.ToString ());
+		if(isPlaying){
+			GUI.Label (new Rect (Screen.width * 0.045f, 0, 0, 0), points.ToString (), resourceStyle);
+		}
+		GUI.DrawTexture(new Rect (Screen.width * 0.005f, 0, Screen.width * 0.05f, Screen.width * 0.05f), crystal);
+		if(!isPlaying){
+			GUI.DrawTexture(new Rect (Screen.width * 0.995f - Screen.width * 0.05f, 0, Screen.width * 0.05f, Screen.width * 0.05f), crystal);
+		}
+		
 		GUI.Label (new Rect(0, 40, 100, 50), message);
 		endGameTextStyle.alignment = TextAnchor.UpperCenter;
 		GUI.Label ( new Rect(Screen.width * 0.5f, Screen.height * 0.4f, 0.0f,0.0f), endGameText, endGameTextStyle);
@@ -460,7 +478,7 @@ public class GameManager : MonoBehaviour {
 		GUI.Label(new Rect(Screen.width * 0.5f + 20.0f, Screen.height * 0.5f, Screen.width * 0.5f - 20.0f, Screen.height * 0.5f), playerTwoScoresText, endGameTextStyle);
 		if(IsBall())
 		{
-			GUI.Label (new Rect(20,400,100,50), "Lap : " + (((currentRound - 1) / 2) + 1).ToString() + "/" + (maxRounds/2).ToString());
+			GUI.Label (new Rect(Screen.width * 0.5f, Screen.height * 0.1f, 0.0f,0.0f), "Lap " + (((currentRound - 1) / 2) + 1).ToString() + "/" + (maxRounds/2).ToString(), lapStyle);
 		}
 		if(displayEndOfLapInfo){
 			Debug.Log(currentRound / 2 + " - " + PlayerOneLapTimes.Count);

@@ -2,16 +2,26 @@
 using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
-	private string gameName = "SuperBowl3D";
+	public string gameName = "SuperBowl3D";
 	public GameObject Lobby;
 	public HostData[] hostData;
 
-	public void startServer(string serverName)
+	public bool startServer(string serverName)
 	{
+		hostData = MasterServer.PollHostList ();
+		foreach(HostData hd in hostData){
+			if(hd.gameName == serverName){
+				Debug.Log("Duplicate name");
+				return false;
+				}
+		}
+		
 		Network.InitializeServer (32, 25001, !Network.HavePublicAddress());
 		MasterServer.RegisterHost (gameName, serverName);
 		Debug.Log ("Started server");
+		return true;
 	}
+	
 
 	public void Connect(int id)
 	{
