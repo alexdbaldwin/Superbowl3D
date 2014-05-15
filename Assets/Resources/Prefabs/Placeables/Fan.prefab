@@ -379,7 +379,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 210, z: 0}
   scale: {x: 1, y: 1, z: 1}
   rotateAfterPlacement: 1
-  cost: 3
+  cost: 8
   lockUpdate: 0
 --- !u!148 &14800000
 NetworkView:
@@ -655,7 +655,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 200
+      scalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:

@@ -11,7 +11,7 @@ public class JumpPadScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll){
 
-		if (coll.name == "Kulan") {
+		if (coll.tag == "TheBall") {
 			StartCoroutine(Bounce ());
 			coll.attachedRigidbody.AddForce(new Vector3(0.0f, 8.0f, 0.0f), ForceMode.VelocityChange);
 			GetComponent<AudioSource>().Play();

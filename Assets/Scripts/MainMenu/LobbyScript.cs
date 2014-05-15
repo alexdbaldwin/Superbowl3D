@@ -124,10 +124,13 @@ public class LobbyScript : MonoBehaviour {
 
 
 	[RPC]
-	void SetPlayer1(string name)
+	void SetPlayer1(string name, string guid)
 	{
 		player1 = name;
 		player1Locked = true;
+		if (Network.isServer) {
+			PlayerPrefs.SetString("Player1Guid", guid);
+		}
 	}
 	
 	[RPC]
@@ -138,10 +141,13 @@ public class LobbyScript : MonoBehaviour {
 	}
 
 	[RPC]
-	void SetPlayer2(string name)
+	void SetPlayer2(string name, string guid)
 	{
 		player2 = name;
 		player2Locked = true;
+		if (Network.isServer) {
+			PlayerPrefs.SetString("Player2Guid", guid);
+				}
 	}
 	
 	[RPC]
@@ -222,7 +228,7 @@ public class LobbyScript : MonoBehaviour {
 				{
 					networkView.RPC("RemoveObserver", RPCMode.AllBuffered, currentObserverIndex);
 				}
-				networkView.RPC("SetPlayer1", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"));
+				networkView.RPC("SetPlayer1", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"), Network.player.guid);
 				currentPlayerState = PlayerState.PLAYERONE;
 //				globalStorage.GetComponent<NetworkManager>().SetId(0);
 				PlayerPrefs.SetInt("PlayerType", 0);
@@ -236,7 +242,7 @@ public class LobbyScript : MonoBehaviour {
 				{
 					networkView.RPC("RemoveObserver", RPCMode.AllBuffered, currentObserverIndex);
 				}
-				networkView.RPC("SetPlayer2", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"));
+				networkView.RPC("SetPlayer2", RPCMode.AllBuffered, PlayerPrefs.GetString("PlayerName"), Network.player.guid);
 				currentPlayerState = PlayerState.PLAYERTWO;
 //				globalStorage.GetComponent<NetworkManager>().SetId(1);
 				PlayerPrefs.SetInt("PlayerType", 1);

@@ -29,7 +29,23 @@ public class InGameNetworkScript : MonoBehaviour {
 	
 	void OnDisconnectedFromServer(NetworkDisconnection info)
 	{
+		//Network.Disconnect ();
 		Application.LoadLevel (0);
+	}
+
+	void OnPlayerDisconnected(NetworkPlayer player)
+	{
+		if ((player.guid == PlayerPrefs.GetString ("Player1Guid")) || (player.guid == PlayerPrefs.GetString ("Player2Guid"))) {
+			if (Network.isServer) {
+				MasterServer.UnregisterHost();
+				
+			}
+			
+			Network.Disconnect ();
+			Application.LoadLevel (0);
+
+		}
+
 	}
 
 	[RPC] 

@@ -18,7 +18,7 @@ public class HexTrapTriggerScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.name == "Kulan") {
+		if (collider.gameObject.tag == "TheBall") {
 			if(!alreadyTrackingBall){
 				alreadyTrackingBall = true;
 				collider.gameObject.GetComponent<AndroidControlScript>().SlowDown();

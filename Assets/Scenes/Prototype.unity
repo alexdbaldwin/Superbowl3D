@@ -26003,7 +26003,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: 3
+      scalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -26018,7 +26018,7 @@ ParticleSystem:
         serializedVersion: 2
         m_Curve:
         - time: 0
-          value: 0
+          value: .166666672
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -26078,7 +26078,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 100
+      scalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -26195,34 +26195,34 @@ ParticleSystem:
       maxGradient:
         key0:
           serializedVersion: 2
-          rgba: 4289919185
+          rgba: 4294967295
         key1:
           serializedVersion: 2
-          rgba: 4282833508
+          rgba: 4283030094
         key2:
           serializedVersion: 2
-          rgba: 1693247
+          rgba: 4053054
         key3:
           serializedVersion: 2
-          rgba: 0
+          rgba: 3069738
         key4:
           serializedVersion: 2
-          rgba: 0
+          rgba: 4643403
         key5:
           serializedVersion: 2
-          rgba: 0
+          rgba: 2283033
         key6:
           serializedVersion: 2
           rgba: 0
         key7:
           serializedVersion: 2
           rgba: 0
-        ctime0: 386
-        ctime1: 39899
-        ctime2: 65535
-        ctime3: 0
-        ctime4: 0
-        ctime5: 0
+        ctime0: 655
+        ctime1: 20817
+        ctime2: 24865
+        ctime3: 30455
+        ctime4: 39899
+        ctime5: 65535
         ctime6: 0
         ctime7: 0
         atime0: 0
@@ -26233,7 +26233,7 @@ ParticleSystem:
         atime5: 0
         atime6: 0
         atime7: 0
-        m_NumColorKeys: 3
+        m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       minGradient:
         key0:
@@ -35271,6 +35271,10 @@ Prefab:
     - target: {fileID: 2000000, guid: b9515cdb0bc10f84b82468b0dd176fcb, type: 2}
       propertyPath: m_CullingMask.m_Bits
       value: 4294959080
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b9515cdb0bc10f84b82468b0dd176fcb, type: 2}
+      propertyPath: DrawFps
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8100000, guid: b9515cdb0bc10f84b82468b0dd176fcb, type: 2}
@@ -46819,6 +46823,7 @@ MonoBehaviour:
   steeringArrows: {fileID: 2044100846}
   jumpArrow: {fileID: 564100369}
   steeringBorder: {fileID: 1869983643}
+  DrawFps: 0
 --- !u!1 &1174442043
 GameObject:
   m_ObjectHideFlags: 0

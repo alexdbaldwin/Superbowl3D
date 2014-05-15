@@ -17,7 +17,7 @@ public class FanScript : MonoBehaviour {
 
 	void OnTriggerStay(Collider other)
 	{
-		if (other.name == "Kulan") {
+		if (other.tag == "TheBall") {
 					other.attachedRigidbody.AddForce(this.transform.forward * pushValue);
 				}
 	}

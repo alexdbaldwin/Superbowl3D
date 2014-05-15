@@ -16,6 +16,7 @@ GameObject:
   - 65: {fileID: 6500000}
   - 148: {fileID: 14800000}
   - 65: {fileID: 6500004}
+  - 114: {fileID: 11400032}
   m_Layer: 0
   m_Name: HexTrap
   m_TagString: Untagged
@@ -1286,6 +1287,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: HexTrap
+--- !u!114 &11400032
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 814155fa266b558408596b091bb97702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1
