@@ -25,12 +25,12 @@ public class GameManager : MonoBehaviour {
 	private bool areaOverlayVisible = true;
 	
 	private bool isSwapped = false;
-	private bool isPlaying = false;
+	public bool isPlaying = false;
 
 	private bool skipIt = false;
 
 	private int points = 20;
-	private int maxRounds = 2;
+	private int maxRounds = 6;
 	private int currentRound = 1;
 	private float pointGainTimer = 0.0f;
 	private float pointGainInterval = 5.0f;
@@ -111,9 +111,6 @@ public class GameManager : MonoBehaviour {
 		Application.LoadLevel(0);
 	}
 	void Update () {
-		Debug.Log("IsBall: " + IsBall().ToString());
-		Debug.Log("IsPLaying: " + isPlaying.ToString());
-		Debug.Log("IsSwapped: " + isSwapped.ToString());
 		
 		if(ball == null)
 			ball = GameObject.FindGameObjectWithTag("TheBall");
@@ -369,7 +366,7 @@ public class GameManager : MonoBehaviour {
 		}
 		else
 		{
-			endGameText = "THANK YOU FOR WATCHING! PLAYER " + (winner + 1) + " WON!";
+			endGameText = "PLAYER " + (winner + 1) + " WON!";
 		}
 		
 		for(int i = 0; i < PlayerOneLapTimes.Count; i++){
@@ -464,9 +461,10 @@ public class GameManager : MonoBehaviour {
 		if(isPlaying){
 			GUI.Label (new Rect (Screen.width * 0.045f, 0, 0, 0), points.ToString (), resourceStyle);
 		}
-		GUI.DrawTexture(new Rect (Screen.width * 0.005f, 0, Screen.width * 0.05f, Screen.width * 0.05f), crystal);
+		float crystalWidth = Screen.width * 0.05f * ((float)crystal.width / (float)crystal.height);
+		GUI.DrawTexture(new Rect (Screen.width * 0.005f, 0, crystalWidth, Screen.width * 0.05f), crystal);
 		if(!isPlaying){
-			GUI.DrawTexture(new Rect (Screen.width * 0.995f - Screen.width * 0.05f, 0, Screen.width * 0.05f, Screen.width * 0.05f), crystal);
+			GUI.DrawTexture(new Rect (Screen.width * 0.995f - crystalWidth, 0, crystalWidth, Screen.width * 0.05f), crystal);
 		}
 		
 		GUI.Label (new Rect(0, 40, 100, 50), message);

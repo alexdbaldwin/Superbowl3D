@@ -8,6 +8,7 @@ public class GUIScript : MonoBehaviour {
 	public GameObject steeringCircle = null;
 	public GameObject steeringArrows = null;
 	public GameObject jumpArrow = null;
+	public GameObject jumpArrowBase = null;
 	public GameObject steeringBorder = null;
 	public bool DrawFps = false;
 	
@@ -44,7 +45,15 @@ public class GUIScript : MonoBehaviour {
 		steeringCircleStart = steeringCircle.transform.position;
 		jumpArrowStart = jumpArrow.transform.position;
 
-		if (PlayerPrefs.GetInt ("Tilt") == 1) {
+		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+			steeringArrows.GetComponent<SpriteRenderer>().enabled = false;
+			steeringCircle.GetComponent<SpriteRenderer>().enabled = false;
+			steeringBorder.GetComponent<SpriteRenderer>().enabled = false;
+			jumpArrow.GetComponent<SpriteRenderer>().enabled = false;
+			jumpArrowBase.GetComponent<SpriteRenderer>().enabled = false;
+			}
+
+		else if (PlayerPrefs.GetInt ("Tilt") == 1) {
 			tiltControls = true;
 			steeringArrows.GetComponent<SpriteRenderer>().enabled = false;
 			steeringCircle.GetComponent<SpriteRenderer>().enabled = false;

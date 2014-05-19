@@ -31,7 +31,7 @@ public class AndroidControlScript : MonoBehaviour {
 	private Rect jumpBtn;
 	private Rect boostBtn;
 	
-	private float jumpVelocity = 3.8f;
+	private float jumpVelocity = 5.0f;
 	private float boostVelocity = 20;
 	
 	private float boostModifier = 0;
@@ -79,10 +79,14 @@ public class AndroidControlScript : MonoBehaviour {
 
 
 		isBoosting = GUIManager.GetComponent<GUIScript> ().GetBoost () > 0 ? true : false;
-		if (Application.isEditor || Application.isWebPlayer) {
-						isBoosting = Input.GetKey (KeyCode.UpArrow);
+		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+					isBoosting = Input.GetKey (KeyCode.UpArrow);
+					isJumping = Input.GetKeyDown(KeyCode.LeftControl);
 				}
-		isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
+		else {
+			isJumping = GUIManager.GetComponent<GUIScript> ().GetJump ();
+				}
+
 
 		if (isBoosting && powerGauge > minPower) {
 			boostTrail.GetComponent<BoostTrailScript> ().Show ();	
@@ -105,7 +109,7 @@ public class AndroidControlScript : MonoBehaviour {
 			
 		
 
-		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsWebPlayer) {
 			horizontalMovement = Input.GetAxis ("Horizontal");
 				}
 
@@ -147,7 +151,7 @@ public class AndroidControlScript : MonoBehaviour {
 		//isBoosting = false;
 
 
-		if ((isJumping || Input.GetKey(KeyCode.Space)) && isOnSurface) {
+		if (isJumping && isOnSurface) {
 			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0), ForceMode.Impulse);
 			isJumping = false;
 			jumpEffect.Play();

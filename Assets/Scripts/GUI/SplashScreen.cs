@@ -72,6 +72,8 @@ public class SplashScreen : MonoBehaviour {
 		return showing;
 	}
 
+	
+
 	void OnGUI()
 	{
 		if (showing) {
@@ -82,7 +84,7 @@ public class SplashScreen : MonoBehaviour {
 
 			if(hasText)
 			{
-				GUI.Label(new Rect(centerScreen.x, centerScreen.y, 0, 0), text, TextStyle);
+				GUI.Label(new Rect(centerScreen.x, Screen.height * 0.8f, 0, 0), text, TextStyle);
 			} 
 
 		}

@@ -33,6 +33,7 @@ public class TurretScript : MonoBehaviour {
 
 		Vector3 targetLookDirection = (ball.transform.position - transform.position).normalized;
 		targetLookDirection -= Vector3.Dot (targetLookDirection, transform.up) * transform.up;
+//		this.transform.rotation = Quaternion.Lerp (this.transform.rotation, Quaternion.FromToRotation (Vector3.forward, targetLookDirection.normalized), Time.deltaTime * 10.0f);
 		this.transform.rotation = Quaternion.Lerp (this.transform.rotation, Quaternion.LookRotation (targetLookDirection.normalized, transform.up), Time.deltaTime * 10.0f);
 
 

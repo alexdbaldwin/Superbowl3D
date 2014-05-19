@@ -3,11 +3,13 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 	public string gameName = "SuperBowl3D";
+	public string serverName;
 	public GameObject Lobby;
 	public HostData[] hostData;
 
 	public bool startServer(string serverName)
 	{
+		this.serverName = serverName;
 		hostData = MasterServer.PollHostList ();
 		foreach(HostData hd in hostData){
 			if(hd.gameName == serverName){
@@ -17,7 +19,7 @@ public class NetworkManager : MonoBehaviour {
 		}
 		
 		Network.InitializeServer (32, 25001, !Network.HavePublicAddress());
-		MasterServer.RegisterHost (gameName, serverName);
+		MasterServer.RegisterHost (gameName, serverName, "Open");
 		Debug.Log ("Started server");
 		return true;
 	}
@@ -33,7 +35,6 @@ public class NetworkManager : MonoBehaviour {
 	{
 		MasterServer.RequestHostList (gameName);
 		yield return new WaitForSeconds (1.5f);
-		Debug.Log(MasterServer.PollHostList ().Length);
 		hostData = MasterServer.PollHostList ();
 
 	}

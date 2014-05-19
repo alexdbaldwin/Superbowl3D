@@ -23,7 +23,10 @@ public class HexTrapTriggerScript : MonoBehaviour {
 				alreadyTrackingBall = true;
 				collider.gameObject.GetComponent<AndroidControlScript>().SlowDown();
 
-				foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
+				//NullReferenceException: Object reference not set to an instance of an object
+				//HexTrapTriggerScript.OnTriggerEnter (UnityEngine.Collider collider) (at Assets/Scripts/Placeables/HexTrapTriggerScript.cs:26)
+
+				foreach(Lightning l in GetComponentsInChildren<Lightning>())
 				{
 					oldTarget = l.targetObject;
 					l.targetObject = collider.gameObject;
@@ -31,7 +34,7 @@ public class HexTrapTriggerScript : MonoBehaviour {
 				}
 				StartCoroutine("resetTarget");
 			}
-			GetComponent<AudioSource>().Play();
+			GetComponentInChildren<AudioSource>().Play();
 		}
 	}
 
@@ -39,8 +42,8 @@ public class HexTrapTriggerScript : MonoBehaviour {
 	IEnumerator resetTarget()
 	{
 		yield return new WaitForSeconds (2.0f);
-		GetComponent<AudioSource>().loop = false;
-		foreach(Lightning l in transform.parent.GetComponentsInChildren<Lightning>())
+		GetComponentInChildren<AudioSource>().loop = false;
+		foreach(Lightning l in GetComponentsInChildren<Lightning>())
 			l.targetObject = oldTarget;
 		alreadyTrackingBall = false;
 

@@ -273,6 +273,10 @@ public class LobbyScript : MonoBehaviour {
 			if(Network.isServer && player1Locked && player2Locked){
 				if (GUI.Button (new Rect (Screen.width * 0.6f, Screen.height * 0.7f , launchStyle.fontSize * launchText.Length * 0.5f, launchStyle.fontSize * 2), launchText, launchStyle) && player1Locked && player2Locked) {
 						networkView.RPC("StartGame", RPCMode.All, null);
+					string gameName = GameObject.FindWithTag("GlobalStorage").GetComponent<NetworkManager>().gameName;
+					string serverName = GameObject.FindWithTag("GlobalStorage").GetComponent<NetworkManager>().serverName;
+					MasterServer.RegisterHost (gameName, serverName, "Closed");
+
 				}
 			}
 			else {

@@ -15,6 +15,7 @@ public class PlaceableMenu : MonoBehaviour {
 	bool blocked = false;
 	public Material disabledButtonMaterial;
 	private GameObject gameManager;
+	bool clickable = false;
 
 	void Start(){
 		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
@@ -32,36 +33,38 @@ public class PlaceableMenu : MonoBehaviour {
 	}
 
 	private void MenuClick(Vector2 position){
-		Ray ray = overviewGUICamera.camera.ScreenPointToRay (position);
-		RaycastHit[] hits = Physics.RaycastAll (ray, 1000, 1 << 11 /*Layer mask 11*/);
-		foreach(RaycastHit hit in hits){
-			if (hit.collider.gameObject.tag == "RadialMenuButton") {
+		if (clickable) {
+				Ray ray = overviewGUICamera.camera.ScreenPointToRay (position);
+				RaycastHit[] hits = Physics.RaycastAll (ray, 1000, 1 << 11 /*Layer mask 11*/);
+				foreach (RaycastHit hit in hits) {
+						if (hit.collider.gameObject.tag == "RadialMenuButton") {
 
-				if(hit.collider.gameObject.GetComponent<PlaceableParameters>().cost > gameManager.GetComponent<GameManager>().GetPoints()){
-					break;
+								if (hit.collider.gameObject.GetComponent<PlaceableParameters> ().cost > gameManager.GetComponent<GameManager> ().GetPoints ()) {
+										break;
+								}
+
+
+								GameObject newObstacle;
+								if (Network.isClient || Network.isServer) {
+										newObstacle = (GameObject)Network.Instantiate (Resources.Load ("Prefabs/Placeables/" + hit.collider.gameObject.GetComponent<ObstaclePlacementScript> ().prefabName), transform.position, transform.rotation, 0);
+								} else {
+										newObstacle = (GameObject)Instantiate (Resources.Load ("Prefabs/Placeables/" + hit.collider.gameObject.GetComponent<ObstaclePlacementScript> ().prefabName));
+								}
+
+								gameManager.GetComponent<GameManager> ().RemovePoints (newObstacle.GetComponent<PlaceableParameters> ().cost);
+
+								newObstacle.transform.position = spawnPosition;
+								newObstacle.transform.rotation = Quaternion.FromToRotation (Vector3.up, spawnNormal);
+								if (newObstacle.GetComponent<PlaceableParameters> ().rotateAfterPlacement) {
+										newObstacle.GetComponent<ObstaclePlacementScript> ().StartRotate (Unblock);
+										blocked = true;
+								}
+								//newObstacle.transform.localScale = Vector3.one;
+								newObstacle.layer = 0;
+								newObstacle.tag = "Obstacle";
+						}
 				}
-
-
-				GameObject newObstacle;
-				if (Network.isClient || Network.isServer) {
-					newObstacle = (GameObject)Network.Instantiate (Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName), transform.position, transform.rotation, 0);
-				} else {
-					newObstacle = (GameObject)Instantiate(Resources.Load("Prefabs/Placeables/"+hit.collider.gameObject.GetComponent<ObstaclePlacementScript>().prefabName));
-				}
-
-				gameManager.GetComponent<GameManager>().RemovePoints(newObstacle.GetComponent<PlaceableParameters>().cost);
-	
-				newObstacle.transform.position = spawnPosition;
-				newObstacle.transform.rotation = Quaternion.FromToRotation (Vector3.up, spawnNormal);
-				if(newObstacle.GetComponent<PlaceableParameters>().rotateAfterPlacement){
-					newObstacle.GetComponent<ObstaclePlacementScript>().StartRotate(Unblock);
-					blocked = true;
-				}
-				//newObstacle.transform.localScale = Vector3.one;
-				newObstacle.layer = 0;
-				newObstacle.tag = "Obstacle";
-			}
-		} 
+		}
 		StopRadialMenu ();
 	}
 
@@ -165,14 +168,25 @@ public class PlaceableMenu : MonoBehaviour {
 			go.GetComponent<PlaceableParameters>().lockUpdate = true;
 	
 			menuButtons.Add(go);
+			clickable = false;
+			Invoke ("MakeClickable", 0.1f);
+
 			
 		}
 		
 	}
+
+	void MakeClickable(){
+		clickable = true;
+	
+	}
+
 	
 	public void StopRadialMenu(){
 		if (menuActive) {
-			
+
+			CancelInvoke("MakeClickable");
+
 			menuActive = false;
 			foreach(GameObject go in menuButtons){
 				Destroy (go);
