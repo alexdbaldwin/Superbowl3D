@@ -240,6 +240,17 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
+	public void BroadcastCountdown()
+	{
+		networkView.RPC ("StartCountdownOverNetwork", RPCMode.Others, null);
+
+	}
+	[RPC]
+	public void StartCountdownOverNetwork()
+	{
+		GetComponent<CountdownScript> ().StartCountDown (null);
+	}
+
 	[RPC]
 	public void SwapPlayers()
 	{

@@ -118,10 +118,10 @@ public class CameraPositioningScript : MonoBehaviour {
 		Vector3 cameraOffset = Vector3.Lerp(-closest.up, -secondClosestToUse.up, lerpything);
 		cameraOffset.y = 0;
 		cameraOffset.Normalize ();
-		cameraOffset *= 0.75f;
+		cameraOffset *= 1.5f;
 		cameraOffset.y += cameraHeight;
 
-		transform.position = Vector3.Lerp (transform.position, target.transform.position + cameraOffset, Time.deltaTime * 2);
+		transform.position = Vector3.Lerp (transform.position, target.transform.position + cameraOffset, Time.deltaTime * 8.0f);
 		Quaternion oldRot = transform.rotation;
 		transform.LookAt (transform.position - cameraOffset + new Vector3(0,0.8f,0));
 		Quaternion newRot = transform.rotation;

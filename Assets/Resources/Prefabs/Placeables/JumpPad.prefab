@@ -17,7 +17,7 @@ GameObject:
   - 82: {fileID: 8200000}
   m_Layer: 0
   m_Name: JumpPad
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,7 +232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: JumpPad
-  placementMesh: {fileID: 6400000}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,6 +247,7 @@ MonoBehaviour:
   scale: {x: 1.5, y: 1.5, z: 1.5}
   rotateAfterPlacement: 0
   cost: 1
+  lockUpdate: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1

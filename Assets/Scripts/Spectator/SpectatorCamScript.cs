@@ -11,7 +11,7 @@ public class SpectatorCamScript : MonoBehaviour {
 	public GUIStyle uiOverlayStyle;
 	private int player1Score = 0, player2Score = 0;
 	public string scoreUnit = "SpacePoints", speedUnit = "ly/s";
-	private string player1Name = "Player1", player2Name = "Player2";
+	private string player1Name = "PlayerName", player2Name = "PlayerName";
 	private float ballSpeed = 0;
 	
 	// Use this for initialization

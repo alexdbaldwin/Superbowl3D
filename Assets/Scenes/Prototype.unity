@@ -11511,7 +11511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541163411ad20c14e840918339f14d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newTargetNode: {fileID: 779512284}
+  newTargetNode: {fileID: 0}
   SpectatorCamera: {fileID: 460054607}
   lerpSpeed: 2
 --- !u!23 &278285521
@@ -18700,7 +18700,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294960895
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
@@ -20279,7 +20279,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 487434123}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -67.9871063, y: -4.51268768, z: -23.1294518}
+  m_LocalPosition: {x: -67.9871063, y: -1.93805313, z: -23.1294518}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1624286248}
@@ -37118,7 +37118,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 936040484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -60.3187943, y: 4.05593777, z: 11.2602787}
+  m_LocalPosition: {x: -60.3187943, y: 6.39339352, z: 11.2602787}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1624286248}
@@ -42190,7 +42190,7 @@ AudioSource:
   m_GameObject: {fileID: 1071479241}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: bb6595d193f8de544a96feb630b7e89f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 79c19042f7da5b645904f9cc98f05adb, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -49985,7 +49985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541163411ad20c14e840918339f14d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newTargetNode: {fileID: 779512284}
+  newTargetNode: {fileID: 0}
   SpectatorCamera: {fileID: 460054607}
   lerpSpeed: 2
 --- !u!23 &1300241472
@@ -79742,7 +79742,7 @@ Rigidbody:
   m_AngularDrag: .0500000007
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
 --- !u!95 &2113858735

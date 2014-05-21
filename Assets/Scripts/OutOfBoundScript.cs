@@ -15,9 +15,11 @@ public class OutOfBoundScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collInfo)
 	{
-		if (collInfo.gameObject.tag == "TheBall") {
+		GameObject gm = GameObject.FindGameObjectWithTag ("GameManager");
+		if (collInfo.gameObject.tag == "TheBall" && gm.GetComponent<GameManager>().IsBall() ) {
 			collInfo.gameObject.transform.position = collInfo.gameObject.GetComponent<AndroidControlScript>().GetLastActiveNodePos();
-			GameObject.FindGameObjectWithTag ("GameManager").GetComponent<CountdownScript> ().StartCountDown (null);
+			gm.GetComponent<CountdownScript> ().StartCountDown (null);
+			gm.GetComponent<GameManager>().BroadcastCountdown();
 			collInfo.gameObject.rigidbody.velocity = Vector3.zero;
 		}
 	}
