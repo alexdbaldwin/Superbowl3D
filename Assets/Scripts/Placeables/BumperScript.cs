@@ -46,10 +46,16 @@ public class BumperScript : MonoBehaviour {
 			direction -= Vector3.Dot(direction, transform.up)* transform.up;
 			cO.gameObject.rigidbody.AddForce(direction * 3.0f,ForceMode.VelocityChange);
 		}
+//		networkView.RPC ("BroadcastSound", RPCMode.All, null);
 		GetComponent<AudioSource>().Play();
-
 		//StartCoroutine (Bump ());
 
+	}
+	
+	[RPC]
+	public void BroadcastSound()
+	{
+		GetComponent<AudioSource>().Play();
 	}
 
 

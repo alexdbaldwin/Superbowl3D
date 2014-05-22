@@ -116,8 +116,8 @@ public class GameManager : MonoBehaviour {
 			ball = GameObject.FindGameObjectWithTag("TheBall");
 		
 		if (Input.GetKey(KeyCode.Escape)) 
-		{	
-			QuitGame();
+		{	if(Application.platform != RuntimePlatform.Android)
+				QuitGame();
 		}
 		//Give the non-ball player extra points over time
 		if (!IsBall () && isPlaying) {
@@ -239,6 +239,8 @@ public class GameManager : MonoBehaviour {
 		}
 		
 	}
+
+
 
 	public void BroadcastCountdown()
 	{

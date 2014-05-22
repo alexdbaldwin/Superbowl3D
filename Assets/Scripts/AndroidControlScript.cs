@@ -89,11 +89,10 @@ public class AndroidControlScript : MonoBehaviour {
 
 
 		if (isBoosting && powerGauge > minPower) {
-			boostTrail.GetComponent<BoostTrailScript> ().Show ();	
-			GetComponent<MeshRenderer>().materials[1].color = Color.Lerp(new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f), Color.white, powerGauge/maxPower);
+			networkView.RPC("ShowBoost", RPCMode.All, powerGauge);	
 		} else {
-			boostTrail.GetComponent<BoostTrailScript> ().Hide();
-			GetComponent<MeshRenderer>().materials[1].color = new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f);
+			networkView.RPC("HideBoost", RPCMode.All, powerGauge);	
+			
 		}
 	}
 
@@ -154,11 +153,18 @@ public class AndroidControlScript : MonoBehaviour {
 		if (isJumping && isOnSurface) {
 			rigidbody.AddForce(new Vector3(0, jumpVelocity, 0), ForceMode.Impulse);
 			isJumping = false;
-			jumpEffect.Play();
+			networkView.RPC ("SendJumpSound", RPCMode.All, null);
 		}
 
 
 	}
+	
+	[RPC]
+	public void SendJumpSound()
+	{
+		jumpEffect.Play();	
+	}
+	
 
 	public void SlowDown()
 	{
@@ -177,9 +183,16 @@ public class AndroidControlScript : MonoBehaviour {
 		slowed = false;
 	}
 
-	void OnGUI()
-	{
-
+	[RPC]
+	public void ShowBoost(float boostGauge){
+		boostTrail.GetComponent<BoostTrailScript>().Show();
+		GetComponent<MeshRenderer>().materials[1].color = Color.Lerp(new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f), Color.white, boostGauge/maxPower);	
+	}
+	
+	[RPC]
+	public void HideBoost(float boostGauge){
+		boostTrail.GetComponent<BoostTrailScript>().Hide();		
+		GetComponent<MeshRenderer>().materials[1].color = new Color(89.0f / 256.0f, 30.0f / 256.0f, 150.0f / 256.0f);
 	}
 	
 	void OnCollisionStay(Collision collisionInfo) {

@@ -15,7 +15,14 @@ public class JumpPadScript : MonoBehaviour {
 			StartCoroutine(Bounce ());
 			coll.attachedRigidbody.AddForce(new Vector3(0.0f, 8.0f, 0.0f), ForceMode.VelocityChange);
 			GetComponent<AudioSource>().Play();
+//			networkView.RPC("BroadcastJumpSound", RPCMode.All, null);
 		}
+	}
+	
+	[RPC]
+	public void BroadcastJumpSound()
+	{
+		GetComponent<AudioSource>().Play();
 	}
 
 
